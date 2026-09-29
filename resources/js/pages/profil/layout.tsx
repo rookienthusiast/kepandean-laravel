@@ -1,5 +1,6 @@
-import { Head, Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
+import PublicLayout from '@/layouts/public-layout';
+import type { SiteData } from '@/types/site';
 
 export interface ProfilData {
     sejarah: string | null;
@@ -13,6 +14,7 @@ interface ProfilLayoutProps {
     description: string;
     heading: string;
     desaName: string;
+    site: SiteData;
     children: ReactNode;
 }
 
@@ -21,34 +23,20 @@ export default function ProfilLayout({
     description,
     heading,
     desaName,
+    site,
     children,
 }: ProfilLayoutProps) {
     return (
-        <>
-            <Head title={title}>
-                <meta name="description" content={description} />
-            </Head>
-            <div className="flex min-h-screen flex-col bg-[#FDFDFC] text-[#1b1b18] dark:bg-[#0a0a0a] dark:text-[#EDEDEC]">
-                <header className="w-full border-b border-[#e3e3e0] dark:border-[#3E3E3A]">
-                    <nav className="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-4">
-                        <Link
-                            href="/"
-                            className="text-sm font-medium underline underline-offset-4"
-                        >
-                            Beranda
-                        </Link>
-                        <span className="text-sm text-[#706f6c] dark:text-[#A1A09A]">
-                            {desaName}
-                        </span>
-                    </nav>
-                </header>
-                <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
-                    <h1 className="mb-6 text-3xl font-semibold tracking-tight">
-                        {heading}
-                    </h1>
-                    {children}
-                </main>
+        <PublicLayout title={title} description={description} site={site}>
+            <section className="bg-desa-900/95 px-4 py-10 text-white sm:px-6">
+                <div className="mx-auto w-full max-w-3xl">
+                    <p className="text-sm text-white/70">Profil Desa — {desaName}</p>
+                    <h1 className="mt-2 text-3xl font-bold tracking-tight">{heading}</h1>
+                </div>
+            </section>
+            <div className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
+                {children}
             </div>
-        </>
+        </PublicLayout>
     );
 }

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\AduanController;
+use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\ProfilController;
 use App\Models\Desa;
 use App\Models\Profil;
@@ -11,7 +13,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    $desa = App::bound('current_desa') ? App::make('current_desa') : Desa::getDefault();
+    $desa = PublicSite::currentDesa();
 
     $profil = $desa instanceof Desa
         ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->first()
@@ -28,11 +30,48 @@ Route::get('/', function () {
                 'visiMisi' => route('profil.visi-misi'),
             ],
         ],
+        'meta' => [
+            'title' => "Portal Resmi {$nama}",
+            'description' => "Website resmi {$nama}: profil desa, layanan publik, berita terkini, lokasi kantor desa, dan Aduan warga.",
+        ],
+        ...PublicSite::sharedProps($desa),
     ]);
 })->name('home');
 
 Route::get('profil/sejarah', [ProfilController::class, 'sejarah'])->name('profil.sejarah');
 Route::get('profil/visi-misi', [ProfilController::class, 'visiMisi'])->name('profil.visi-misi');
+
+// Issue #15: Struktur Organisasi native (menggantikan mockup segera-hadir).
+Route::get('struktur-pemerintahan', [PejabatController::class, 'index'])->name('struktur');
+
+// Issue #19: nav mockup jujur — modul belum-siap menampilkan status
+// under-development eksplisit, tidak pernah 404 / link mati / hash.
+Route::get('segera-hadir/{modul}', function (string $modul) {
+    $desa = PublicSite::currentDesa();
+    $nama = PublicSite::displayName($desa);
+
+    return Inertia::render('segera-hadir', [
+        'modul' => $modul,
+        'meta' => [
+            'title' => "Segera Hadir di {$nama}",
+            'description' => "Modul {$modul} {$nama} sedang disiapkan dan akan segera hadir di portal resmi.",
+        ],
+        ...PublicSite::sharedProps($desa),
+    ]);
+})->whereIn('modul', [
+    'pemerintahan',
+    'lembaga-desa',
+    'layanan-warga',
+    'layanan',
+    'informasi',
+    'berita',
+    'pengumuman',
+    'potensi-galeri',
+    'kontak-lokasi',
+])->name('segera-hadir');
+
+// Issue #19: form Aduan sederhana — simpan sederhana, tanpa disposisi.
+Route::post('aduan', [AduanController::class, 'store'])->name('aduan.store');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');

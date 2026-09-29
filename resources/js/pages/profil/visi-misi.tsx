@@ -1,12 +1,14 @@
 import ProfilLayout, { type ProfilData } from './layout';
+import type { SiteData } from '@/types/site';
 
 interface PageProps {
     profil: ProfilData;
     desa: { name: string; slug: string } | null;
     meta: { title: string; description: string };
+    site: SiteData;
 }
 
-export default function VisiMisi({ profil, desa, meta }: PageProps) {
+export default function VisiMisi({ profil, desa, meta, site }: PageProps) {
     const desaName = desa?.name ?? 'Desa';
 
     return (
@@ -15,6 +17,7 @@ export default function VisiMisi({ profil, desa, meta }: PageProps) {
             description={meta.description}
             heading={`Visi dan Misi ${desaName}`}
             desaName={desaName}
+            site={site}
         >
             <section aria-labelledby="visi-heading" className="mb-8">
                 <h2 id="visi-heading" className="mb-3 text-xl font-medium">

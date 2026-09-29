@@ -12,7 +12,10 @@ void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
+            // Halaman publik membawa PublicLayout sendiri (TopBar+Navbar+Footer).
             case name === 'welcome':
+            case name === 'segera-hadir':
+            case name.startsWith('profil/'):
                 return null;
             case name.startsWith('auth/'):
                 return AuthLayout;

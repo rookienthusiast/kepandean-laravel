@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Desa;
 use App\Models\Profil;
 use App\Support\HtmlSanitizer;
-use Illuminate\Support\Facades\App;
+use App\Support\PublicSite;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -34,7 +34,7 @@ class ProfilController extends Controller
      */
     private function render(string $component, string $pageLabel, callable $description): Response
     {
-        $desa = App::bound('current_desa') ? App::make('current_desa') : Desa::getDefault();
+        $desa = PublicSite::currentDesa();
 
         $profil = $desa instanceof Desa
             ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->first()
@@ -55,6 +55,7 @@ class ProfilController extends Controller
                 'title' => $desa instanceof Desa ? "{$pageLabel} {$desa->name}" : $pageLabel,
                 'description' => $desa instanceof Desa ? $description($desa) : $pageLabel,
             ],
+            ...PublicSite::sharedProps($desa),
         ]);
     }
 }

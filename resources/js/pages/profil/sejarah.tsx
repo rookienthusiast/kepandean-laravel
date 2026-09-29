@@ -1,12 +1,14 @@
 import ProfilLayout, { type ProfilData } from './layout';
+import type { SiteData } from '@/types/site';
 
 interface PageProps {
     profil: ProfilData;
     desa: { name: string; slug: string } | null;
     meta: { title: string; description: string };
+    site: SiteData;
 }
 
-export default function Sejarah({ profil, desa, meta }: PageProps) {
+export default function Sejarah({ profil, desa, meta, site }: PageProps) {
     const desaName = desa?.name ?? 'Desa';
 
     return (
@@ -15,6 +17,7 @@ export default function Sejarah({ profil, desa, meta }: PageProps) {
             description={meta.description}
             heading={`Sejarah ${desaName}`}
             desaName={desaName}
+            site={site}
         >
             {profil.sejarah ? (
                 <article

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Desa;
 use App\Models\Profil;
+use App\Models\Statistik;
 use Illuminate\Database\Seeder;
 
 class DesaSeeder extends Seeder
@@ -34,5 +35,9 @@ class DesaSeeder extends Seeder
         // confirmation from perangkat desa, so nothing is fabricated here.
         Profil::forDesa($kepandean);
         Profil::forDesa($desaB);
+
+        // Nilai awal spec-002; admin dapat mengubahnya tanpa developer.
+        Statistik::seedDefaults($kepandean);
+        Statistik::seedDefaults($desaB);
     }
 }
