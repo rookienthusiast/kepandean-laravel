@@ -33,6 +33,9 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->brandName('Desa Kepandean')
+            // Issue #13 item 1, option B: no custom brandLogo asset.
+            // favicon points at public/favicon.ico which ships with the repo,
+            // so /admin/login never renders a broken image.
             ->favicon(asset('favicon.ico'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
