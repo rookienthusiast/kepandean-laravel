@@ -7,12 +7,14 @@ use App\Http\Controllers\ProfilController;
 use App\Models\Desa;
 use App\Models\Profil;
 use App\Support\HtmlSanitizer;
+use App\Support\PublicSite;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     $desa = PublicSite::currentDesa();
+    $nama = PublicSite::displayName($desa);
 
     $profil = $desa instanceof Desa
         ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->first()
