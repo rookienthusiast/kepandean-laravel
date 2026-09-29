@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\ProfilController;
 use App\Models\Desa;
 use App\Models\Profil;
+use App\Support\HtmlSanitizer;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ Route::get('/', function () {
         ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->first()
         : null;
 
-    $sejarah = trim(strip_tags((string) $profil?->sejarah));
+    $sejarah = trim(strip_tags(HtmlSanitizer::clean((string) $profil?->sejarah)));
 
     return Inertia::render('welcome', [
         // Excerpt feed for the Beranda assembly in issue 18.

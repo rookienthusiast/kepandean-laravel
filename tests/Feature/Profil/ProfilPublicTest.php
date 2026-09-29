@@ -134,4 +134,23 @@ class ProfilPublicTest extends TestCase
                 $page->where('profilExcerpt.urls.visiMisi', route('profil.visi-misi'));
             });
     }
+
+    public function test_home_excerpt_never_leaks_script_text(): void
+    {
+        $desa = Desa::where('slug', 'kepandean')->firstOrFail();
+        Profil::forDesa($desa)->update([
+            'sejarah' => '<p>Cuplikan</p><script>alert(1)</script>',
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertOk();
+
+        $props = $response->inertiaProps();
+        $excerpt = (string) ($props['profilExcerpt']['sejarah'] ?? '');
+
+        $this->assertStringContainsString('Cuplikan', $excerpt);
+        $this->assertStringNotContainsString('alert', $excerpt);
+        $this->assertStringNotContainsString('<script', $excerpt);
+    }
 }
