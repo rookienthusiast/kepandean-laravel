@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Asset;
+use App\Models\Desa;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,26 +50,20 @@ class MediaController extends Controller
             $content = is_string($path) ? file_get_contents($path) : false;
 
             if (! is_string($content) || preg_match('/<script|on\w+\s*=/i', $content)) {
-                $message = 'SVG files with scripts or event handlers are not allowed.';
-
-                if ($request->expectsJson()) {
-                    return response()->json([
-                        'message' => $message,
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
-
-                throw ValidationException::withMessages([
-                    'file' => $message,
-                ]);
+                return $this->reject($request, 'SVG files with scripts or event handlers are not allowed.');
             }
         }
 
         // Get current desa from middleware or user
         $desa = App::bound('current_desa') ? App::make('current_desa') : auth()->user()?->desa;
 
+        if (! $desa instanceof Desa) {
+            return $this->reject($request, 'Upload ditolak: tidak ada desa yang terdaftar untuk akun ini.');
+        }
+
         // Create an asset and attach the file
         $asset = Asset::create([
-            'desa_id' => $desa?->id,
+            'desa_id' => $desa->id,
         ]);
 
         $asset->addMedia($file)
@@ -77,6 +72,19 @@ class MediaController extends Controller
         return response()->json([
             'message' => 'File uploaded successfully',
             'asset_id' => $asset->id,
+        ]);
+    }
+
+    private function reject(Request $request, string $message): JsonResponse
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => $message,
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        throw ValidationException::withMessages([
+            'file' => $message,
         ]);
     }
 }

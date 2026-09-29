@@ -3,13 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\Desa;
+use App\Models\Profil;
 use Illuminate\Database\Seeder;
 
 class DesaSeeder extends Seeder
 {
     public function run(): void
     {
-        Desa::firstOrCreate(
+        $kepandean = Desa::firstOrCreate(
             ['slug' => 'kepandean'],
             [
                 'name' => 'Desa Kepandean',
@@ -19,7 +20,7 @@ class DesaSeeder extends Seeder
             ]
         );
 
-        Desa::firstOrCreate(
+        $desaB = Desa::firstOrCreate(
             ['slug' => 'desa-b'],
             [
                 'name' => 'Desa B',
@@ -28,5 +29,10 @@ class DesaSeeder extends Seeder
                 'is_default' => false,
             ]
         );
+
+        // Empty singleton rows: real Sejarah/Visi/Misi text still waits for
+        // confirmation from perangkat desa, so nothing is fabricated here.
+        Profil::forDesa($kepandean);
+        Profil::forDesa($desaB);
     }
 }

@@ -139,4 +139,26 @@ class MediaUploadTest extends TestCase
         Storage::disk('local')->assertExists($media->getPathRelativeToRoot());
         Storage::disk('public')->assertMissing($media->getPathRelativeToRoot());
     }
+
+    public function test_upload_without_any_desa_is_rejected_clearly(): void
+    {
+        Desa::query()->delete();
+
+        $admin = User::factory()->create([
+            'desa_id' => null,
+            'role' => 'admin_desa',
+            'email_verified_at' => now(),
+        ]);
+
+        $this->actingAs($admin, 'web');
+
+        $file = UploadedFile::fake()->image('nodesa.jpg', 640, 480);
+
+        $response = $this->withHeaders(['Accept' => 'application/json'])->post('/admin/media/upload', [
+            'file' => $file,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('message', 'Upload ditolak: tidak ada desa yang terdaftar untuk akun ini.');
+    }
 }
