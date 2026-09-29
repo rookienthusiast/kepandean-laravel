@@ -39,10 +39,16 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
     }));
 
     return (
-        <PublicLayout title={meta.title} description={meta.description} site={site}>
+        <PublicLayout
+            title={meta.title}
+            description={meta.description}
+            site={site}
+        >
             <section className="bg-desa-900/95 px-4 py-10 text-white sm:px-6">
                 <div className="mx-auto w-full max-w-6xl">
-                    <p className="text-sm text-white/70">Pemerintahan — {desaName}</p>
+                    <p className="text-sm text-white/70">
+                        Pemerintahan — {desaName}
+                    </p>
                     <h1 className="mt-2 text-3xl font-bold tracking-tight">
                         Struktur Organisasi {desaName}
                     </h1>
@@ -58,7 +64,11 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
                     className="mb-8 w-full max-w-md rounded-md border border-[#e3e3e0] bg-white px-4 py-3 text-[15px] dark:border-[#3E3E3A] dark:bg-[#161615]"
                 />
                 {filtered.map((group) => (
-                    <section key={group.key} aria-labelledby={`kelompok-${group.key}`} className="mb-10">
+                    <section
+                        key={group.key}
+                        aria-labelledby={`kelompok-${group.key}`}
+                        className="mb-10"
+                    >
                         <h2
                             id={`kelompok-${group.key}`}
                             className="mb-4 text-xl font-semibold"
@@ -88,7 +98,9 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
                                             </span>
                                         )}
                                         <div>
-                                            <p className="font-semibold">{item.nama}</p>
+                                            <p className="font-semibold">
+                                                {item.nama}
+                                            </p>
                                             <p className="text-sm text-[#706f6c] dark:text-[#A1A09A]">
                                                 {item.jabatan}
                                             </p>

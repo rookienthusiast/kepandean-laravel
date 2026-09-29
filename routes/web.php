@@ -7,7 +7,6 @@ use App\Http\Controllers\ProfilController;
 use App\Models\Desa;
 use App\Models\Profil;
 use App\Support\HtmlSanitizer;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Inertia\Inertia;

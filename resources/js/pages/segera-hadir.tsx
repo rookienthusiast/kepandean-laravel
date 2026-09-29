@@ -26,7 +26,11 @@ export default function SegeraHadir({ modul, meta, site }: SegeraHadirProps) {
     const label = LABELS[modul] ?? modul;
 
     return (
-        <PublicLayout title={meta.title} description={meta.description} site={site}>
+        <PublicLayout
+            title={meta.title}
+            description={meta.description}
+            site={site}
+        >
             <section className="bg-desa-900/95 px-4 py-12 text-white sm:px-6">
                 <div className="mx-auto w-full max-w-6xl">
                     <p className="text-sm text-white/70">

@@ -20,7 +20,7 @@ interface PublicLayoutProps {
     children: ReactNode;
 }
 
-function TopBar({ site }: { site: SiteData }) {
+function TopBar() {
     return (
         <div className="bg-desa-900 text-xs text-white">
             <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-1.5 sm:px-6">
@@ -29,7 +29,10 @@ function TopBar({ site }: { site: SiteData }) {
                     Kab. Tegal, Jawa Tengah
                 </p>
                 <div className="flex shrink-0 items-center gap-3">
-                    <Link href="/segera-hadir/layanan-warga" className="hover:underline">
+                    <Link
+                        href="/segera-hadir/layanan-warga"
+                        className="hover:underline"
+                    >
                         Layanan Mandiri
                     </Link>
                     <span aria-hidden="true">•</span>
@@ -44,7 +47,10 @@ function TopBar({ site }: { site: SiteData }) {
 
 function DesktopNav({ items }: { items: NavItem[] }) {
     return (
-        <nav aria-label="Navigasi utama" className="hidden items-center gap-1 lg:flex">
+        <nav
+            aria-label="Navigasi utama"
+            className="hidden items-center gap-1 lg:flex"
+        >
             {items.map((item) =>
                 item.children ? (
                     <div key={item.label} className="group relative">
@@ -53,7 +59,10 @@ function DesktopNav({ items }: { items: NavItem[] }) {
                             className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-white/10"
                         >
                             {item.label}
-                            <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                            <ChevronDown
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                            />
                         </Link>
                         <div className="invisible absolute left-0 z-50 w-56 rounded-md bg-white py-1 opacity-0 shadow-lg ring-1 ring-black/5 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
                             {item.children.map((child) => (
@@ -81,7 +90,13 @@ function DesktopNav({ items }: { items: NavItem[] }) {
     );
 }
 
-function MobileNav({ items, siteName }: { items: NavItem[]; siteName: string }) {
+function MobileNav({
+    items,
+    siteName,
+}: {
+    items: NavItem[];
+    siteName: string;
+}) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -94,7 +109,11 @@ function MobileNav({ items, siteName }: { items: NavItem[]; siteName: string }) 
                 aria-label={open ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
                 className="rounded-md p-2 text-white hover:bg-white/10"
             >
-                {open ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
+                {open ? (
+                    <X className="h-6 w-6" aria-hidden="true" />
+                ) : (
+                    <Menu className="h-6 w-6" aria-hidden="true" />
+                )}
             </button>
             {open && (
                 <nav
@@ -145,7 +164,10 @@ function Footer({ site }: { site: SiteData }) {
     const cepat = [
         { label: 'Profil Desa', href: '/profil/sejarah' },
         { label: 'Sejarah & Visi Misi', href: '/profil/visi-misi' },
-        { label: 'Struktur Organisasi', href: '/segera-hadir/struktur-organisasi' },
+        {
+            label: 'Struktur Organisasi',
+            href: '/struktur-pemerintahan',
+        },
         { label: 'Peta Desa', href: '/segera-hadir/kontak-lokasi' },
         { label: 'Transparansi APBDes', href: '/segera-hadir/informasi' },
     ];
@@ -157,7 +179,9 @@ function Footer({ site }: { site: SiteData }) {
                     <p className="text-sm font-bold tracking-wide text-desa-800">
                         DESA KEPANDEAN
                     </p>
-                    <p className="text-xs text-neutral-500">Dukuhturi, Kabupaten Tegal</p>
+                    <p className="text-xs text-neutral-500">
+                        Dukuhturi, Kabupaten Tegal
+                    </p>
                     <p className="mt-3 text-sm leading-6 text-neutral-600">
                         Portal Digital Resmi Pemerintahan Desa Kepandean yang
                         transparan, akuntabel, dan mengutamakan pelayanan
@@ -165,15 +189,27 @@ function Footer({ site }: { site: SiteData }) {
                     </p>
                     <ul className="mt-4 space-y-2 text-sm text-neutral-700">
                         <li className="flex items-start gap-2">
-                            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-desa-800" aria-hidden="true" />
-                            <span>Kec. Dukuhturi, Kab. Tegal, Jawa Tengah — Kode Pos 52192</span>
+                            <MapPin
+                                className="mt-0.5 h-4 w-4 shrink-0 text-desa-800"
+                                aria-hidden="true"
+                            />
+                            <span>
+                                Kec. Dukuhturi, Kab. Tegal, Jawa Tengah — Kode
+                                Pos 52192
+                            </span>
                         </li>
                         <li className="flex items-start gap-2">
-                            <Phone className="mt-0.5 h-4 w-4 shrink-0 text-desa-800" aria-hidden="true" />
+                            <Phone
+                                className="mt-0.5 h-4 w-4 shrink-0 text-desa-800"
+                                aria-hidden="true"
+                            />
                             <span>{site.kontak.telepon}</span>
                         </li>
                         <li className="flex items-start gap-2">
-                            <Mail className="mt-0.5 h-4 w-4 shrink-0 text-desa-800" aria-hidden="true" />
+                            <Mail
+                                className="mt-0.5 h-4 w-4 shrink-0 text-desa-800"
+                                aria-hidden="true"
+                            />
                             <span>{site.kontak.surel}</span>
                         </li>
                     </ul>
@@ -185,7 +221,10 @@ function Footer({ site }: { site: SiteData }) {
                     <ul className="mt-3 space-y-2 text-sm">
                         {cepat.map((l) => (
                             <li key={l.label}>
-                                <Link href={l.href} className="text-neutral-600 hover:text-desa-800 hover:underline">
+                                <Link
+                                    href={l.href}
+                                    className="text-neutral-600 hover:text-desa-800 hover:underline"
+                                >
                                     › {l.label}
                                 </Link>
                             </li>
@@ -199,7 +238,10 @@ function Footer({ site }: { site: SiteData }) {
                     <ul className="mt-3 space-y-2 text-sm">
                         {layanan.map((l) => (
                             <li key={l.label}>
-                                <Link href={l.href} className="text-neutral-600 hover:text-desa-800 hover:underline">
+                                <Link
+                                    href={l.href}
+                                    className="text-neutral-600 hover:text-desa-800 hover:underline"
+                                >
                                     › {l.label}
                                 </Link>
                             </li>
@@ -218,7 +260,9 @@ function Footer({ site }: { site: SiteData }) {
                             </div>
                         ))}
                     </dl>
-                    <p className="mt-4 text-sm font-semibold">Media Sosial Resmi</p>
+                    <p className="mt-4 text-sm font-semibold">
+                        Media Sosial Resmi
+                    </p>
                     <ul className="mt-1 space-y-1 text-sm">
                         {site.kontak.sosmed.map((s) => (
                             <li key={s.label}>
@@ -228,7 +272,10 @@ function Footer({ site }: { site: SiteData }) {
                                     rel="noreferrer"
                                     className="flex items-center gap-2 text-neutral-600 hover:text-desa-800 hover:underline"
                                 >
-                                    <Facebook className="h-4 w-4" aria-hidden="true" />
+                                    <Facebook
+                                        className="h-4 w-4"
+                                        aria-hidden="true"
+                                    />
                                     {s.label}
                                 </a>
                             </li>
@@ -239,8 +286,8 @@ function Footer({ site }: { site: SiteData }) {
             <div className="border-t border-neutral-200 bg-indigo-50/50">
                 <div className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3 text-xs text-neutral-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                     <p className="flex items-center gap-1">
-                        <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                        © 2026 Pemerintah Desa Kepandean, Kecamatan Dukuhturi,
+                        <Clock className="h-3.5 w-3.5" aria-hidden="true" />©
+                        2026 Pemerintah Desa Kepandean, Kecamatan Dukuhturi,
                         Kabupaten Tegal. Hak Cipta Dilindungi Undang-Undang.
                     </p>
                     <p className="font-medium text-desa-800">
@@ -252,14 +299,19 @@ function Footer({ site }: { site: SiteData }) {
     );
 }
 
-export default function PublicLayout({ title, description, site, children }: PublicLayoutProps) {
+export default function PublicLayout({
+    title,
+    description,
+    site,
+    children,
+}: PublicLayoutProps) {
     return (
         <>
             <Head title={title}>
                 <meta name="description" content={description} />
             </Head>
             <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900">
-                <TopBar site={site} />
+                <TopBar />
                 <header className="sticky top-0 z-40 bg-desa-900 shadow">
                     <div className="relative mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
                         <Link href="/" className="flex items-center gap-3">
@@ -281,7 +333,10 @@ export default function PublicLayout({ title, description, site, children }: Pub
                                 href="/segera-hadir/layanan-warga"
                                 className="hidden items-center gap-1.5 rounded-md bg-desa-700 px-4 py-2 text-sm font-medium text-white hover:bg-desa-800 lg:inline-flex"
                             >
-                                <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+                                <ShieldCheck
+                                    className="h-4 w-4"
+                                    aria-hidden="true"
+                                />
                                 Layanan Mandiri Warga
                             </Link>
                             <MobileNav items={site.nav} siteName={site.nama} />

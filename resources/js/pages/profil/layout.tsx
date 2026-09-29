@@ -30,8 +30,12 @@ export default function ProfilLayout({
         <PublicLayout title={title} description={description} site={site}>
             <section className="bg-desa-900/95 px-4 py-10 text-white sm:px-6">
                 <div className="mx-auto w-full max-w-3xl">
-                    <p className="text-sm text-white/70">Profil Desa — {desaName}</p>
-                    <h1 className="mt-2 text-3xl font-bold tracking-tight">{heading}</h1>
+                    <p className="text-sm text-white/70">
+                        Profil Desa — {desaName}
+                    </p>
+                    <h1 className="mt-2 text-3xl font-bold tracking-tight">
+                        {heading}
+                    </h1>
                 </div>
             </section>
             <div className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
