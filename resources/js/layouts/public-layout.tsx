@@ -29,10 +29,7 @@ function TopBar() {
                     Kab. Tegal, Jawa Tengah
                 </p>
                 <div className="flex shrink-0 items-center gap-3">
-                    <Link
-                        href="/segera-hadir/layanan-warga"
-                        className="hover:underline"
-                    >
+                    <Link href="/layanan-warga" className="hover:underline">
                         Layanan Mandiri
                     </Link>
                     <span aria-hidden="true">•</span>
@@ -155,10 +152,10 @@ function MobileNav({
 
 function Footer({ site }: { site: SiteData }) {
     const layanan = [
-        { label: 'Alur Surat Digital', href: '/segera-hadir/layanan-warga' },
-        { label: 'Cek Tagihan PBB', href: '/segera-hadir/layanan-warga' },
-        { label: 'Cek DPT Online', href: '/segera-hadir/layanan-warga' },
-        { label: 'Layanan Mandiri Warga', href: '/segera-hadir/layanan-warga' },
+        { label: 'Alur Surat Digital', href: '/layanan-warga' },
+        { label: 'Cek Tagihan PBB', href: '/layanan-warga' },
+        { label: 'Cek DPT Online', href: '/layanan-warga' },
+        { label: 'Layanan Mandiri Warga', href: '/layanan-warga' },
         { label: 'Aduan Warga', href: '/#aduan' },
     ];
     const cepat = [
@@ -168,8 +165,8 @@ function Footer({ site }: { site: SiteData }) {
             label: 'Struktur Organisasi',
             href: '/struktur-pemerintahan',
         },
-        { label: 'Peta Desa', href: '/segera-hadir/kontak-lokasi' },
-        { label: 'Transparansi APBDes', href: '/segera-hadir/informasi' },
+        { label: 'Peta Desa', href: '/kontak-lokasi' },
+        { label: 'Transparansi APBDes', href: '/informasi' },
     ];
 
     return (
@@ -330,7 +327,7 @@ export default function PublicLayout({
                         <DesktopNav items={site.nav} />
                         <div className="flex items-center gap-2">
                             <Link
-                                href="/segera-hadir/layanan-warga"
+                                href="/layanan-warga"
                                 className="hidden items-center gap-1.5 rounded-md bg-desa-700 px-4 py-2 text-sm font-medium text-white hover:bg-desa-800 lg:inline-flex"
                             >
                                 <ShieldCheck

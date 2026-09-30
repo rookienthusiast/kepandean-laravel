@@ -15,7 +15,9 @@ void createInertiaApp({
             // Halaman publik membawa PublicLayout sendiri (TopBar+Navbar+Footer).
             case name === 'welcome':
             case name === 'segera-hadir':
+            case name === 'struktur':
             case name.startsWith('profil/'):
+            case name.startsWith('berita/'):
                 return null;
             case name.startsWith('auth/'):
                 return AuthLayout;

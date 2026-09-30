@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\AduanController;
+use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\SitemapController;
 use App\Models\Desa;
 use App\Models\Profil;
 use App\Support\HtmlSanitizer;
@@ -45,8 +47,44 @@ Route::get('profil/visi-misi', [ProfilController::class, 'visiMisi'])->name('pro
 // Issue #15: Struktur Organisasi native (menggantikan mockup segera-hadir).
 Route::get('struktur-pemerintahan', [PejabatController::class, 'index'])->name('struktur');
 
-// Issue #19: nav mockup jujur — modul belum-siap menampilkan status
-// under-development eksplisit, tidak pernah 404 / link mati / hash.
+// Issue #16: Berita end to end (pola baku untuk Pengumuman #17).
+Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
+Route::get('berita/{tahun}/{bulan}/{tanggal}/{slug}', [BeritaController::class, 'show'])
+    ->where(['tahun' => '[0-9]{4}', 'bulan' => '[0-9]{2}', 'tanggal' => '[0-9]{2}', 'slug' => '[a-z0-9-]+'])
+    ->name('berita.show');
+
+// Issue #16: sitemap otomatis memuat URL berita yang baru terbit.
+Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+// Modul belum-siap memakai slug kanonisnya sendiri (/pengumuman,
+// bukan /segera-hadir/pengumuman) dengan status under-development
+// eksplisit — tidak pernah 404 / link mati / hash.
+foreach ([
+    'pemerintahan' => 'Pemerintahan',
+    'lembaga-desa' => 'Lembaga Desa',
+    'layanan-warga' => 'Layanan Warga',
+    'layanan' => 'Layanan',
+    'informasi' => 'Informasi',
+    'pengumuman' => 'Pengumuman',
+    'potensi-galeri' => 'Potensi & Galeri',
+    'kontak-lokasi' => 'Kontak & Lokasi',
+] as $slug => $label) {
+    Route::get($slug, function () use ($slug, $label) {
+        $desa = PublicSite::currentDesa();
+        $nama = PublicSite::displayName($desa);
+
+        return Inertia::render('segera-hadir', [
+            'modul' => $slug,
+            'meta' => [
+                'title' => "{$label} {$nama}",
+                'description' => "Modul {$label} {$nama} sedang disiapkan dan akan segera hadir di portal resmi.",
+            ],
+            ...PublicSite::sharedProps($desa),
+        ]);
+    })->name("segera-hadir.{$slug}");
+}
+
+// Alias lama dipertahankan agar tautan lama tidak patah (tetap 200).
 Route::get('segera-hadir/{modul}', function (string $modul) {
     $desa = PublicSite::currentDesa();
     $nama = PublicSite::displayName($desa);
@@ -65,7 +103,6 @@ Route::get('segera-hadir/{modul}', function (string $modul) {
     'layanan-warga',
     'layanan',
     'informasi',
-    'berita',
     'pengumuman',
     'potensi-galeri',
     'kontak-lokasi',
