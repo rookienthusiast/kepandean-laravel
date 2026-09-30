@@ -10,7 +10,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('desa_id')->nullable()->after('email')->constrained()->nullOnDelete();
-            $table->enum('role', ['dinas', 'admin_desa', 'editor'])->default('editor')->after('desa_id');
+            // Role techade menggantikan dinas (rename 30 Sep 2026): super-admin lintas-desa
+            // setara admin_desa tapi tanpa scope desa. Migrasi rename menangani DB lama.
+            $table->enum('role', ['techade', 'admin_desa', 'editor'])->default('editor')->after('desa_id');
         });
     }
 

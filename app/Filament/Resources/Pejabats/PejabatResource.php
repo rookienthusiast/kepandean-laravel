@@ -45,7 +45,16 @@ class PejabatResource extends Resource
 
         $user = auth()->user();
 
-        if (! $user instanceof User || $user->desa_id === null) {
+        if (! $user instanceof User) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        // Techade: akses semua desa, tanpa scope desa_id.
+        if ($user->isTechade()) {
+            return $query;
+        }
+
+        if ($user->desa_id === null) {
             return $query->whereRaw('1 = 0');
         }
 

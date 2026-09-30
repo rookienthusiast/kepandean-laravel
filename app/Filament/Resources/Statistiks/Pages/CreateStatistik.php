@@ -14,7 +14,16 @@ class CreateStatistik extends CreateRecord
     {
         $user = auth()->user();
 
-        abort_unless($user instanceof User && $user->desa_id !== null, 403);
+        abort_unless($user instanceof User, 403);
+
+        // Techade wajib memilih desa di form; selain itu dikunci ke desa sendiri.
+        if ($user->isTechade()) {
+            abort_unless(filled($data['desa_id'] ?? null), 422);
+
+            return $data;
+        }
+
+        abort_unless($user->desa_id !== null, 403);
 
         $data['desa_id'] = $user->desa_id;
 

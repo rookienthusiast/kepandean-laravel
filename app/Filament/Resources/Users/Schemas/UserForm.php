@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Models\Desa;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -22,11 +23,29 @@ class UserForm
                     ->required()
                     ->maxLength(255)
                     ->unique(table: User::class, column: 'email', ignoreRecord: true),
+                Select::make('desa_id')
+                    ->label('Desa')
+                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
+                    ->required()
+                    // Hanya techade yang memilih desa; admin_desa dikunci ke desanya sendiri.
+                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
                 Select::make('role')
-                    ->options([
-                        'admin_desa' => 'Admin Desa',
-                        'editor' => 'Editor',
-                    ])
+                    ->options(function (): array {
+                        $user = auth()->user();
+
+                        if ($user instanceof User && $user->isTechade()) {
+                            return [
+                                'techade' => 'Techade',
+                                'admin_desa' => 'Admin Desa',
+                                'editor' => 'Editor',
+                            ];
+                        }
+
+                        return [
+                            'admin_desa' => 'Admin Desa',
+                            'editor' => 'Editor',
+                        ];
+                    })
                     ->required(),
                 TextInput::make('password')
                     ->password()
