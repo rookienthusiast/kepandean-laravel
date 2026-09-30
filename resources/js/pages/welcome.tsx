@@ -36,19 +36,19 @@ const LAYANAN = [
         ikon: FileText,
         judul: 'Surat Online',
         deskripsi: 'Pembuatan surat online cepat',
-        href: '/segera-hadir/layanan-warga',
+        href: '/layanan-warga',
     },
     {
         ikon: Bell,
         judul: 'Pengumuman',
         deskripsi: 'Informasi & Pengumuman',
-        href: '/segera-hadir/pengumuman',
+        href: '/pengumuman',
     },
     {
         ikon: Users,
         judul: 'Kependudukan',
         deskripsi: 'Informasi & Layanan Kependudukan',
-        href: '/segera-hadir/layanan-warga',
+        href: '/layanan-warga',
     },
     {
         ikon: MessageSquareWarning,
@@ -60,7 +60,7 @@ const LAYANAN = [
         ikon: Info,
         judul: 'Informasi Publik',
         deskripsi: 'Transparansi data & Informasi desa',
-        href: '/segera-hadir/informasi',
+        href: '/informasi',
     },
 ];
 
@@ -248,7 +248,7 @@ function SekilasSejarah({ excerpt }: { excerpt: ProfilExcerpt }) {
                             Berita Terkini
                         </h2>
                         <Link
-                            href="/segera-hadir/berita"
+                            href="/berita"
                             className="text-xs font-medium text-desa-800 hover:underline"
                         >
                             Lihat semua →

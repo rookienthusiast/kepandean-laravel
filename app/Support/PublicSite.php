@@ -28,14 +28,15 @@ class PublicSite
     }
 
     /**
-     * Item nav mockup: selalu route nyata ke segera-hadir, tidak pernah
+     * Item nav mockup: selalu route nyata ke slug kanonis modul
+     * (/pengumuman, bukan /segera-hadir/pengumuman), tidak pernah
      * href="#", IP intranet, atau placeholder. Label mengikuti Homepage.png.
      *
      * @return array<int, array{label: string, href: string, children?: array<int, array{label: string, href: string}>}>
      */
     public static function nav(): array
     {
-        $soon = fn (string $modul): string => route('segera-hadir', ['modul' => $modul], false);
+        $soon = fn (string $modul): string => route("segera-hadir.{$modul}", [], false);
 
         return [
             ['label' => 'Beranda', 'href' => route('home', [], false)],
