@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Statistiks\Schemas;
 
+use App\Models\Desa;
+use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -13,6 +15,11 @@ class StatistikForm
     {
         return $schema
             ->components([
+                Select::make('desa_id')
+                    ->label('Desa')
+                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
+                    ->required()
+                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
                 Select::make('kunci')
                     ->label('Kunci')
                     ->options([
@@ -29,7 +36,13 @@ class StatistikForm
                         column: 'kunci',
                         ignoreRecord: true,
                         modifyRuleUsing: function (Unique $rule): Unique {
-                            $desaId = auth()->user()?->desa_id;
+                            $user = auth()->user();
+
+                            // Techade memilih desa di form: cakupkan unik ke desa yang dipilih
+                            // bila tersedia; selain itu pakai desa user sendiri.
+                            $desaId = request()->input('data.desa_id')
+                                ?? request()->input('desa_id')
+                                ?? ($user instanceof User ? $user->desa_id : null);
 
                             return $desaId === null ? $rule : $rule->where('desa_id', $desaId);
                         },

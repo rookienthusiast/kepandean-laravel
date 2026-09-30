@@ -21,10 +21,28 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Admin Kepandean',
-            'email' => 'admin@kepandean.test',
+            'email' => 'admin@kepandean.id',
             'password' => 'password',
             'desa_id' => $kepandean?->id,
             'role' => 'admin_desa',
+            'email_verified_at' => now(),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Techade',
+            'email' => 'admin@techade.dev',
+            'password' => 'Sukses2026!',
+            'desa_id' => null,
+            'role' => 'techade',
+            'email_verified_at' => now(),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Editor Kepandean',
+            'email' => 'editor@kepandean.id',
+            'password' => 'password',
+            'desa_id' => $kepandean?->id,
+            'role' => 'editor',
             'email_verified_at' => now(),
         ]);
 
