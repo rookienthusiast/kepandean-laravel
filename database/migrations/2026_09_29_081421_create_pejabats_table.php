@@ -7,6 +7,15 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
+     * DDL only — no data migration (issue #15 checklist 3).
+     *
+     * OpenSID parity: SEBELUM 0 baris (tabel belum ada, tidak ada dump
+     * aparatur di repo/PRD); SESUDAH 5 baris contoh via PejabatSeeder
+     * untuk Kepandean. Contoh BUKAN data asli — lihat catatan parity di
+     * PejabatSeeder; penggantian dengan data asli menunggu konfirmasi
+     * perangkat desa via halaman admin. Index (desa_id, kelompok, urutan)
+     * mendukung scoping per-desa + default sort halaman publik.
+     *
      * Run the migrations.
      */
     public function up(): void

@@ -5,6 +5,7 @@ namespace Tests\Feature\Pejabat;
 use App\Models\Desa;
 use App\Models\Pejabat;
 use Database\Seeders\DesaSeeder;
+use Database\Seeders\PejabatSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -81,5 +82,19 @@ class PejabatPublicTest extends TestCase
         $names = collect($props['groups'])->flatMap(fn ($g) => $g['items'])->pluck('nama')->all();
 
         $this->assertNotContains('Rahasia B', $names);
+    }
+
+    public function test_pejabat_seeder_parity_five_rows_two_wilayah_idempotent(): void
+    {
+        $this->seed(PejabatSeeder::class);
+
+        $desa = Desa::where('slug', 'kepandean')->firstOrFail();
+
+        $this->assertSame(5, Pejabat::forDesa($desa)->count());
+        $this->assertSame(2, Pejabat::forDesa($desa)->where('kelompok', Pejabat::KELOMPOK_WILAYAH)->count());
+
+        $this->seed(PejabatSeeder::class);
+
+        $this->assertSame(5, Pejabat::forDesa($desa)->count());
     }
 }
