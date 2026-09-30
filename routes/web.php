@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\AduanController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\PejabatController;
+use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\SitemapController;
 use App\Models\Desa;
@@ -53,19 +54,31 @@ Route::get('berita/{tahun}/{bulan}/{tanggal}/{slug}', [BeritaController::class, 
     ->where(['tahun' => '[0-9]{4}', 'bulan' => '[0-9]{2}', 'tanggal' => '[0-9]{2}', 'slug' => '[a-z0-9-]+'])
     ->name('berita.show');
 
+// Issue #17: Pengumuman native (meniru pola Berita #16, versi ringan:
+// URL slug-saja, tanpa filter kategori). Menggantikan mockup segera-hadir.
+Route::get('pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
+Route::get('pengumuman/{slug}', [PengumumanController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('pengumuman.show');
+
+// Alias lama /segera-hadir/pengumuman diteruskan ke rute native (301).
+Route::get('segera-hadir/pengumuman', function () {
+    return redirect()->route('pengumuman.index', status: 301);
+});
+
 // Issue #16: sitemap otomatis memuat URL berita yang baru terbit.
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-// Modul belum-siap memakai slug kanonisnya sendiri (/pengumuman,
-// bukan /segera-hadir/pengumuman) dengan status under-development
+// Modul belum-siap memakai slug kanonisnya sendiri (/informasi,
+// bukan /segera-hadir/informasi) dengan status under-development
 // eksplisit — tidak pernah 404 / link mati / hash.
+// (Pengumuman sudah native via issue #17, bukan mockup lagi.)
 foreach ([
     'pemerintahan' => 'Pemerintahan',
     'lembaga-desa' => 'Lembaga Desa',
     'layanan-warga' => 'Layanan Warga',
     'layanan' => 'Layanan',
     'informasi' => 'Informasi',
-    'pengumuman' => 'Pengumuman',
     'potensi-galeri' => 'Potensi & Galeri',
     'kontak-lokasi' => 'Kontak & Lokasi',
 ] as $slug => $label) {
@@ -103,7 +116,6 @@ Route::get('segera-hadir/{modul}', function (string $modul) {
     'layanan-warga',
     'layanan',
     'informasi',
-    'pengumuman',
     'potensi-galeri',
     'kontak-lokasi',
 ])->name('segera-hadir');

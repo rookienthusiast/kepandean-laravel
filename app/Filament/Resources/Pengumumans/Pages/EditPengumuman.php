@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Filament\Resources\Pengumumans\Pages;
+
+use App\Filament\Resources\Pengumumans\PengumumanResource;
+use App\Models\Pengumuman;
+use App\Models\User;
+use App\Support\HtmlSanitizer;
+use Filament\Actions\DeleteAction;
+use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Gate;
+
+class EditPengumuman extends EditRecord
+{
+    protected static string $resource = PengumumanResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            DeleteAction::make(),
+        ];
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $user = auth()->user();
+
+        abort_unless($user instanceof User, 403);
+
+        // Desa dikunci: non-techade tidak bisa memindahkan pengumuman antar desa.
+        if (! $user->isTechade()) {
+            abort_unless($user->desa_id !== null, 403);
+
+            $data['desa_id'] = $user->desa_id;
+        }
+
+        // Editor boleh simpan draft; tombol publish ditolak (aturan #13).
+        if (($data['status'] ?? Pengumuman::STATUS_DRAFT) === Pengumuman::STATUS_PUBLISHED) {
+            Gate::forUser($user)->authorize('publish-content');
+        }
+
+        $data['isi'] = HtmlSanitizer::clean($data['isi'] ?? '');
+
+        if (($data['status'] ?? null) === Pengumuman::STATUS_PUBLISHED && empty($data['published_at'])) {
+            $data['published_at'] = now();
+        }
+
+        return $data;
+    }
+}

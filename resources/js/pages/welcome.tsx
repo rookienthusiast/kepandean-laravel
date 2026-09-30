@@ -59,8 +59,8 @@ const LAYANAN = [
     {
         ikon: Info,
         judul: 'Informasi Publik',
-        deskripsi: 'Transparansi data & Informasi desa',
-        href: '/informasi',
+        deskripsi: 'Transparansi & info resmi (via Pengumuman)',
+        href: '/pengumuman',
     },
 ];
 

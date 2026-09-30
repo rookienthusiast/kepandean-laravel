@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Berita;
 use App\Models\Desa;
+use App\Models\Pengumuman;
 use App\Support\PublicSite;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
@@ -20,6 +21,7 @@ class SitemapController extends Controller
             $this->entry(route('profil.visi-misi'), now()),
             $this->entry(route('struktur'), now()),
             $this->entry(route('berita.index'), now()),
+            $this->entry(route('pengumuman.index'), now()),
         ];
 
         if ($desa instanceof Desa) {
@@ -36,6 +38,17 @@ class SitemapController extends Controller
                         'slug' => $berita->slug,
                     ]),
                     $berita->updated_at ?? now(),
+                );
+            }
+
+            // Issue #17: sitemap memuat pengumuman yang tayang saja
+            // (published + belum kedaluarsa).
+            $pengumumans = Pengumuman::visibleForDesa($desa)->orderByDesc('published_at')->get();
+
+            foreach ($pengumumans as $pengumuman) {
+                $urls[] = $this->entry(
+                    route('pengumuman.show', ['slug' => $pengumuman->slug]),
+                    $pengumuman->updated_at ?? now(),
                 );
             }
         }

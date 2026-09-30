@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Pejabat;
+use App\Models\User;
+
+/**
+ * Revisi peran: Pejabat bukan konten editor. Hanya admin_desa
+ * (satu desa) dan techade (lintas desa) yang boleh akses.
+ */
+class PejabatPolicy
+{
+    public function viewAny(User $user): bool
+    {
+        return $user->isAdminDesa() || $user->isTechade();
+    }
+
+    public function view(User $user, Pejabat $model): bool
+    {
+        if ($user->isTechade()) {
+            return true;
+        }
+
+        return $user->isAdminDesa() && $user->desa_id === $model->desa_id;
+    }
+
+    public function create(User $user): bool
+    {
+        return $user->isAdminDesa() || $user->isTechade();
+    }
+
+    public function update(User $user, Pejabat $model): bool
+    {
+        if ($user->isTechade()) {
+            return true;
+        }
+
+        return $user->isAdminDesa() && $user->desa_id === $model->desa_id;
+    }
+
+    public function delete(User $user, Pejabat $model): bool
+    {
+        if ($user->isTechade()) {
+            return true;
+        }
+
+        return $user->isAdminDesa() && $user->desa_id === $model->desa_id;
+    }
+
+    public function deleteAny(User $user): bool
+    {
+        return $user->isAdminDesa() || $user->isTechade();
+    }
+}

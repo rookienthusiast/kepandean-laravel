@@ -2,7 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\Berita;
+use App\Models\Kategori;
+use App\Models\Pejabat;
+use App\Models\Pengumuman;
+use App\Models\Statistik;
 use App\Models\User;
+use App\Policies\BeritaPolicy;
+use App\Policies\KategoriPolicy;
+use App\Policies\PejabatPolicy;
+use App\Policies\PengumumanPolicy;
+use App\Policies\StatistikPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -11,6 +21,11 @@ class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
         User::class => UserPolicy::class,
+        Berita::class => BeritaPolicy::class,
+        Kategori::class => KategoriPolicy::class,
+        Pejabat::class => PejabatPolicy::class,
+        Pengumuman::class => PengumumanPolicy::class,
+        Statistik::class => StatistikPolicy::class,
     ];
 
     public function boot(): void

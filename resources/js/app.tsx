@@ -18,6 +18,7 @@ void createInertiaApp({
             case name === 'struktur':
             case name.startsWith('profil/'):
             case name.startsWith('berita/'):
+            case name.startsWith('pengumuman/'):
                 return null;
             case name.startsWith('auth/'):
                 return AuthLayout;
