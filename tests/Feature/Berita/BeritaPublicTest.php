@@ -285,4 +285,21 @@ class BeritaPublicTest extends TestCase
         $this->assertStringContainsString($this->detailUrl($terbit), (string) $body);
         $this->assertStringNotContainsString('draft-x', (string) $body);
     }
+
+    public function test_admin_bisa_buka_halaman_beritas_dan_kategoris(): void
+    {
+        $admin = $this->makeUser('admin_desa', 'kepandean');
+
+        $this->actingAs($admin, 'web')->get('/admin/beritas')->assertOk();
+        $this->actingAs($admin, 'web')->get('/admin/kategoris')->assertOk();
+        $this->actingAs($admin, 'web')->get('/admin/beritas/create')->assertOk();
+    }
+
+    public function test_editor_bisa_buka_form_berita_untuk_draft(): void
+    {
+        $editor = $this->makeUser('editor', 'kepandean');
+
+        $this->actingAs($editor, 'web')->get('/admin/beritas')->assertOk();
+        $this->actingAs($editor, 'web')->get('/admin/beritas/create')->assertOk();
+    }
 }
