@@ -54,6 +54,58 @@ class HtmlSanitizer
         return $clean;
     }
 
+    /**
+     * Teks biasa (dari textarea) menjadi HTML tersanitasi: blok yang
+     * dipisah baris kosong menjadi <p>, baris tunggal menjadi <br>.
+     * Semua markup diketik pengguna lolos sebagai teks (di-escape dulu).
+     */
+    public static function fromPlainText(?string $text): string
+    {
+        if ($text === null || trim($text) === '') {
+            return '';
+        }
+
+        $escaped = htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $blocks = preg_split("/\R{2,}/", $escaped) ?: [];
+
+        $html = '';
+
+        foreach ($blocks as $block) {
+            $block = trim((string) $block);
+
+            if ($block === '') {
+                continue;
+            }
+
+            $html .= '<p>'.preg_replace("/\R/", '<br>', $block).'</p>';
+        }
+
+        return self::clean($html);
+    }
+
+    /**
+     * HTML tersimpan menjadi teks biasa untuk textarea: penutup blok dan
+     * <br> menjadi baris baru, lalu tag dikupas dan entitas dibuka.
+     */
+    public static function toPlainText(?string $html): string
+    {
+        if ($html === null || trim($html) === '') {
+            return '';
+        }
+
+        $text = (string) $html;
+        $text = preg_replace('#</\s*(p|div|h[1-6]|blockquote|ul|ol|tr)\s*>#i', "\n", $text) ?? $text;
+        $text = preg_replace('#<\s*br\s*/?\s*>#i', "\n", $text) ?? $text;
+        $text = preg_replace('#<\s*li[^>]*>#i', '• ', $text) ?? $text;
+        $text = strip_tags($text);
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        $lines = array_map('rtrim', explode("\n", $text));
+        $text = preg_replace("/\n{3,}/", "\n\n", implode("\n", $lines)) ?? '';
+
+        return trim($text);
+    }
+
     private static function sanitizeNode(DOMDocument $document, DOMNode $node): void
     {
         $children = [];

@@ -9,7 +9,8 @@ use App\Support\HtmlSanitizer;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns;
 use Filament\Pages\Page;
@@ -64,7 +65,34 @@ class KelolaProfil extends Page
 
         abort_unless($user instanceof User && $user->canPublish(), 403);
 
-        $desa = $user->desa()->first();
+        // Techade lintas-desa: pakai desanya bila ada, kalau tidak pakai
+        // desa default/pertama. Tanpa desa sama sekali = salah konfigurasi.
+        $desa = $user->isTechade()
+            ? $user->desa()->first() ?? Desa::getDefault() ?? Desa::orderBy('id')->first()
+            : $user->desa()->first();
+
+        abort_unless($desa instanceof Desa, 404);
+
+        $this->profil = Profil::forDesa($desa);
+
+        $this->fillForm();
+    }
+
+    /**
+     * Techade berpindah antar desa tanpa ganti akun: muat ulang profil
+     * desa tujuan ke form. Non-techade ditolak (403).
+     */
+    public function switchDesa(int $desaId): void
+    {
+        $user = auth()->user();
+
+        abort_unless($user instanceof User && $user->isTechade(), 403);
+
+        if ($this->profil instanceof Profil && $this->profil->desa_id === $desaId) {
+            return;
+        }
+
+        $desa = Desa::find($desaId);
 
         abort_unless($desa instanceof Desa, 404);
 
@@ -75,7 +103,18 @@ class KelolaProfil extends Page
 
     protected function fillForm(): void
     {
-        $data = $this->profil->attributesToArray();
+        $raw = $this->profil->attributesToArray();
+
+        // Form memakai teks biasa: HTML tersimpan dibuka jadi teks.
+        $data = [
+            'sejarah' => HtmlSanitizer::toPlainText($raw['sejarah'] ?? null),
+            'visi' => HtmlSanitizer::toPlainText($raw['visi'] ?? null),
+            'misi' => HtmlSanitizer::toPlainText($raw['misi'] ?? null),
+        ];
+
+        if (auth()->user() instanceof User && auth()->user()->isTechade()) {
+            $data['desa_id'] = $this->profil->desa_id;
+        }
 
         $this->callHook('beforeFill');
 
@@ -90,10 +129,13 @@ class KelolaProfil extends Page
      */
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        // Input teks biasa dibungkus jadi paragraf HTML tersanitasi.
         foreach (['sejarah', 'visi', 'misi'] as $field) {
             $value = $data[$field] ?? null;
-            $data[$field] = is_string($value) ? HtmlSanitizer::clean($value) : '';
+            $data[$field] = is_string($value) ? HtmlSanitizer::fromPlainText($value) : '';
         }
+
+        unset($data['desa_id']);
 
         return $data;
     }
@@ -108,6 +150,20 @@ class KelolaProfil extends Page
             $data = $this->form->getState();
 
             $this->callHook('afterValidate');
+
+            // Techade menyimpan ke desa yang dipilih; selain itu dikunci
+            // ke desa sendiri (desa_id di form tidak dipercaya).
+            $user = auth()->user();
+
+            abort_unless($user instanceof User && $user->canPublish(), 403);
+
+            $target = $user->isTechade()
+                ? Desa::find($data['desa_id'] ?? null)
+                : $user->desa()->first();
+
+            abort_unless($target instanceof Desa, 404);
+
+            $this->profil = Profil::forDesa($target);
 
             $data = $this->mutateFormDataBeforeSave($data);
 
@@ -152,15 +208,32 @@ class KelolaProfil extends Page
     {
         return $schema
             ->components([
-                RichEditor::make('sejarah')
+                Select::make('desa_id')
+                    ->label('Desa')
+                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
+                    ->required()
+                    ->live()
+                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade())
+                    ->afterStateUpdated(function ($state, $livewire): void {
+                        if ($livewire instanceof KelolaProfil && filled($state)) {
+                            $livewire->switchDesa((int) $state);
+                        }
+                    }),
+                Textarea::make('sejarah')
                     ->label('Sejarah')
-                    ->columnSpanFull(),
-                RichEditor::make('visi')
+                    ->rows(8)
+                    ->columnSpanFull()
+                    ->helperText('Teks biasa — baris kosong menjadi paragraf baru.'),
+                Textarea::make('visi')
                     ->label('Visi')
-                    ->columnSpanFull(),
-                RichEditor::make('misi')
+                    ->rows(4)
+                    ->columnSpanFull()
+                    ->helperText('Teks biasa — baris kosong menjadi paragraf baru.'),
+                Textarea::make('misi')
                     ->label('Misi')
-                    ->columnSpanFull(),
+                    ->rows(8)
+                    ->columnSpanFull()
+                    ->helperText('Teks biasa — satu baris menjadi satu baris tampilan.'),
             ]);
     }
 

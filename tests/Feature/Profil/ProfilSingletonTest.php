@@ -34,6 +34,66 @@ class ProfilSingletonTest extends TestCase
         ]);
     }
 
+    private function makeTechadeTanpaDesa(): User
+    {
+        return User::factory()->create([
+            'desa_id' => null,
+            'role' => 'techade',
+            'email_verified_at' => now(),
+        ]);
+    }
+
+    public function test_techade_tanpa_desa_bisa_buka_halaman_profil(): void
+    {
+        $techade = $this->makeTechadeTanpaDesa();
+
+        $this->actingAs($techade, 'web')->get('/admin/profil')->assertOk();
+    }
+
+    public function test_techade_bisa_simpan_profil_desa_lain(): void
+    {
+        $techade = $this->makeTechadeTanpaDesa();
+        $desaB = Desa::where('slug', 'desa-b')->firstOrFail();
+
+        $this->actingAs($techade, 'web');
+
+        Livewire::test(KelolaProfil::class)
+            ->call('switchDesa', $desaB->id)
+            ->fillForm([
+                'sejarah' => "Sejarah desa B.\n\nParagraf kedua.",
+                'visi' => 'Visi B',
+                'misi' => 'Misi B',
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $profilB = Profil::withoutGlobalScope('desa')->where('desa_id', $desaB->id)->firstOrFail();
+
+        $this->assertStringContainsString('<p>Sejarah desa B.</p><p>Paragraf kedua.</p>', (string) $profilB->sejarah);
+    }
+
+    public function test_admin_simpan_teks_biasa_jadi_paragraf_aman(): void
+    {
+        $admin = $this->makeUser('admin_desa', 'kepandean');
+
+        $this->actingAs($admin, 'web');
+
+        Livewire::test(KelolaProfil::class)
+            ->fillForm([
+                'sejarah' => "Sejarah singkat.\n\n<script>alert(1)</script>",
+                'visi' => 'Visi desa',
+                'misi' => "Poin satu\nPoin dua",
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $profil = Profil::withoutGlobalScope('desa')->where('desa_id', $admin->desa_id)->firstOrFail();
+
+        $this->assertStringNotContainsString('<script', (string) $profil->sejarah);
+        $this->assertStringContainsString('<p>Sejarah singkat.</p>', (string) $profil->sejarah);
+        $this->assertStringContainsString('<p>Poin satu<br>', (string) $profil->misi);
+    }
+
     public function test_admin_desa_can_open_profil_page(): void
     {
         $admin = $this->makeUser('admin_desa', 'kepandean');
