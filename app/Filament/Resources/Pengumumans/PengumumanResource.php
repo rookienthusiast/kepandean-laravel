@@ -2,26 +2,25 @@
 
 namespace App\Filament\Resources\Pengumumans;
 
+use App\Filament\Resources\Concerns\ScopedResource;
 use App\Filament\Resources\Pengumumans\Pages\CreatePengumuman;
 use App\Filament\Resources\Pengumumans\Pages\EditPengumuman;
 use App\Filament\Resources\Pengumumans\Pages\ListPengumumans;
 use App\Filament\Resources\Pengumumans\Schemas\PengumumanForm;
 use App\Filament\Resources\Pengumumans\Tables\PengumumansTable;
 use App\Models\Pengumuman;
-use App\Support\Filament\DesaScoping;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 /**
- * Issue #17: meniru BeritaResource (#16) versi ringan — tanpa kategori/cover.
+ * Arsip Pengumuman (#17): adapter ringan di atas Terbitan.
+ * Punya cover dan kedaluarsa, tanpa kategori.
  * Editor boleh simpan draft; publish hanya canPublish() (admin_desa/techade).
  */
-class PengumumanResource extends Resource
+class PengumumanResource extends ScopedResource
 {
     protected static ?string $model = Pengumuman::class;
 
@@ -43,12 +42,6 @@ class PengumumanResource extends Resource
     public static function getPluralLabel(): string
     {
         return 'Pengumuman';
-    }
-
-    /** @return Builder<Pengumuman> */
-    public static function getEloquentQuery(): Builder
-    {
-        return DesaScoping::scopeForAdmin(Pengumuman::query());
     }
 
     public static function form(Schema $schema): Schema

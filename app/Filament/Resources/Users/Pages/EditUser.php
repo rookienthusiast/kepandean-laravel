@@ -2,13 +2,12 @@
 
 namespace App\Filament\Resources\Users\Pages;
 
+use App\Filament\Resources\Concerns\ScopedEditPage;
 use App\Filament\Resources\Users\UserResource;
 use App\Models\User;
-use App\Support\Filament\DesaScoping;
 use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditUser extends EditRecord
+class EditUser extends ScopedEditPage
 {
     protected static string $resource = UserResource::class;
 
@@ -19,14 +18,13 @@ class EditUser extends EditRecord
         ];
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateScopedData(array $data, ?User $user): array
     {
-        $user = auth()->user();
-
         abort_unless($user instanceof User && ($user->isAdminDesa() || $user->isTechade()), 403);
-
-        // Admin desa tidak boleh memindahkan user ke desa lain (dikunci eksplisit).
-        $data = DesaScoping::lockDesaIdForSave($data);
 
         // Hanya techade yang boleh memberi role techade.
         if (($data['role'] ?? null) === 'techade') {

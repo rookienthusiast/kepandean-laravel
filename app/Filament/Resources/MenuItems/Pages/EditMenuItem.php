@@ -2,14 +2,13 @@
 
 namespace App\Filament\Resources\MenuItems\Pages;
 
+use App\Filament\Resources\Concerns\ScopedEditPage;
 use App\Filament\Resources\MenuItems\MenuItemResource;
 use App\Models\MenuItem;
 use App\Models\User;
-use App\Support\Filament\DesaScoping;
 use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditMenuItem extends EditRecord
+class EditMenuItem extends ScopedEditPage
 {
     protected static string $resource = MenuItemResource::class;
 
@@ -20,12 +19,12 @@ class EditMenuItem extends EditRecord
         ];
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateScopedData(array $data, ?User $user): array
     {
-        abort_unless(auth()->user() instanceof User, 403);
-
-        $data = DesaScoping::lockDesaIdForSave($data);
-
         $recordDesaId = $this->record instanceof MenuItem ? $this->record->desa_id : null;
 
         MenuItem::assertValidParent(

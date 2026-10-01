@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Desa;
 use App\Models\Pengumuman;
-use App\Support\HtmlSanitizer;
 use App\Support\PublicSite;
-use Illuminate\Support\Str;
+use App\Support\Terbitan;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,13 +15,14 @@ class PengumumanController extends Controller
         $desa = PublicSite::currentDesa();
         $nama = PublicSite::displayName($desa);
 
-        $query = $desa instanceof Desa
-            ? Pengumuman::visibleForDesa($desa)->orderByDesc('published_at')->orderByDesc('id')
-            : Pengumuman::query()->whereRaw('1 = 0');
+        $paginator = Terbitan::archiveFor($desa, Pengumuman::class, 'visibleForDesa')
+            ->paginate(9)
+            ->withQueryString();
 
-        $paginator = $query->paginate(9)->withQueryString();
-
-        $paginator->getCollection()->transform(fn (Pengumuman $pengumuman): array => $this->toCard($pengumuman));
+        $paginator->getCollection()->transform(fn (Pengumuman $pengumuman): array => Terbitan::card(
+            $pengumuman,
+            route('pengumuman.show', ['slug' => $pengumuman->slug]),
+        ));
 
         return Inertia::render('pengumuman/index', [
             'pengumuman' => $paginator,
@@ -39,47 +38,25 @@ class PengumumanController extends Controller
     {
         $desa = PublicSite::currentDesa();
 
-        $pengumuman = $desa instanceof Desa
-            ? Pengumuman::visibleForDesa($desa)->where('slug', $slug)->first()
-            : null;
+        $pengumuman = Terbitan::findFor($desa, Pengumuman::class, 'visibleForDesa', $slug);
 
         abort_if($pengumuman === null, 404);
 
-        $isi = HtmlSanitizer::clean((string) $pengumuman->isi);
+        $isi = Terbitan::cleanedIsi($pengumuman);
         $nama = PublicSite::displayName($desa);
-        $date = $pengumuman->published_at ?? $pengumuman->created_at ?? now();
 
         return Inertia::render('pengumuman/detail', [
-            'pengumuman' => [
-                'judul' => $pengumuman->judul,
-                'slug' => $pengumuman->slug,
-                'isi' => $isi,
-                'cover_url' => $pengumuman->cover_path ? asset('storage/'.$pengumuman->cover_path) : null,
-                'tanggal' => $date->format('d M Y'),
-                'kedaluarsa' => $pengumuman->expired_at?->format('d M Y'),
-                'url' => route('pengumuman.show', ['slug' => $pengumuman->slug]),
-            ],
+            'pengumuman' => Terbitan::detail(
+                $pengumuman,
+                route('pengumuman.show', ['slug' => $pengumuman->slug]),
+                $isi,
+                ['kedaluarsa' => $pengumuman->expired_at?->format('d M Y')],
+            ),
             'meta' => [
                 'title' => "{$pengumuman->judul} ({$nama})",
-                'description' => Str::limit(trim(strip_tags($isi)), 150),
+                'description' => Terbitan::metaDescription($isi),
             ],
             ...PublicSite::sharedProps($desa),
         ]);
-    }
-
-    /** @return array<string, mixed> */
-    private function toCard(Pengumuman $pengumuman): array
-    {
-        $date = $pengumuman->published_at ?? $pengumuman->created_at ?? now();
-        $excerpt = Str::limit(trim(strip_tags(HtmlSanitizer::clean((string) $pengumuman->isi))), 160);
-
-        return [
-            'judul' => $pengumuman->judul,
-            'slug' => $pengumuman->slug,
-            'excerpt' => $excerpt === '' ? null : $excerpt,
-            'cover_url' => $pengumuman->cover_path ? asset('storage/'.$pengumuman->cover_path) : null,
-            'tanggal' => $date->format('d M Y'),
-            'url' => route('pengumuman.show', ['slug' => $pengumuman->slug]),
-        ];
     }
 }

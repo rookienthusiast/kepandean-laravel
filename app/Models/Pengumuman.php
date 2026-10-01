@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Concerns\BelongsToDesa;
-use App\Support\HtmlSanitizer;
+use App\Concerns\TerbitanModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Pengumuman extends Model
 {
     use BelongsToDesa;
+    use TerbitanModel;
 
     public const STATUS_DRAFT = 'draft';
 
@@ -33,27 +34,6 @@ class Pengumuman extends Model
         'expired_at' => 'datetime',
     ];
 
-    /** @return array<string, string> */
-    public static function statusOptions(): array
-    {
-        return [
-            self::STATUS_DRAFT => 'Draft',
-            self::STATUS_PUBLISHED => 'Published',
-        ];
-    }
-
-    /** @return Builder<self> */
-    public static function forDesa(Desa $desa): Builder
-    {
-        return static::withoutGlobalScope('desa')->where('desa_id', $desa->id);
-    }
-
-    /** @return Builder<self> */
-    public static function publishedForDesa(Desa $desa): Builder
-    {
-        return static::forDesa($desa)->where('status', self::STATUS_PUBLISHED);
-    }
-
     /**
      * Yang tayang = published DAN belum kedaluarsa.
      * Kedaluarsa = hilang (tak tampil di index, detail 404) — pilihan
@@ -68,20 +48,8 @@ class Pengumuman extends Model
         });
     }
 
-    public function isPublished(): bool
-    {
-        return $this->status === self::STATUS_PUBLISHED;
-    }
-
     public function isExpired(): bool
     {
         return $this->expired_at !== null && ! $this->expired_at->isFuture();
-    }
-
-    protected static function booted(): void
-    {
-        static::saving(function (self $pengumuman): void {
-            $pengumuman->isi = HtmlSanitizer::clean((string) $pengumuman->isi);
-        });
     }
 }

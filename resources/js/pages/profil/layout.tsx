@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import PublicLayout from '@/layouts/public-layout';
+import { resolveHeroUrl } from '@/components/page-hero';
 import type { SiteData } from '@/types/site';
 export interface ProfilData {
     sejarah: string | null;
@@ -18,7 +19,8 @@ interface ProfilLayoutProps {
     crumb: string;
     desaName: string;
     site: SiteData;
-    gambarUrl?: string | null;
+    laman?: string | null;
+    coverUrl?: string | null;
     children: ReactNode;
 }
 
@@ -30,9 +32,17 @@ export default function ProfilLayout({
     crumb,
     desaName,
     site,
-    gambarUrl,
+    laman,
+    coverUrl,
     children,
 }: ProfilLayoutProps) {
+    const gambarUrl = resolveHeroUrl({
+        laman,
+        coverUrl,
+        heroLaman: site.hero_laman,
+        fallbackUrl: site.hero_fallback_url,
+    });
+
     return (
         <PublicLayout title={title} description={description} site={site}>
             <section className="relative flex min-h-[340px] items-center overflow-hidden bg-desa-900 text-white sm:min-h-[400px]">
@@ -48,7 +58,7 @@ export default function ProfilLayout({
                     aria-hidden="true"
                     className="absolute inset-0 bg-desa-900/50"
                 />
-                <div className="relative mx-auto w-full max-w-7xl px-4 pt-28 pb-14 sm:px-6 sm:pt-36 sm:pb-16">
+                <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-28 pb-14 sm:px-8 sm:pt-36 sm:pb-16">
                     <nav
                         aria-label="Breadcrumb profil"
                         className="text-xs text-white/70"
@@ -83,7 +93,7 @@ export default function ProfilLayout({
                     </p>
                 </div>
             </section>
-            <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 sm:py-12">
+            <div className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-10 sm:px-8 sm:py-12">
                 {children}
             </div>
         </PublicLayout>

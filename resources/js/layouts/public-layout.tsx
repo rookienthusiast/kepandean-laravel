@@ -22,8 +22,12 @@ interface PublicLayoutProps {
 
 function TopBar() {
     return (
-        <div className="text-xs text-white">
-            <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-1.5 sm:px-6">
+        // TopBar dengan background hijau paling gelap (desa-900 / #0b3d2e)
+        // sesuai desain. Teks kiri: identitas resmi. Teks kanan: tautan
+        // sekunder 'Layanan Mandiri' & 'Pojok Aduan'. Ukuran teks text-sm
+        // agar terbaca jelas (diperbesar dari text-xs).
+        <div className="bg-desa-900 text-sm text-white">
+            <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-2 sm:px-8">
                 <p className="truncate">
                     Website Resmi Pemerintah Desa Kepandean | Kec. Dukuhturi,
                     Kab. Tegal, Jawa Tengah
@@ -34,7 +38,7 @@ function TopBar() {
                     </Link>
                     <span aria-hidden="true">•</span>
                     <Link href="/#aduan" className="hover:underline">
-                        Aduan
+                        Pojok Aduan
                     </Link>
                 </div>
             </div>
@@ -151,40 +155,26 @@ function MobileNav({
 }
 
 function Footer({ site }: { site: SiteData }) {
-    const layanan = [
-        { label: 'Alur Surat Digital', href: '/layanan-warga' },
-        { label: 'Cek Tagihan PBB', href: '/layanan-warga' },
-        { label: 'Cek DPT Online', href: '/layanan-warga' },
-        { label: 'Layanan Mandiri Warga', href: '/layanan-warga' },
-        { label: 'Aduan Warga', href: '/#aduan' },
-    ];
-    const cepat = [
-        { label: 'Profil Desa', href: '/profil/sejarah-visi-misi' },
-        { label: 'Sejarah & Visi Misi', href: '/profil/sejarah-visi-misi' },
-        {
-            label: 'Struktur Organisasi',
-            href: '/profil/struktur-organisasi',
-        },
-        { label: 'Peta Desa', href: '/kontak-lokasi' },
-        { label: 'Transparansi APBDes', href: '/informasi' },
-    ];
+    const { layanan, cepat } = site.footer;
 
     return (
-        <footer className="border-t border-neutral-200 bg-white">
-            <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+        // Satu garis tegas hijau desa sebagai batas konten-vs-footer agar
+        // pengguna menyadari area footer; warna sama dengan atribut lain.
+        <footer className="border-t-4 border-desa-700 bg-white">
+            <div className="mx-auto grid w-full max-w-[1440px] gap-8 px-4 py-10 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
                 <div>
-                    <p className="text-sm font-bold tracking-wide text-desa-800">
+                    <p className="text-base font-bold tracking-wide text-desa-800">
                         DESA KEPANDEAN
                     </p>
-                    <p className="text-xs text-neutral-500">
+                    <p className="text-sm text-neutral-500">
                         Dukuhturi, Kabupaten Tegal
                     </p>
-                    <p className="mt-3 text-sm leading-6 text-neutral-600">
+                    <p className="mt-3 text-base leading-6 text-neutral-600">
                         Portal Digital Resmi Pemerintahan Desa Kepandean yang
                         transparan, akuntabel, dan mengutamakan pelayanan
                         masyarakat inklusif.
                     </p>
-                    <ul className="mt-4 space-y-2 text-sm text-neutral-700">
+                    <ul className="mt-4 space-y-2 text-base text-neutral-700">
                         <li className="flex items-start gap-2">
                             <MapPin
                                 className="mt-0.5 h-4 w-4 shrink-0 text-desa-800"
@@ -212,10 +202,10 @@ function Footer({ site }: { site: SiteData }) {
                     </ul>
                 </div>
                 <nav aria-label="Navigasi cepat">
-                    <p className="border-b-2 border-desa-800 pb-1 text-sm font-semibold">
+                    <p className="border-b-2 border-desa-800 pb-1 text-base font-semibold">
                         Navigasi Cepat
                     </p>
-                    <ul className="mt-3 space-y-2 text-sm">
+                    <ul className="mt-3 space-y-2 text-base">
                         {cepat.map((l) => (
                             <li key={l.label}>
                                 <Link
@@ -229,10 +219,10 @@ function Footer({ site }: { site: SiteData }) {
                     </ul>
                 </nav>
                 <nav aria-label="Layanan publik">
-                    <p className="border-b-2 border-desa-800 pb-1 text-sm font-semibold">
+                    <p className="border-b-2 border-desa-800 pb-1 text-base font-semibold">
                         Layanan Publik
                     </p>
-                    <ul className="mt-3 space-y-2 text-sm">
+                    <ul className="mt-3 space-y-2 text-base">
                         {layanan.map((l) => (
                             <li key={l.label}>
                                 <Link
@@ -246,10 +236,10 @@ function Footer({ site }: { site: SiteData }) {
                     </ul>
                 </nav>
                 <div>
-                    <p className="border-b-2 border-desa-800 pb-1 text-sm font-semibold">
+                    <p className="border-b-2 border-desa-800 pb-1 text-base font-semibold">
                         Jam Pelayanan
                     </p>
-                    <dl className="mt-3 space-y-2 rounded-md bg-indigo-50/60 p-3 text-sm">
+                    <dl className="mt-3 space-y-2 rounded-md bg-indigo-50/60 p-3 text-base">
                         {site.kontak.jam.map((j) => (
                             <div key={j.hari}>
                                 <dt className="font-medium">{j.hari}:</dt>
@@ -257,10 +247,10 @@ function Footer({ site }: { site: SiteData }) {
                             </div>
                         ))}
                     </dl>
-                    <p className="mt-4 text-sm font-semibold">
+                    <p className="mt-4 text-base font-semibold">
                         Media Sosial Resmi
                     </p>
-                    <ul className="mt-1 space-y-1 text-sm">
+                    <ul className="mt-1 space-y-1 text-base">
                         {site.kontak.sosmed.map((s) => (
                             <li key={s.label}>
                                 <a
@@ -281,14 +271,14 @@ function Footer({ site }: { site: SiteData }) {
                 </div>
             </div>
             <div className="border-t border-neutral-200 bg-indigo-50/50">
-                <div className="mx-auto flex w-full max-w-7xl flex-col gap-1 px-4 py-3 text-xs text-neutral-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-1 px-4 py-3 text-sm text-neutral-600 sm:flex-row sm:items-center sm:justify-between sm:px-8">
                     <p className="flex items-center gap-1">
                         <Clock className="h-3.5 w-3.5" aria-hidden="true" />©
                         2026 Pemerintah Desa Kepandean, Kecamatan Dukuhturi,
                         Kabupaten Tegal. Hak Cipta Dilindungi Undang-Undang.
                     </p>
                     <p className="font-medium text-desa-800">
-                        Sinergi OpenSID &amp; Sistem Informasi Desa Tegal
+                        Sinergi OpenSID & Sistem Informasi Desa Tegal
                     </p>
                 </div>
             </div>
@@ -312,35 +302,38 @@ export default function PublicLayout({
                 <div className="absolute inset-x-0 top-0 z-40 bg-gradient-to-b from-black/60 via-black/25 to-transparent">
                     <TopBar />
                     <header>
-                    <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-                        <Link href="/" className="flex items-center gap-3">
-                            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-desa-800">
-                                K
-                            </span>
-                            <span className="leading-tight">
-                                <span className="block text-sm font-bold tracking-wide text-white">
-                                    PEMERINTAH DESA KEPANDEAN
+                        <div className="relative mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-8">
+                            <Link href="/" className="flex items-center gap-3">
+                                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-desa-800">
+                                    K
                                 </span>
-                                <span className="block text-xs text-white/75">
-                                    Kecamatan Dukuhturi - Kabupaten Tegal
+                                <span className="leading-tight">
+                                    <span className="block text-base font-bold tracking-wide text-white">
+                                        PEMERINTAH DESA KEPANDEAN
+                                    </span>
+                                    <span className="block text-sm text-white/75">
+                                        Kecamatan Dukuhturi - Kabupaten Tegal
+                                    </span>
                                 </span>
-                            </span>
-                        </Link>
-                        <DesktopNav items={site.nav} />
-                        <div className="flex items-center gap-2">
-                            <Link
-                                href="/layanan-warga"
-                                className="hidden items-center gap-1.5 rounded-md bg-desa-700 px-4 py-2 text-sm font-medium text-white hover:bg-desa-800 lg:inline-flex"
-                            >
-                                <ShieldCheck
-                                    className="h-4 w-4"
-                                    aria-hidden="true"
-                                />
-                                Layanan Mandiri Warga
                             </Link>
-                            <MobileNav items={site.nav} siteName={site.nama} />
+                            <DesktopNav items={site.nav} />
+                            <div className="flex items-center gap-2">
+                                <Link
+                                    href="/layanan-warga"
+                                    className="hidden items-center gap-1.5 rounded-md bg-desa-700 px-4 py-2 text-sm font-medium text-white hover:bg-desa-800 lg:inline-flex"
+                                >
+                                    <ShieldCheck
+                                        className="h-4 w-4"
+                                        aria-hidden="true"
+                                    />
+                                    Layanan Mandiri Warga
+                                </Link>
+                                <MobileNav
+                                    items={site.nav}
+                                    siteName={site.nama}
+                                />
+                            </div>
                         </div>
-                    </div>
                     </header>
                 </div>
                 <main className="flex-1">{children}</main>

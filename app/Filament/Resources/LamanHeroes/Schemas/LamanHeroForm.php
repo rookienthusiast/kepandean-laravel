@@ -4,7 +4,7 @@ namespace App\Filament\Resources\LamanHeroes\Schemas;
 
 use App\Models\LamanHero;
 use App\Support\Filament\DesaScoping;
-use Filament\Forms\Components\FileUpload;
+use App\Support\Media;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
@@ -30,13 +30,7 @@ class LamanHeroForm
                         },
                     )
                     ->helperText('Satu gambar untuk tiap laman.'),
-                FileUpload::make('gambar_path')
-                    ->label('Gambar hero')
-                    ->image()
-                    ->disk('public')
-                    ->maxSize(5120)
-                    ->directory('hero-laman')
-                    ->visibility('public')
+                Media::upload('gambar_path', 'hero-laman', 'Gambar hero')
                     ->required()
                     ->columnSpanFull()
                     ->helperText('Foto lebar (landscape) agar rapi mengisi hero.'),

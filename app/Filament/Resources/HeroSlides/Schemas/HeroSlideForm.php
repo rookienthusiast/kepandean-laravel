@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\HeroSlides\Schemas;
 
 use App\Support\Filament\DesaScoping;
-use Filament\Forms\Components\FileUpload;
+use App\Support\Media;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -24,13 +24,7 @@ class HeroSlideForm
                     ->maxLength(300)
                     ->columnSpanFull()
                     ->helperText('Opsional, tampil di bawah judul.'),
-                FileUpload::make('gambar_path')
-                    ->label('Gambar')
-                    ->image()
-                    ->disk('public')
-                    ->maxSize(5120)
-                    ->directory('hero')
-                    ->visibility('public')
+                Media::upload('gambar_path', 'hero', 'Gambar')
                     ->columnSpanFull()
                     ->helperText('Gambar slide (jpg/png/webp, maks. 5 MB). Slide pertama dimuat prioritas, sisanya lazy-load.'),
                 TextInput::make('tautan_label')

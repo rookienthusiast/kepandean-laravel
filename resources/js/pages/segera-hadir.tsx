@@ -51,12 +51,7 @@ export default function SegeraHadir({ modul, meta, site }: SegeraHadirProps) {
                         <Link href="/" className="hover:underline">
                             Beranda
                         </Link>{' '}
-                        ›{' '}
-                        {grup && grup !== label ? (
-                            <>
-                                {grup} ›{' '}
-                            </>
-                        ) : null}
+                        › {grup && grup !== label ? <>{grup} › </> : null}
                         {label}
                     </>
                 }
@@ -67,9 +62,10 @@ export default function SegeraHadir({ modul, meta, site }: SegeraHadirProps) {
                         disiapkan.
                     </>
                 }
-                gambarUrl={site.hero_fallback_url}
+                site={site}
+                laman={modul}
             />
-            <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6">
+            <section className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8">
                 <SegeraHadirPanel label={label} />
             </section>
         </PublicLayout>

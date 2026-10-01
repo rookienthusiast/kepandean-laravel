@@ -83,13 +83,11 @@ export default function BeritaIndex({
             <PageHero
                 eyebrow={`Informasi ${desaName}`}
                 title={`Berita ${desaName}`}
-                gambarUrl={
-                    site.hero_laman?.berita ??
-                    berita.data[0]?.cover_url ??
-                    site.hero_fallback_url
-                }
+                site={site}
+                laman="berita"
+                coverUrl={berita.data[0]?.cover_url}
             />
-            <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">
+            <div className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-10 sm:px-8">
                 <nav
                     aria-label="Filter kategori"
                     className="mb-8 flex flex-wrap gap-2"

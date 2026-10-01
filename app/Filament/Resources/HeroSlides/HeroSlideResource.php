@@ -2,26 +2,24 @@
 
 namespace App\Filament\Resources\HeroSlides;
 
+use App\Filament\Resources\Concerns\ScopedResource;
 use App\Filament\Resources\HeroSlides\Pages\CreateHeroSlide;
 use App\Filament\Resources\HeroSlides\Pages\EditHeroSlide;
 use App\Filament\Resources\HeroSlides\Pages\ListHeroSlides;
 use App\Filament\Resources\HeroSlides\Schemas\HeroSlideForm;
 use App\Filament\Resources\HeroSlides\Tables\HeroSlidesTable;
 use App\Models\HeroSlide;
-use App\Support\Filament\DesaScoping;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 /**
  * Issue #18 checklist 1b: admin kelola slide hero Beranda (maks 5 aktif
  * tampil, sisanya draf). Scope per-desa mengikuti pola StatistikResource.
  */
-class HeroSlideResource extends Resource
+class HeroSlideResource extends ScopedResource
 {
     protected static ?string $model = HeroSlide::class;
 
@@ -39,12 +37,6 @@ class HeroSlideResource extends Resource
     public static function getPluralLabel(): string
     {
         return 'Slide Hero';
-    }
-
-    /** @return Builder<HeroSlide> */
-    public static function getEloquentQuery(): Builder
-    {
-        return DesaScoping::scopeForAdmin(HeroSlide::query());
     }
 
     public static function form(Schema $schema): Schema

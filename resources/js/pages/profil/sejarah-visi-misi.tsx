@@ -27,11 +27,8 @@ export default function SejarahVisiMisi({
             crumb="Sejarah & Visi Misi"
             desaName={desaName}
             site={site}
-            gambarUrl={
-                site.hero_laman?.profil ??
-                profil.foto_url ??
-                site.hero_fallback_url
-            }
+            laman="profil"
+            coverUrl={profil.foto_url}
         >
             <section
                 id="sejarah"
@@ -55,10 +52,9 @@ export default function SejarahVisiMisi({
                                     aria-hidden="true"
                                 />
                                 <figcaption className="mt-4 text-sm leading-6 text-white/80">
-                                    Foto gerbang {desaName} menyusul.
-                                    Perangkat desa akan mengunggah dokumentasi
-                                    resmi setelah data dari OpenSID
-                                    dikonfirmasi.
+                                    Foto gerbang {desaName} menyusul. Perangkat
+                                    desa akan mengunggah dokumentasi resmi
+                                    setelah data dari OpenSID dikonfirmasi.
                                 </figcaption>
                             </div>
                         )}

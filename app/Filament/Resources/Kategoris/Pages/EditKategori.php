@@ -2,12 +2,11 @@
 
 namespace App\Filament\Resources\Kategoris\Pages;
 
+use App\Filament\Resources\Concerns\ScopedEditPage;
 use App\Filament\Resources\Kategoris\KategoriResource;
-use App\Support\Filament\DesaScoping;
 use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditKategori extends EditRecord
+class EditKategori extends ScopedEditPage
 {
     protected static string $resource = KategoriResource::class;
 
@@ -16,12 +15,5 @@ class EditKategori extends EditRecord
         return [
             DeleteAction::make(),
         ];
-    }
-
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        $data = DesaScoping::lockDesaIdForSave($data);
-
-        return $data;
     }
 }

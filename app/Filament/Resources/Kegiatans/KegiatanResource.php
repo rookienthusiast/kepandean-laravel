@@ -2,30 +2,29 @@
 
 namespace App\Filament\Resources\Kegiatans;
 
+use App\Filament\Resources\Concerns\ScopedResource;
 use App\Filament\Resources\Kegiatans\Pages\CreateKegiatan;
 use App\Filament\Resources\Kegiatans\Pages\EditKegiatan;
 use App\Filament\Resources\Kegiatans\Pages\ListKegiatans;
 use App\Filament\Resources\Kegiatans\Schemas\KegiatanForm;
 use App\Filament\Resources\Kegiatans\Tables\KegiatansTable;
 use App\Models\Kegiatan;
-use App\Support\Filament\DesaScoping;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 /**
- * Issue #17: meniru BeritaResource (#16) versi ringan , tanpa kategori/cover.
+ * Arsip Kegiatan: adapter ringan di atas Terbitan (kedaluarsa = hilang,
+ * meniru Pengumuman #17). Punya cover, tanpa kategori.
  * Editor boleh simpan draft; publish hanya canPublish() (admin_desa/techade).
  */
-class KegiatanResource extends Resource
+class KegiatanResource extends ScopedResource
 {
     protected static ?string $model = Kegiatan::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMegaphone;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     protected static UnitEnum|string|null $navigationGroup = 'Konten';
 
@@ -43,12 +42,6 @@ class KegiatanResource extends Resource
     public static function getPluralLabel(): string
     {
         return 'Kegiatan';
-    }
-
-    /** @return Builder<Kegiatan> */
-    public static function getEloquentQuery(): Builder
-    {
-        return DesaScoping::scopeForAdmin(Kegiatan::query());
     }
 
     public static function form(Schema $schema): Schema

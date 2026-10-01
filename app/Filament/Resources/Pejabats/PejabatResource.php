@@ -2,26 +2,24 @@
 
 namespace App\Filament\Resources\Pejabats;
 
+use App\Filament\Resources\Concerns\ScopedResource;
 use App\Filament\Resources\Pejabats\Pages\CreatePejabat;
 use App\Filament\Resources\Pejabats\Pages\EditPejabat;
 use App\Filament\Resources\Pejabats\Pages\ListPejabats;
 use App\Filament\Resources\Pejabats\Schemas\PejabatForm;
 use App\Filament\Resources\Pejabats\Tables\PejabatsTable;
 use App\Models\Pejabat;
-use App\Support\Filament\DesaScoping;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 /**
  * Issue #15: Struktur Organisasi + roster RT/RW, terurut by nomor urut.
  * Scope per-desa mengikuti pola UserResource/StatistikResource.
  */
-class PejabatResource extends Resource
+class PejabatResource extends ScopedResource
 {
     protected static ?string $model = Pejabat::class;
 
@@ -39,12 +37,6 @@ class PejabatResource extends Resource
     public static function getPluralLabel(): string
     {
         return 'Struktur Organisasi';
-    }
-
-    /** @return Builder<Pejabat> */
-    public static function getEloquentQuery(): Builder
-    {
-        return DesaScoping::scopeForAdmin(Pejabat::query());
     }
 
     public static function form(Schema $schema): Schema

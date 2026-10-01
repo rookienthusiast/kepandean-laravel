@@ -7,10 +7,9 @@ use App\Models\Desa;
 use App\Models\Kategori;
 use App\Models\Kegiatan;
 use App\Models\Pengumuman;
-use App\Support\HtmlSanitizer;
 use App\Support\PublicSite;
+use App\Support\Terbitan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -35,9 +34,7 @@ class InformasiController extends Controller
             ? $kategoris->firstWhere('slug', $activeSlug)
             : null;
 
-        $beritaQuery = $desa instanceof Desa
-            ? Berita::publishedForDesa($desa)->with('kategori')->orderByDesc('published_at')->orderByDesc('id')
-            : Berita::query()->whereRaw('1 = 0');
+        $beritaQuery = Terbitan::archiveFor($desa, Berita::class, 'publishedForDesa', ['kategori']);
 
         if ($active instanceof Kategori) {
             $beritaQuery->where('kategori_id', $active->id);
@@ -46,21 +43,27 @@ class InformasiController extends Controller
         // Paginasi terpisah per tab: page param berbeda agar tidak
         // saling menimpa (bukan load semua sekaligus).
         $beritaPaginator = $beritaQuery->paginate(6, ['*'], 'berita_page')->withQueryString();
-        $beritaPaginator->getCollection()->transform(fn (Berita $berita): array => $this->toBeritaCard($berita));
+        $beritaPaginator->getCollection()->transform(fn (Berita $berita): array => Terbitan::card(
+            $berita,
+            BeritaController::showUrl($berita),
+            ['kategori' => BeritaController::kategoriArray($berita)],
+        ));
 
-        $pengumumanQuery = $desa instanceof Desa
-            ? Pengumuman::visibleForDesa($desa)->orderByDesc('published_at')->orderByDesc('id')
-            : Pengumuman::query()->whereRaw('1 = 0');
+        $pengumumanQuery = Terbitan::archiveFor($desa, Pengumuman::class, 'visibleForDesa');
 
         $pengumumanPaginator = $pengumumanQuery->paginate(6, ['*'], 'pengumuman_page')->withQueryString();
-        $pengumumanPaginator->getCollection()->transform(fn (Pengumuman $pengumuman): array => $this->toPengumumanCard($pengumuman));
+        $pengumumanPaginator->getCollection()->transform(fn (Pengumuman $pengumuman): array => Terbitan::card(
+            $pengumuman,
+            route('pengumuman.show', ['slug' => $pengumuman->slug]),
+        ));
 
-        $kegiatanQuery = $desa instanceof Desa
-            ? Kegiatan::visibleForDesa($desa)->orderByDesc('published_at')->orderByDesc('id')
-            : Kegiatan::query()->whereRaw('1 = 0');
+        $kegiatanQuery = Terbitan::archiveFor($desa, Kegiatan::class, 'visibleForDesa');
 
         $kegiatanPaginator = $kegiatanQuery->paginate(6, ['*'], 'kegiatan_page')->withQueryString();
-        $kegiatanPaginator->getCollection()->transform(fn (Kegiatan $kegiatan): array => $this->toKegiatanCard($kegiatan));
+        $kegiatanPaginator->getCollection()->transform(fn (Kegiatan $kegiatan): array => Terbitan::card(
+            $kegiatan,
+            route('kegiatan.show', ['slug' => $kegiatan->slug]),
+        ));
 
         // Badge tab memakai total tanpa filter kategori agar konsisten
         // saat filter aktif (paginator di atas sudah terfilter).
@@ -89,62 +92,5 @@ class InformasiController extends Controller
             ],
             ...PublicSite::sharedProps($desa),
         ]);
-    }
-
-    /** @return array<string, mixed> */
-    private function toBeritaCard(Berita $berita): array
-    {
-        $date = $berita->published_at ?? $berita->created_at ?? now();
-        $excerpt = Str::limit(trim(strip_tags(HtmlSanitizer::clean((string) $berita->isi))), 160);
-
-        return [
-            'judul' => $berita->judul,
-            'slug' => $berita->slug,
-            'excerpt' => $excerpt === '' ? null : $excerpt,
-            'cover_url' => $berita->cover_path ? asset('storage/'.$berita->cover_path) : null,
-            'kategori' => $berita->kategori instanceof Kategori ? [
-                'nama' => $berita->kategori->nama,
-                'slug' => $berita->kategori->slug,
-            ] : null,
-            'tanggal' => $date->format('d M Y'),
-            'url' => route('berita.show', [
-                'tahun' => $date->format('Y'),
-                'bulan' => $date->format('m'),
-                'tanggal' => $date->format('d'),
-                'slug' => $berita->slug,
-            ]),
-        ];
-    }
-
-    /** @return array<string, mixed> */
-    private function toPengumumanCard(Pengumuman $pengumuman): array
-    {
-        $date = $pengumuman->published_at ?? $pengumuman->created_at ?? now();
-        $excerpt = Str::limit(trim(strip_tags(HtmlSanitizer::clean((string) $pengumuman->isi))), 160);
-
-        return [
-            'judul' => $pengumuman->judul,
-            'slug' => $pengumuman->slug,
-            'excerpt' => $excerpt === '' ? null : $excerpt,
-            'cover_url' => $pengumuman->cover_path ? asset('storage/'.$pengumuman->cover_path) : null,
-            'tanggal' => $date->format('d M Y'),
-            'url' => route('pengumuman.show', ['slug' => $pengumuman->slug]),
-        ];
-    }
-
-    /** @return array<string, mixed> */
-    private function toKegiatanCard(Kegiatan $kegiatan): array
-    {
-        $date = $kegiatan->published_at ?? $kegiatan->created_at ?? now();
-        $excerpt = Str::limit(trim(strip_tags(HtmlSanitizer::clean((string) $kegiatan->isi))), 160);
-
-        return [
-            'judul' => $kegiatan->judul,
-            'slug' => $kegiatan->slug,
-            'excerpt' => $excerpt === '' ? null : $excerpt,
-            'cover_url' => $kegiatan->cover_path ? asset('storage/'.$kegiatan->cover_path) : null,
-            'tanggal' => $date->format('d M Y'),
-            'url' => route('kegiatan.show', ['slug' => $kegiatan->slug]),
-        ];
     }
 }

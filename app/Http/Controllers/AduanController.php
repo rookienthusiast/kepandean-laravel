@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aduan;
+use App\Support\Media;
 use App\Support\PublicSite;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class AduanController extends Controller
 
         $fotoPath = null;
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('aduan', 'public');
+            $fotoPath = Media::storeUploaded($request->file('foto'), 'aduan');
         }
 
         Aduan::withoutGlobalScope('desa')->create([

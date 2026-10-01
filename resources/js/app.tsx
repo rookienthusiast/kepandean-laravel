@@ -12,22 +12,18 @@ void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
-            // Halaman publik membawa PublicLayout sendiri (TopBar+Navbar+Footer).
-            case name === 'welcome':
-            case name === 'segera-hadir':
-            case name === 'struktur':
-            case name.startsWith('profil/'):
-            case name.startsWith('berita/'):
-            case name.startsWith('pengumuman/'):
-            case name.startsWith('kegiatan/'):
-            case name.startsWith('informasi/'):
-                return null;
+            // Cangkang publik adalah bawaan: halaman membawa PublicLayout
+            // sendiri. Hanya area terotentikasi yang memakai cangkang
+            // AppLayout (sidebar) secara eksplisit, sehingga prefix
+            // halaman publik baru tidak perlu didaftarkan lagi.
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
-            default:
+            case name === 'dashboard':
                 return AppLayout;
+            default:
+                return null;
         }
     },
     strictMode: true,

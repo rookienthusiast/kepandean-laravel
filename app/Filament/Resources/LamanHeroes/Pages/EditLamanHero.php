@@ -2,13 +2,11 @@
 
 namespace App\Filament\Resources\LamanHeroes\Pages;
 
+use App\Filament\Resources\Concerns\ScopedEditPage;
 use App\Filament\Resources\LamanHeroes\LamanHeroResource;
-use App\Models\User;
-use App\Support\Filament\DesaScoping;
 use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditLamanHero extends EditRecord
+class EditLamanHero extends ScopedEditPage
 {
     protected static string $resource = LamanHeroResource::class;
 
@@ -17,12 +15,5 @@ class EditLamanHero extends EditRecord
         return [
             DeleteAction::make(),
         ];
-    }
-
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        abort_unless(auth()->user() instanceof User, 403);
-
-        return DesaScoping::lockDesaIdForSave($data);
     }
 }

@@ -2,26 +2,24 @@
 
 namespace App\Filament\Resources\Kategoris;
 
+use App\Filament\Resources\Concerns\ScopedResource;
 use App\Filament\Resources\Kategoris\Pages\CreateKategori;
 use App\Filament\Resources\Kategoris\Pages\EditKategori;
 use App\Filament\Resources\Kategoris\Pages\ListKategoris;
 use App\Filament\Resources\Kategoris\Schemas\KategoriForm;
 use App\Filament\Resources\Kategoris\Tables\KategorisTable;
 use App\Models\Kategori;
-use App\Support\Filament\DesaScoping;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 /**
  * Issue #16: Kategori sederhana (nama + slug), dipakai sebagai filter
  * di index Berita. Dibuat dulu sebelum Berita (Berita butuh FK kategori).
  */
-class KategoriResource extends Resource
+class KategoriResource extends ScopedResource
 {
     protected static ?string $model = Kategori::class;
 
@@ -39,12 +37,6 @@ class KategoriResource extends Resource
     public static function getPluralLabel(): string
     {
         return 'Kategori';
-    }
-
-    /** @return Builder<Kategori> */
-    public static function getEloquentQuery(): Builder
-    {
-        return DesaScoping::scopeForAdmin(Kategori::query());
     }
 
     public static function form(Schema $schema): Schema

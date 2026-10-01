@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Berita;
 use App\Models\Desa;
 use App\Models\Kategori;
-use App\Support\HtmlSanitizer;
 use App\Support\PublicSite;
+use App\Support\Terbitan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,9 +28,7 @@ class BeritaController extends Controller
             ? $kategoris->firstWhere('slug', $activeSlug)
             : null;
 
-        $query = $desa instanceof Desa
-            ? Berita::publishedForDesa($desa)->with('kategori')->orderByDesc('published_at')->orderByDesc('id')
-            : Berita::query()->whereRaw('1 = 0');
+        $query = Terbitan::archiveFor($desa, Berita::class, 'publishedForDesa', ['kategori']);
 
         if ($active instanceof Kategori) {
             $query->where('kategori_id', $active->id);
@@ -39,7 +36,11 @@ class BeritaController extends Controller
 
         $paginator = $query->paginate(9)->withQueryString();
 
-        $paginator->getCollection()->transform(fn (Berita $berita): array => $this->toCard($berita));
+        $paginator->getCollection()->transform(fn (Berita $berita): array => Terbitan::card(
+            $berita,
+            self::showUrl($berita),
+            ['kategori' => self::kategoriArray($berita)],
+        ));
 
         $title = $active instanceof Kategori ? "Berita {$active->nama} {$nama}" : "Berita {$nama}";
 
@@ -69,13 +70,11 @@ class BeritaController extends Controller
     {
         $desa = PublicSite::currentDesa();
 
-        $berita = $desa instanceof Desa
-            ? Berita::publishedForDesa($desa)->with('kategori')->where('slug', $slug)->first()
-            : null;
+        $berita = Terbitan::findFor($desa, Berita::class, 'publishedForDesa', $slug, ['kategori']);
 
         abort_if($berita === null, 404);
 
-        $date = $berita->published_at ?? $berita->created_at ?? now();
+        $date = Terbitan::displayDate($berita);
 
         abort_unless(
             (int) $tahun === (int) $date->format('Y')
@@ -84,57 +83,42 @@ class BeritaController extends Controller
             404
         );
 
-        $isi = HtmlSanitizer::clean((string) $berita->isi);
+        $isi = Terbitan::cleanedIsi($berita);
         $nama = PublicSite::displayName($desa);
 
         return Inertia::render('berita/detail', [
-            'berita' => [
-                'judul' => $berita->judul,
-                'slug' => $berita->slug,
-                'isi' => $isi,
-                'cover_url' => $berita->cover_path ? asset('storage/'.$berita->cover_path) : null,
-                'kategori' => $berita->kategori instanceof Kategori ? [
-                    'nama' => $berita->kategori->nama,
-                    'slug' => $berita->kategori->slug,
-                ] : null,
-                'tanggal' => $date->format('d M Y'),
-                'url' => route('berita.show', [
-                    'tahun' => $date->format('Y'),
-                    'bulan' => $date->format('m'),
-                    'tanggal' => $date->format('d'),
-                    'slug' => $berita->slug,
-                ]),
-            ],
+            'berita' => Terbitan::detail(
+                $berita,
+                self::showUrl($berita),
+                $isi,
+                ['kategori' => self::kategoriArray($berita)],
+            ),
             'meta' => [
                 'title' => "{$berita->judul} ({$nama})",
-                'description' => Str::limit(trim(strip_tags($isi)), 150),
+                'description' => Terbitan::metaDescription($isi),
             ],
             ...PublicSite::sharedProps($desa),
         ]);
     }
 
-    /** @return array<string, mixed> */
-    private function toCard(Berita $berita): array
+    public static function showUrl(Berita $berita): string
     {
-        $date = $berita->published_at ?? $berita->created_at ?? now();
-        $excerpt = Str::limit(trim(strip_tags(HtmlSanitizer::clean((string) $berita->isi))), 160);
+        $date = Terbitan::displayDate($berita);
 
-        return [
-            'judul' => $berita->judul,
+        return route('berita.show', [
+            'tahun' => $date->format('Y'),
+            'bulan' => $date->format('m'),
+            'tanggal' => $date->format('d'),
             'slug' => $berita->slug,
-            'excerpt' => $excerpt === '' ? null : $excerpt,
-            'cover_url' => $berita->cover_path ? asset('storage/'.$berita->cover_path) : null,
-            'kategori' => $berita->kategori instanceof Kategori ? [
-                'nama' => $berita->kategori->nama,
-                'slug' => $berita->kategori->slug,
-            ] : null,
-            'tanggal' => $date->format('d M Y'),
-            'url' => route('berita.show', [
-                'tahun' => $date->format('Y'),
-                'bulan' => $date->format('m'),
-                'tanggal' => $date->format('d'),
-                'slug' => $berita->slug,
-            ]),
-        ];
+        ]);
+    }
+
+    /** @return array{nama: string, slug: string}|null */
+    public static function kategoriArray(Berita $berita): ?array
+    {
+        return $berita->kategori instanceof Kategori ? [
+            'nama' => $berita->kategori->nama,
+            'slug' => $berita->kategori->slug,
+        ] : null;
     }
 }

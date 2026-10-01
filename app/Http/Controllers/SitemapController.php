@@ -7,6 +7,7 @@ use App\Models\Desa;
 use App\Models\Kegiatan;
 use App\Models\Pengumuman;
 use App\Support\PublicSite;
+use App\Support\Terbitan;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
 
@@ -16,21 +17,18 @@ class SitemapController extends Controller
     {
         $desa = PublicSite::currentDesa();
 
-        $urls = [
-            $this->entry(route('home'), now()),
-            $this->entry(route('profil.sejarah-visi-misi'), now()),
-            $this->entry(route('profil.struktur'), now()),
-            $this->entry(route('berita.index'), now()),
-            $this->entry(route('pengumuman.index'), now()),
-            $this->entry(route('kegiatan.index'), now()),
-            $this->entry(route('informasi'), now()),
-        ];
+        // Entri statis diturunkan dari nav: laman native baru otomatis
+        // masuk sitemap tanpa edit kedua.
+        $urls = array_map(
+            fn (string $path): array => $this->entry(url($path), now()),
+            PublicSite::sitemapPaths(),
+        );
 
         if ($desa instanceof Desa) {
-            $beritas = Berita::publishedForDesa($desa)->orderByDesc('published_at')->get();
+            $beritas = Terbitan::archiveFor($desa, Berita::class, 'publishedForDesa')->get();
 
             foreach ($beritas as $berita) {
-                $date = $berita->published_at ?? $berita->created_at ?? now();
+                $date = Terbitan::displayDate($berita);
 
                 $urls[] = $this->entry(
                     route('berita.show', [
@@ -45,7 +43,7 @@ class SitemapController extends Controller
 
             // Issue #17: sitemap memuat pengumuman yang tayang saja
             // (published + belum kedaluarsa).
-            $pengumumans = Pengumuman::visibleForDesa($desa)->orderByDesc('published_at')->get();
+            $pengumumans = Terbitan::archiveFor($desa, Pengumuman::class, 'visibleForDesa')->get();
 
             foreach ($pengumumans as $pengumuman) {
                 $urls[] = $this->entry(
@@ -54,7 +52,7 @@ class SitemapController extends Controller
                 );
             }
 
-            $kegiatans = Kegiatan::visibleForDesa($desa)->orderByDesc('published_at')->get();
+            $kegiatans = Terbitan::archiveFor($desa, Kegiatan::class, 'visibleForDesa')->get();
 
             foreach ($kegiatans as $kegiatan) {
                 $urls[] = $this->entry(

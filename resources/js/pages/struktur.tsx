@@ -48,11 +48,10 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
             <PageHero
                 eyebrow={`Profil ${desaName}`}
                 title={`Struktur Organisasi ${desaName}`}
-                gambarUrl={
-                    site.hero_laman?.struktur ?? site.hero_fallback_url
-                }
+                site={site}
+                laman="struktur"
             />
-            <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">
+            <div className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-10 sm:px-8">
                 <input
                     type="search"
                     value={query}

@@ -7,21 +7,19 @@ use App\Filament\Resources\Beritas\Pages\EditBerita;
 use App\Filament\Resources\Beritas\Pages\ListBeritas;
 use App\Filament\Resources\Beritas\Schemas\BeritaForm;
 use App\Filament\Resources\Beritas\Tables\BeritasTable;
+use App\Filament\Resources\Concerns\ScopedResource;
 use App\Models\Berita;
-use App\Support\Filament\DesaScoping;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 /**
  * Issue #16: Berita end to end — pola baku yang ditiru Pengumuman (#17).
  * Editor boleh simpan draft; publish hanya canPublish() (admin_desa/techade).
  */
-class BeritaResource extends Resource
+class BeritaResource extends ScopedResource
 {
     protected static ?string $model = Berita::class;
 
@@ -39,12 +37,6 @@ class BeritaResource extends Resource
     public static function getPluralLabel(): string
     {
         return 'Berita';
-    }
-
-    /** @return Builder<Berita> */
-    public static function getEloquentQuery(): Builder
-    {
-        return DesaScoping::scopeForAdmin(Berita::query());
     }
 
     public static function form(Schema $schema): Schema

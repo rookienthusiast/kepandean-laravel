@@ -2,26 +2,24 @@
 
 namespace App\Filament\Resources\Statistiks;
 
+use App\Filament\Resources\Concerns\ScopedResource;
 use App\Filament\Resources\Statistiks\Pages\CreateStatistik;
 use App\Filament\Resources\Statistiks\Pages\EditStatistik;
 use App\Filament\Resources\Statistiks\Pages\ListStatistiks;
 use App\Filament\Resources\Statistiks\Schemas\StatistikForm;
 use App\Filament\Resources\Statistiks\Tables\StatistiksTable;
 use App\Models\Statistik;
-use App\Support\Filament\DesaScoping;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 /**
  * Issue #18: admin ubah angka Statistik tanpa developer; Beranda membaca
  * dari tabel ini. Scope per-desa mengikuti pola UserResource.
  */
-class StatistikResource extends Resource
+class StatistikResource extends ScopedResource
 {
     protected static ?string $model = Statistik::class;
 
@@ -30,12 +28,6 @@ class StatistikResource extends Resource
     protected static UnitEnum|string|null $navigationGroup = 'Konten';
 
     protected static ?string $recordTitleAttribute = 'kunci';
-
-    /** @return Builder<Statistik> */
-    public static function getEloquentQuery(): Builder
-    {
-        return DesaScoping::scopeForAdmin(Statistik::query());
-    }
 
     public static function form(Schema $schema): Schema
     {

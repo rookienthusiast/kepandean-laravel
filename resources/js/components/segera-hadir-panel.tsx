@@ -14,9 +14,9 @@ export default function SegeraHadirPanel({ label }: { label: string }) {
                 Halaman {label} Belum Tersedia
             </h2>
             <p className="mx-auto mt-2 max-w-xl text-neutral-600">
-                Mohon maaf, modul {label} sedang disiapkan oleh perangkat
-                desa. Tidak ada tautan mati di portal ini. Semua menu yang
-                belum siap mengarah ke halaman ini dengan jujur.
+                Mohon maaf, modul {label} sedang disiapkan oleh perangkat desa.
+                Tidak ada tautan mati di portal ini. Semua menu yang belum siap
+                mengarah ke halaman ini dengan jujur.
             </p>
             <Link
                 href="/"

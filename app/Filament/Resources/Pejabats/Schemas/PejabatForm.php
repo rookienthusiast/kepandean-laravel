@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Pejabats\Schemas;
 
 use App\Models\Pejabat;
 use App\Support\Filament\DesaScoping;
-use Filament\Forms\Components\FileUpload;
+use App\Support\Media;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -34,13 +34,7 @@ class PejabatForm
                     ->maxLength(60)
                     ->helperText('Wajib diisi untuk kelompok Wilayah, mis. RW 05.')
                     ->required(fn ($get): bool => $get('kelompok') === Pejabat::KELOMPOK_WILAYAH),
-                FileUpload::make('foto_path')
-                    ->label('Foto')
-                    ->image()
-                    ->disk('public')
-                    ->maxSize(5120)
-                    ->directory('pejabat')
-                    ->visibility('public'),
+                Media::upload('foto_path', 'pejabat', 'Foto'),
                 TextInput::make('urutan')
                     ->label('Nomor urut')
                     ->numeric()

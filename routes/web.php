@@ -14,7 +14,9 @@ use App\Models\Desa;
 use App\Models\HeroSlide;
 use App\Models\Profil;
 use App\Support\HtmlSanitizer;
+use App\Support\Media;
 use App\Support\PublicSite;
+use App\Support\Terbitan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -32,26 +34,15 @@ Route::get('/', function () {
     // Berita Terkini beranda: 2 terbitan terbaru desa aktif
     // (hanya published — draft dan desa lain tidak pernah bocor).
     $beritaTerkini = $desa instanceof Desa
-        ? Berita::publishedForDesa($desa)
-            ->orderByDesc('published_at')
-            ->orderByDesc('id')
+        ? Terbitan::archiveFor($desa, Berita::class, 'publishedForDesa')
             ->limit(2)
             ->get()
-            ->map(function (Berita $berita): array {
-                $date = $berita->published_at ?? $berita->created_at ?? now();
-
-                return [
-                    'judul' => $berita->judul,
-                    'tanggal' => $date->format('d M Y'),
-                    'cover_url' => $berita->cover_path ? asset('storage/'.$berita->cover_path) : null,
-                    'url' => route('berita.show', [
-                        'tahun' => $date->format('Y'),
-                        'bulan' => $date->format('m'),
-                        'tanggal' => $date->format('d'),
-                        'slug' => $berita->slug,
-                    ]),
-                ];
-            })->all()
+            ->map(fn (Berita $berita): array => [
+                'judul' => $berita->judul,
+                'tanggal' => Terbitan::displayDate($berita)->format('d M Y'),
+                'cover_url' => Media::url($berita->cover_path),
+                'url' => BeritaController::showUrl($berita),
+            ])->all()
         : [];
 
     // Hero slider Beranda: maksimal 5 slide aktif desa ini

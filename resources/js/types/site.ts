@@ -14,6 +14,16 @@ export interface KontakJam {
     jam: string;
 }
 
+export interface FooterLink {
+    label: string;
+    href: string;
+}
+
+export interface SiteFooter {
+    layanan: FooterLink[];
+    cepat: FooterLink[];
+}
+
 export interface Sosmed {
     label: string;
     href: string;
@@ -30,6 +40,7 @@ export interface SiteKontak {
 export interface SiteData {
     nama: string;
     nav: NavItem[];
+    footer: SiteFooter;
     kontak: SiteKontak;
     hero_fallback_url: string | null;
     hero_laman: Record<string, string>;

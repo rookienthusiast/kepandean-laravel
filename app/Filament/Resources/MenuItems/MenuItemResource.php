@@ -2,26 +2,24 @@
 
 namespace App\Filament\Resources\MenuItems;
 
+use App\Filament\Resources\Concerns\ScopedResource;
 use App\Filament\Resources\MenuItems\Pages\CreateMenuItem;
 use App\Filament\Resources\MenuItems\Pages\EditMenuItem;
 use App\Filament\Resources\MenuItems\Pages\ListMenuItems;
 use App\Filament\Resources\MenuItems\Schemas\MenuItemForm;
 use App\Filament\Resources\MenuItems\Tables\MenuItemsTable;
 use App\Models\MenuItem;
-use App\Support\Filament\DesaScoping;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 /**
  * Issue #19 checklist 3: menu dinamis. Admin CRUD label, URL, urutan,
  * parent (satu tingkat nesting); tampil setelah menu bawaan di nav.
  */
-class MenuItemResource extends Resource
+class MenuItemResource extends ScopedResource
 {
     protected static ?string $model = MenuItem::class;
 
@@ -39,12 +37,6 @@ class MenuItemResource extends Resource
     public static function getPluralLabel(): string
     {
         return 'Menu Navigasi';
-    }
-
-    /** @return Builder<MenuItem> */
-    public static function getEloquentQuery(): Builder
-    {
-        return DesaScoping::scopeForAdmin(MenuItem::query());
     }
 
     public static function form(Schema $schema): Schema

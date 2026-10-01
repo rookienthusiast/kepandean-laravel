@@ -2,16 +2,14 @@
 
 namespace App\Filament\Resources\Kegiatans\Pages;
 
+use App\Filament\Resources\Concerns\ScopedEditPage;
 use App\Filament\Resources\Kegiatans\KegiatanResource;
 use App\Models\Kegiatan;
 use App\Models\User;
-use App\Support\Filament\DesaScoping;
-use App\Support\HtmlSanitizer;
+use App\Support\Filament\TerbitanForm;
 use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\Facades\Gate;
 
-class EditKegiatan extends EditRecord
+class EditKegiatan extends ScopedEditPage
 {
     protected static string $resource = KegiatanResource::class;
 
@@ -22,26 +20,12 @@ class EditKegiatan extends EditRecord
         ];
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateScopedData(array $data, ?User $user): array
     {
-        $user = auth()->user();
-
-        abort_unless($user instanceof User, 403);
-
-        // Desa dikunci: non-techade tidak bisa memindahkan kegiatan antar desa.
-        $data = DesaScoping::lockDesaIdForSave($data);
-
-        // Editor boleh simpan draft; tombol publish ditolak (aturan #13).
-        if (($data['status'] ?? Kegiatan::STATUS_DRAFT) === Kegiatan::STATUS_PUBLISHED) {
-            Gate::forUser($user)->authorize('publish-content');
-        }
-
-        $data['isi'] = HtmlSanitizer::clean($data['isi'] ?? '');
-
-        if (($data['status'] ?? null) === Kegiatan::STATUS_PUBLISHED && empty($data['published_at'])) {
-            $data['published_at'] = now();
-        }
-
-        return $data;
+        return TerbitanForm::applyPublishRules($data, $user, Kegiatan::STATUS_PUBLISHED);
     }
 }

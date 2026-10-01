@@ -3,41 +3,28 @@
 namespace App\Filament\Resources\Beritas\Pages;
 
 use App\Filament\Resources\Beritas\BeritaResource;
+use App\Filament\Resources\Concerns\ScopedCreatePage;
 use App\Models\Berita;
 use App\Models\Kategori;
 use App\Models\User;
-use App\Support\Filament\DesaScoping;
-use App\Support\HtmlSanitizer;
-use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Support\Facades\Gate;
+use App\Support\Filament\TerbitanForm;
 
-class CreateBerita extends CreateRecord
+class CreateBerita extends ScopedCreatePage
 {
     protected static string $resource = BeritaResource::class;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateScopedData(array $data, ?User $user): array
     {
-        $user = auth()->user();
-
-        abort_unless($user instanceof User, 403);
-
-        $data = DesaScoping::resolveDesaIdForCreate($data);
-
-        // Editor boleh simpan draft; tombol publish ditolak (aturan #13).
-        if (($data['status'] ?? Berita::STATUS_DRAFT) === Berita::STATUS_PUBLISHED) {
-            Gate::forUser($user)->authorize('publish-content');
-        }
+        $data = TerbitanForm::applyPublishRules($data, $user, Berita::STATUS_PUBLISHED);
 
         // Kategori harus milik desa yang sama.
         $kategori = Kategori::withoutGlobalScope('desa')->find($data['kategori_id'] ?? null);
 
         abort_unless($kategori instanceof Kategori && $kategori->desa_id === (int) $data['desa_id'], 422);
-
-        $data['isi'] = HtmlSanitizer::clean($data['isi'] ?? '');
-
-        if (($data['status'] ?? null) === Berita::STATUS_PUBLISHED && empty($data['published_at'])) {
-            $data['published_at'] = now();
-        }
 
         return $data;
     }

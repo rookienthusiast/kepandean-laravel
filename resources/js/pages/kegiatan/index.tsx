@@ -62,13 +62,11 @@ export default function KegiatanIndex({
             <PageHero
                 eyebrow={`Informasi ${desaName}`}
                 title={`Kegiatan ${desaName}`}
-                gambarUrl={
-                    site.hero_laman?.kegiatan ??
-                    kegiatan.data[0]?.cover_url ??
-                    site.hero_fallback_url
-                }
+                site={site}
+                laman="kegiatan"
+                coverUrl={kegiatan.data[0]?.cover_url}
             />
-            <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">
+            <div className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-10 sm:px-8">
                 {kegiatan.data.length > 0 ? (
                     <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {kegiatan.data.map((item) => (

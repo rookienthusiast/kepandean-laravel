@@ -2,23 +2,21 @@
 
 namespace App\Filament\Resources\Users\Pages;
 
+use App\Filament\Resources\Concerns\ScopedCreatePage;
 use App\Filament\Resources\Users\UserResource;
 use App\Models\User;
-use App\Support\Filament\DesaScoping;
-use Filament\Resources\Pages\CreateRecord;
 
-class CreateUser extends CreateRecord
+class CreateUser extends ScopedCreatePage
 {
     protected static string $resource = UserResource::class;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateScopedData(array $data, ?User $user): array
     {
-        $user = auth()->user();
-
         abort_unless($user instanceof User && ($user->isAdminDesa() || $user->isTechade()), 403);
-
-        // Techade wajib memilih desa di form; admin_desa dikunci ke desanya sendiri.
-        $data = DesaScoping::resolveDesaIdForCreate($data);
 
         // Hanya techade yang boleh membuat akun techade.
         if (($data['role'] ?? null) === 'techade') {

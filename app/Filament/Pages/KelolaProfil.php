@@ -7,10 +7,10 @@ use App\Models\Profil;
 use App\Models\User;
 use App\Support\Filament\DesaScoping;
 use App\Support\HtmlSanitizer;
+use App\Support\Media;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
@@ -237,13 +237,7 @@ class KelolaProfil extends Page
                     ->rows(8)
                     ->columnSpanFull()
                     ->helperText('Teks biasa. Satu baris menjadi satu baris tampilan.'),
-                FileUpload::make('foto_path')
-                    ->label('Foto Sejarah')
-                    ->image()
-                    ->disk('public')
-                    ->maxSize(5120)
-                    ->directory('profil')
-                    ->visibility('public')
+                Media::upload('foto_path', 'profil', 'Foto Sejarah')
                     ->columnSpanFull()
                     ->helperText('Foto pendamping seksi Sejarah (jpg/png/webp, maks. 5 MB). Kosongkan untuk memakai placeholder.'),
             ]);

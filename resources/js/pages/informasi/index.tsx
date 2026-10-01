@@ -66,6 +66,7 @@ function tabHref(
         kategori?: string | null;
         beritaPage?: number;
         pengumumanPage?: number;
+        kegiatanPage?: number;
     },
 ) {
     const params = new URLSearchParams();
@@ -75,6 +76,8 @@ function tabHref(
         params.set('berita_page', String(opts.beritaPage));
     if (opts.pengumumanPage && opts.pengumumanPage > 1)
         params.set('pengumuman_page', String(opts.pengumumanPage));
+    if (opts.kegiatanPage && opts.kegiatanPage > 1)
+        params.set('kegiatan_page', String(opts.kegiatanPage));
     const qs = params.toString();
     return qs ? `/informasi?${qs}` : '/informasi';
 }
@@ -152,17 +155,18 @@ export default function InformasiIndex({
                         pengumuman resmi, dan kegiatan perangkat desa.
                     </>
                 }
-                gambarUrl={
-                    site.hero_laman?.informasi ??
+                site={site}
+                laman="informasi"
+                coverUrl={
                     (isBerita
                         ? berita.data[0]
                         : isPengumuman
                           ? pengumuman.data[0]
                           : kegiatan.data[0]
-                    )?.cover_url ?? site.hero_fallback_url
+                    )?.cover_url
                 }
             />
-            <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">
+            <div className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-10 sm:px-8">
                 <div
                     role="tablist"
                     aria-label="Jenis informasi"

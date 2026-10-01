@@ -180,6 +180,61 @@ class PublicSite
         ];
     }
 
+    /**
+     * Kolom tautan footer. Satu-satunya sumber di backend agar perubahan
+     * struktur tidak diedit di dua tempat (nav utama vs footer).
+     *
+     * @return array{layanan: array<int, array{label: string, href: string}>, cepat: array<int, array{label: string, href: string}>}
+     */
+    public static function footer(): array
+    {
+        $layanan = fn (): string => route('segera-hadir.layanan-warga', [], false);
+
+        return [
+            'layanan' => [
+                ['label' => 'Alur Surat Digital', 'href' => $layanan()],
+                ['label' => 'Cek Tagihan PBB', 'href' => $layanan()],
+                ['label' => 'Cek DPT Online', 'href' => $layanan()],
+                ['label' => 'Layanan Mandiri Warga', 'href' => $layanan()],
+                ['label' => 'Aduan Warga', 'href' => '/#aduan'],
+            ],
+            'cepat' => [
+                ['label' => 'Profil Desa', 'href' => route('profil.sejarah-visi-misi', [], false)],
+                ['label' => 'Sejarah & Visi Misi', 'href' => route('profil.sejarah-visi-misi', [], false)],
+                ['label' => 'Struktur Organisasi', 'href' => route('profil.struktur', [], false)],
+                ['label' => 'Peta Desa', 'href' => route('segera-hadir.kontak-lokasi', [], false)],
+                ['label' => 'Transparansi APBDes', 'href' => route('informasi', [], false)],
+            ],
+        ];
+    }
+
+    /**
+     * Jalur internal untuk sitemap, diturunkan dari nav agar laman native
+     * baru otomatis masuk sitemap tanpa edit kedua.
+     *
+     * @return array<int, string>
+     */
+    public static function sitemapPaths(): array
+    {
+        $paths = ['/'];
+
+        $collect = function (array $items) use (&$collect, &$paths): void {
+            foreach ($items as $item) {
+                if (is_string($item['href'] ?? null) && str_starts_with($item['href'], '/')) {
+                    $paths[] = $item['href'];
+                }
+
+                if (isset($item['children']) && is_array($item['children'])) {
+                    $collect($item['children']);
+                }
+            }
+        };
+
+        $collect(static::nav());
+
+        return array_values(array_unique($paths));
+    }
+
     /** @return array<string, mixed> */
     public static function sharedProps(?Desa $desa = null): array
     {
@@ -209,6 +264,7 @@ class PublicSite
             'site' => [
                 'nama' => $nama,
                 'nav' => static::nav(),
+                'footer' => static::footer(),
                 'kontak' => static::kontak(),
                 'hero_fallback_url' => is_string($fotoPath) && $fotoPath !== ''
                     ? asset('storage/'.$fotoPath)

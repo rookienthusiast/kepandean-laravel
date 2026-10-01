@@ -2,18 +2,10 @@
 
 namespace App\Filament\Resources\Kategoris\Pages;
 
+use App\Filament\Resources\Concerns\ScopedCreatePage;
 use App\Filament\Resources\Kategoris\KategoriResource;
-use App\Support\Filament\DesaScoping;
-use Filament\Resources\Pages\CreateRecord;
 
-class CreateKategori extends CreateRecord
+class CreateKategori extends ScopedCreatePage
 {
     protected static string $resource = KategoriResource::class;
-
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        $data = DesaScoping::resolveDesaIdForCreate($data);
-
-        return $data;
-    }
 }

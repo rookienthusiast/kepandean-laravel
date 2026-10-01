@@ -2,12 +2,11 @@
 
 namespace App\Filament\Resources\Pejabats\Pages;
 
+use App\Filament\Resources\Concerns\ScopedEditPage;
 use App\Filament\Resources\Pejabats\PejabatResource;
-use App\Support\Filament\DesaScoping;
 use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditPejabat extends EditRecord
+class EditPejabat extends ScopedEditPage
 {
     protected static string $resource = PejabatResource::class;
 
@@ -16,13 +15,5 @@ class EditPejabat extends EditRecord
         return [
             DeleteAction::make(),
         ];
-    }
-
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        // Admin desa tidak boleh memindahkan baris ke desa lain (dikunci eksplisit).
-        $data = DesaScoping::lockDesaIdForSave($data);
-
-        return $data;
     }
 }
