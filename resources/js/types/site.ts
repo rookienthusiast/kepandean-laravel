@@ -31,6 +31,8 @@ export interface SiteData {
     nama: string;
     nav: NavItem[];
     kontak: SiteKontak;
+    hero_fallback_url: string | null;
+    hero_laman: Record<string, string>;
 }
 
 export interface LokasiData {

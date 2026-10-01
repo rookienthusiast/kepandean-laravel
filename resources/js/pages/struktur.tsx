@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PageHero from '@/components/page-hero';
 import PublicLayout from '@/layouts/public-layout';
 import type { SiteData } from '@/types/site';
 
@@ -44,16 +45,13 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
             description={meta.description}
             site={site}
         >
-            <section className="bg-desa-900/95 px-4 py-10 text-white sm:px-6">
-                <div className="mx-auto w-full max-w-7xl">
-                    <p className="text-sm text-white/70">
-                        Profil {desaName}
-                    </p>
-                    <h1 className="mt-2 text-3xl font-bold tracking-tight">
-                        Struktur Organisasi {desaName}
-                    </h1>
-                </div>
-            </section>
+            <PageHero
+                eyebrow={`Profil ${desaName}`}
+                title={`Struktur Organisasi ${desaName}`}
+                gambarUrl={
+                    site.hero_laman?.struktur ?? site.hero_fallback_url
+                }
+            />
             <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">
                 <input
                     type="search"

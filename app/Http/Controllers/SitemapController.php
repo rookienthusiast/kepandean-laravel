@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Berita;
 use App\Models\Desa;
+use App\Models\Kegiatan;
 use App\Models\Pengumuman;
 use App\Support\PublicSite;
 use Illuminate\Http\Response as HttpResponse;
@@ -21,6 +22,7 @@ class SitemapController extends Controller
             $this->entry(route('profil.struktur'), now()),
             $this->entry(route('berita.index'), now()),
             $this->entry(route('pengumuman.index'), now()),
+            $this->entry(route('kegiatan.index'), now()),
             $this->entry(route('informasi'), now()),
         ];
 
@@ -49,6 +51,15 @@ class SitemapController extends Controller
                 $urls[] = $this->entry(
                     route('pengumuman.show', ['slug' => $pengumuman->slug]),
                     $pengumuman->updated_at ?? now(),
+                );
+            }
+
+            $kegiatans = Kegiatan::visibleForDesa($desa)->orderByDesc('published_at')->get();
+
+            foreach ($kegiatans as $kegiatan) {
+                $urls[] = $this->entry(
+                    route('kegiatan.show', ['slug' => $kegiatan->slug]),
+                    $kegiatan->updated_at ?? now(),
                 );
             }
         }

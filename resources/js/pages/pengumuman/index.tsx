@@ -1,5 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { Megaphone } from 'lucide-react';
+import PageHero from '@/components/page-hero';
+import SegeraHadirPanel from '@/components/segera-hadir-panel';
 import PublicLayout from '@/layouts/public-layout';
 import type { SiteData } from '@/types/site';
 
@@ -57,16 +59,15 @@ export default function PengumumanIndex({
             description={meta.description}
             site={site}
         >
-            <section className="bg-desa-900/95 px-4 py-10 text-white sm:px-6">
-                <div className="mx-auto w-full max-w-7xl">
-                    <p className="text-sm text-white/70">
-                        Informasi {desaName}
-                    </p>
-                    <h1 className="mt-2 text-3xl font-bold tracking-tight">
-                        Pengumuman {desaName}
-                    </h1>
-                </div>
-            </section>
+            <PageHero
+                eyebrow={`Informasi ${desaName}`}
+                title={`Pengumuman ${desaName}`}
+                gambarUrl={
+                    site.hero_laman?.pengumuman ??
+                    pengumuman.data[0]?.cover_url ??
+                    site.hero_fallback_url
+                }
+            />
             <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">
                 {pengumuman.data.length > 0 ? (
                     <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -110,9 +111,7 @@ export default function PengumumanIndex({
                         ))}
                     </ul>
                 ) : (
-                    <p className="rounded-md border border-[#e3e3e0] bg-white p-6 text-[15px] dark:border-[#3E3E3A] dark:bg-[#161615]">
-                        Belum ada pengumuman yang diterbitkan.
-                    </p>
+                    <SegeraHadirPanel label="Pengumuman" />
                 )}
                 {pages && (
                     <nav

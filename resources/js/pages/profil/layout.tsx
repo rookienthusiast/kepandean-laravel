@@ -2,7 +2,6 @@ import { Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import PublicLayout from '@/layouts/public-layout';
 import type { SiteData } from '@/types/site';
-
 export interface ProfilData {
     sejarah: string | null;
     visi: string | null;
@@ -19,6 +18,7 @@ interface ProfilLayoutProps {
     crumb: string;
     desaName: string;
     site: SiteData;
+    gambarUrl?: string | null;
     children: ReactNode;
 }
 
@@ -30,12 +30,25 @@ export default function ProfilLayout({
     crumb,
     desaName,
     site,
+    gambarUrl,
     children,
 }: ProfilLayoutProps) {
     return (
         <PublicLayout title={title} description={description} site={site}>
-            <section className="w-full bg-gradient-to-r from-desa-900 via-desa-900 to-desa-800 px-4 py-14 text-white sm:px-6 sm:py-16">
-                <div className="mx-auto w-full max-w-7xl">
+            <section className="relative flex min-h-[340px] items-center overflow-hidden bg-desa-900 text-white sm:min-h-[400px]">
+                {gambarUrl && (
+                    <img
+                        src={gambarUrl}
+                        alt=""
+                        loading="eager"
+                        className="absolute inset-0 h-full w-full object-cover"
+                    />
+                )}
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-desa-900/50"
+                />
+                <div className="relative mx-auto w-full max-w-7xl px-4 pt-28 pb-14 sm:px-6 sm:pt-36 sm:pb-16">
                     <nav
                         aria-label="Breadcrumb profil"
                         className="text-xs text-white/70"

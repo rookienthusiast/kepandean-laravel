@@ -19,6 +19,7 @@ void createInertiaApp({
             case name.startsWith('profil/'):
             case name.startsWith('berita/'):
             case name.startsWith('pengumuman/'):
+            case name.startsWith('kegiatan/'):
             case name.startsWith('informasi/'):
                 return null;
             case name.startsWith('auth/'):

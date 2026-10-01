@@ -27,6 +27,11 @@ export default function SejarahVisiMisi({
             crumb="Sejarah & Visi Misi"
             desaName={desaName}
             site={site}
+            gambarUrl={
+                site.hero_laman?.profil ??
+                profil.foto_url ??
+                site.hero_fallback_url
+            }
         >
             <section
                 id="sejarah"

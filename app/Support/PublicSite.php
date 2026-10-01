@@ -3,6 +3,9 @@
 namespace App\Support;
 
 use App\Models\Desa;
+use App\Models\LamanHero;
+use App\Models\MenuItem;
+use App\Models\Profil;
 use App\Models\Statistik;
 use Illuminate\Support\Facades\App;
 
@@ -31,6 +34,10 @@ class PublicSite
      * Item nav mockup: selalu route nyata ke slug kanonis modul
      * (/pengumuman, bukan /segera-hadir/pengumuman), tidak pernah
      * href="#", IP intranet, atau placeholder. Label mengikuti Homepage.png.
+     *
+     * Menu dinamis (issue #19 checklist 3, tabel `menu_items`) tampil
+     * SETELAH menu bawaan, terurut `urutan`; mockup bawaan tidak berubah
+     * sampai modulnya native.
      *
      * @return array<int, array{label: string, href: string, children?: array<int, array{label: string, href: string}>}>
      */
@@ -64,11 +71,58 @@ class PublicSite
                 'children' => [
                     ['label' => 'Berita Desa', 'href' => route('berita.index', [], false)],
                     ['label' => 'Pengumuman', 'href' => route('pengumuman.index', [], false)],
+                    ['label' => 'Kegiatan', 'href' => route('kegiatan.index', [], false)],
                 ],
             ],
             ['label' => 'Potensi & Galeri', 'href' => $soon('potensi-galeri')],
             ['label' => 'Kontak & Lokasi', 'href' => $soon('kontak-lokasi')],
+            ...self::dynamicMenuItems(),
         ];
+    }
+
+    /**
+     * @return array<int, array{label: string, href: string, children?: array<int, array{label: string, href: string}>}>
+     */
+    private static function dynamicMenuItems(): array
+    {
+        $desa = static::currentDesa();
+
+        if (! $desa instanceof Desa) {
+            return [];
+        }
+
+        $top = MenuItem::forDesa($desa)
+            ->whereNull('parent_id')
+            ->orderBy('urutan')
+            ->orderBy('id')
+            ->with('children')
+            ->get();
+
+        $items = [];
+
+        foreach ($top as $menu) {
+            $entry = ['label' => $menu->label, 'href' => $menu->navHref()];
+
+            $children = [];
+
+            foreach ($menu->children as $child) {
+                // Pertahanan terakhir anti-siklus: anak yang menunjuk
+                // dirinya sendiri tidak dirender.
+                if ((int) $child->getKey() === (int) $menu->getKey()) {
+                    continue;
+                }
+
+                $children[] = ['label' => $child->label, 'href' => $child->navHref()];
+            }
+
+            if ($children !== []) {
+                $entry['children'] = $children;
+            }
+
+            $items[] = $entry;
+        }
+
+        return $items;
     }
 
     /**
@@ -132,6 +186,21 @@ class PublicSite
         $desa ??= static::currentDesa();
         $nama = $desa instanceof Desa ? $desa->name : 'Desa Kepandean';
 
+        // Foto sejarah sebagai latar hero cadangan tiap halaman dalam (satu query ringan, sama untuk semua halaman).
+        $fotoPath = $desa instanceof Desa
+            ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->value('foto_path')
+            : null;
+
+        // Hero tiap laman yang diatur admin (slug => URL). Kosong berarti
+        // frontend memakai foto konten, lalu foto sejarah sebagai cadangan.
+        $heroLaman = [];
+
+        if ($desa instanceof Desa) {
+            $heroLaman = LamanHero::forDesa($desa)->get()->mapWithKeys(
+                fn (LamanHero $hero): array => [$hero->slug => asset('storage/'.$hero->gambar_path)],
+            )->all();
+        }
+
         return [
             'desa' => $desa instanceof Desa ? [
                 'name' => $desa->name,
@@ -141,6 +210,10 @@ class PublicSite
                 'nama' => $nama,
                 'nav' => static::nav(),
                 'kontak' => static::kontak(),
+                'hero_fallback_url' => is_string($fotoPath) && $fotoPath !== ''
+                    ? asset('storage/'.$fotoPath)
+                    : null,
+                'hero_laman' => $heroLaman,
             ],
             'lokasi' => static::lokasi(),
             'statistik' => Statistik::currentMap(),

@@ -102,7 +102,7 @@ function Hero({ siteName, slides }: { siteName: string; slides: HeroSlideItem[] 
 
     if (jumlah === 0) {
         return (
-            <section className="bg-desa-900 px-4 py-16 text-white sm:px-6 sm:py-20">
+            <section className="flex min-h-[540px] items-center bg-desa-900 px-4 pt-28 pb-16 text-white sm:min-h-[620px] sm:px-6 sm:pt-36 sm:pb-20">
                 <div className="mx-auto w-full max-w-7xl">
                     <p className="text-sm text-white/75">
                         Selamat datang di
@@ -142,7 +142,7 @@ function Hero({ siteName, slides }: { siteName: string; slides: HeroSlideItem[] 
             onMouseLeave={() => setJeda(false)}
             onFocus={() => setJeda(true)}
             onBlur={() => setJeda(false)}
-            className="relative overflow-hidden bg-desa-900 text-white"
+            className="relative flex min-h-[540px] items-center overflow-hidden bg-desa-900 text-white sm:min-h-[620px]"
         >
             {aktif.gambar_url && (
                 <img
@@ -156,9 +156,9 @@ function Hero({ siteName, slides }: { siteName: string; slides: HeroSlideItem[] 
             )}
             <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-desa-900/70"
+                className="absolute inset-0 bg-desa-900/50"
             />
-            <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
+            <div className="relative mx-auto w-full max-w-7xl px-4 pt-28 pb-16 sm:px-6 sm:pt-36 sm:pb-20">
                 <p className="text-sm text-white/75">
                     Selamat datang di {siteName}
                 </p>

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\AduanController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\InformasiController;
+use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\ProfilController;
@@ -115,6 +116,18 @@ Route::get('pengumuman/{slug}', [PengumumanController::class, 'show'])
 // Alias lama /segera-hadir/pengumuman diteruskan ke rute native (301).
 Route::get('segera-hadir/pengumuman', function () {
     return redirect()->route('pengumuman.index', status: 301);
+});
+
+// Kegiatan native (meniru pola Pengumuman #17: URL slug-saja,
+// tanpa filter kategori). Menggantikan mockup segera-hadir.
+Route::get('kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
+Route::get('kegiatan/{slug}', [KegiatanController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('kegiatan.show');
+
+// Alias lama /segera-hadir/kegiatan diteruskan ke rute native (301).
+Route::get('segera-hadir/kegiatan', function () {
+    return redirect()->route('kegiatan.index', status: 301);
 });
 
 // Issue #16: sitemap otomatis memuat URL berita yang baru terbit.

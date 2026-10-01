@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
-import { Megaphone } from 'lucide-react';
+import { CalendarDays, Megaphone } from 'lucide-react';
+import PageHero from '@/components/page-hero';
 import PublicLayout from '@/layouts/public-layout';
 import type { SiteData } from '@/types/site';
 
@@ -14,6 +15,15 @@ interface BeritaCard {
 }
 
 interface PengumumanCard {
+    judul: string;
+    slug: string;
+    excerpt: string | null;
+    cover_url: string | null;
+    tanggal: string;
+    url: string;
+}
+
+interface KegiatanCard {
     judul: string;
     slug: string;
     excerpt: string | null;
@@ -38,12 +48,13 @@ interface Paginator<T> {
 }
 
 interface PageProps {
-    tab: 'berita' | 'pengumuman';
+    tab: 'berita' | 'pengumuman' | 'kegiatan';
     berita: Paginator<BeritaCard>;
     pengumuman: Paginator<PengumumanCard>;
+    kegiatan: Paginator<KegiatanCard>;
     kategoris: KategoriItem[];
     activeKategori: string | null;
-    counts: { berita: number; pengumuman: number };
+    counts: { berita: number; pengumuman: number; kegiatan: number };
     desa: { name: string; slug: string } | null;
     meta: { title: string; description: string };
     site: SiteData;
@@ -114,6 +125,7 @@ export default function InformasiIndex({
     tab,
     berita,
     pengumuman,
+    kegiatan,
     kategoris,
     activeKategori,
     counts,
@@ -122,7 +134,8 @@ export default function InformasiIndex({
     site,
 }: PageProps) {
     const desaName = desa?.name ?? 'Desa';
-    const isBerita = tab !== 'pengumuman';
+    const isBerita = tab === 'berita';
+    const isPengumuman = tab === 'pengumuman';
 
     return (
         <PublicLayout
@@ -130,20 +143,25 @@ export default function InformasiIndex({
             description={meta.description}
             site={site}
         >
-            <section className="w-full bg-desa-900/95 px-4 py-10 text-white sm:px-6">
-                <div className="mx-auto w-full max-w-7xl">
-                    <p className="text-sm text-white/70">
-                        Informasi {desaName}
-                    </p>
-                    <h1 className="mt-2 text-3xl font-bold tracking-tight">
-                        Informasi {desaName}
-                    </h1>
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">
-                        Satu pintu informasi {desaName}: arsip berita terkini
-                        dan pengumuman resmi perangkat desa.
-                    </p>
-                </div>
-            </section>
+            <PageHero
+                eyebrow={`Informasi ${desaName}`}
+                title={`Informasi ${desaName}`}
+                description={
+                    <>
+                        Satu pintu informasi {desaName}: arsip berita terkini,
+                        pengumuman resmi, dan kegiatan perangkat desa.
+                    </>
+                }
+                gambarUrl={
+                    site.hero_laman?.informasi ??
+                    (isBerita
+                        ? berita.data[0]
+                        : isPengumuman
+                          ? pengumuman.data[0]
+                          : kegiatan.data[0]
+                    )?.cover_url ?? site.hero_fallback_url
+                }
+            />
             <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">
                 <div
                     role="tablist"
@@ -167,14 +185,26 @@ export default function InformasiIndex({
                     <Link
                         href={tabHref('pengumuman', {})}
                         role="tab"
-                        aria-selected={!isBerita}
+                        aria-selected={isPengumuman}
                         className={`rounded-full border px-4 py-2 text-sm font-medium ${
-                            !isBerita
+                            isPengumuman
                                 ? 'border-transparent bg-desa-900 text-white'
                                 : 'border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]'
                         }`}
                     >
                         Pengumuman ({counts.pengumuman})
+                    </Link>
+                    <Link
+                        href={tabHref('kegiatan', {})}
+                        role="tab"
+                        aria-selected={!isBerita && !isPengumuman}
+                        className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                            !isBerita && !isPengumuman
+                                ? 'border-transparent bg-desa-900 text-white'
+                                : 'border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]'
+                        }`}
+                    >
+                        Kegiatan ({counts.kegiatan})
                     </Link>
                 </div>
 
@@ -275,7 +305,7 @@ export default function InformasiIndex({
                             next={berita.next_page_url}
                         />
                     </div>
-                ) : (
+                ) : isPengumuman ? (
                     <div role="tabpanel" aria-label="Pengumuman">
                         {pengumuman.data.length > 0 ? (
                             <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -329,6 +359,62 @@ export default function InformasiIndex({
                             last={pengumuman.last_page}
                             prev={pengumuman.prev_page_url}
                             next={pengumuman.next_page_url}
+                        />
+                    </div>
+                ) : (
+                    <div role="tabpanel" aria-label="Kegiatan">
+                        {kegiatan.data.length > 0 ? (
+                            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                                {kegiatan.data.map((item) => (
+                                    <li
+                                        key={item.slug}
+                                        className="flex min-h-[44px] flex-col overflow-hidden rounded-md border border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]"
+                                    >
+                                        {item.cover_url && (
+                                            <img
+                                                src={item.cover_url}
+                                                alt={`Cover ${item.judul}`}
+                                                className="aspect-video w-full object-cover"
+                                                loading="lazy"
+                                            />
+                                        )}
+                                        <div className="flex flex-1 flex-col p-4">
+                                            <p className="mb-2 flex items-center gap-2 text-xs text-[#706f6c] dark:text-[#A1A09A]">
+                                                <span className="inline-flex items-center gap-1 rounded-full bg-[#efedea] px-2 py-0.5 font-medium text-[#37352f] dark:bg-[#2a2a28] dark:text-[#E8E7E3]">
+                                                    <CalendarDays
+                                                        className="h-3 w-3"
+                                                        aria-hidden="true"
+                                                    />
+                                                    Kegiatan
+                                                </span>
+                                                <time>{item.tanggal}</time>
+                                            </p>
+                                            <Link
+                                                href={item.url}
+                                                className="text-lg font-semibold underline-offset-4 hover:underline"
+                                            >
+                                                {item.judul}
+                                            </Link>
+                                            {item.excerpt && (
+                                                <p className="mt-2 text-[15px] leading-7 text-[#706f6c] dark:text-[#A1A09A]">
+                                                    {item.excerpt}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="rounded-md border border-[#e3e3e0] bg-white p-6 text-[15px] dark:border-[#3E3E3A] dark:bg-[#161615]">
+                                Belum ada kegiatan yang diterbitkan.
+                            </p>
+                        )}
+                        <Pagination
+                            label="Paginasi kegiatan"
+                            current={kegiatan.current_page}
+                            last={kegiatan.last_page}
+                            prev={kegiatan.prev_page_url}
+                            next={kegiatan.next_page_url}
                         />
                     </div>
                 )}

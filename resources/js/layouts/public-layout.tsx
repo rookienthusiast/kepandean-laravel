@@ -22,7 +22,7 @@ interface PublicLayoutProps {
 
 function TopBar() {
     return (
-        <div className="bg-desa-900 text-xs text-white">
+        <div className="text-xs text-white">
             <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-1.5 sm:px-6">
                 <p className="truncate">
                     Website Resmi Pemerintah Desa Kepandean | Kec. Dukuhturi,
@@ -308,8 +308,10 @@ export default function PublicLayout({
                 <meta name="description" content={description} />
             </Head>
             <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900">
-                <TopBar />
-                <header className="sticky top-0 z-40 bg-desa-900 shadow">
+                {/* Navbar overlay transparan agar menyatu dengan hero; gradasi hanya penjamin keterbacaan teks. */}
+                <div className="absolute inset-x-0 top-0 z-40 bg-gradient-to-b from-black/60 via-black/25 to-transparent">
+                    <TopBar />
+                    <header>
                     <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
                         <Link href="/" className="flex items-center gap-3">
                             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-desa-800">
@@ -339,7 +341,8 @@ export default function PublicLayout({
                             <MobileNav items={site.nav} siteName={site.nama} />
                         </div>
                     </div>
-                </header>
+                    </header>
+                </div>
                 <main className="flex-1">{children}</main>
                 <Footer site={site} />
             </div>
