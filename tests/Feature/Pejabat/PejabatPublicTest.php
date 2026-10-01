@@ -29,7 +29,7 @@ class PejabatPublicTest extends TestCase
             'urutan' => 1,
         ]);
 
-        $this->get('/struktur-pemerintahan')
+        $this->get('/profil/struktur-organisasi')
             ->assertOk()
             ->assertInertia(function ($page) {
                 $page->component('struktur');
@@ -37,6 +37,11 @@ class PejabatPublicTest extends TestCase
                 $page->where('meta.title', 'Struktur Organisasi Desa Kepandean');
                 $page->has('meta.description');
             });
+    }
+
+    public function test_legacy_struktur_url_redirects_to_profil_canonical(): void
+    {
+        $this->get('/struktur-pemerintahan')->assertRedirect('/profil/struktur-organisasi');
     }
 
     public function test_ordering_reflects_publicly(): void
@@ -49,7 +54,7 @@ class PejabatPublicTest extends TestCase
             'nama' => 'Duluan', 'jabatan' => 'Sekretaris', 'kelompok' => Pejabat::KELOMPOK_PERANGKAT, 'urutan' => 1,
         ]);
 
-        $props = $this->get('/struktur-pemerintahan')->inertiaProps();
+        $props = $this->get('/profil/struktur-organisasi')->inertiaProps();
         $items = collect($props['groups'])->firstWhere('key', Pejabat::KELOMPOK_PERANGKAT)['items'];
 
         $this->assertSame('Duluan', $items[0]['nama']);
@@ -63,7 +68,7 @@ class PejabatPublicTest extends TestCase
             'nama' => 'Budi Santoso', 'jabatan' => 'Ketua RT', 'kelompok' => Pejabat::KELOMPOK_WILAYAH, 'wilayah_label' => 'RT 01 / RW 05', 'urutan' => 1,
         ]);
 
-        $props = $this->get('/struktur-pemerintahan')->inertiaProps();
+        $props = $this->get('/profil/struktur-organisasi')->inertiaProps();
         $items = collect($props['groups'])->firstWhere('key', Pejabat::KELOMPOK_WILAYAH)['items'];
 
         $this->assertCount(1, $items);
@@ -78,7 +83,7 @@ class PejabatPublicTest extends TestCase
             'nama' => 'Rahasia B', 'jabatan' => 'Kades B', 'kelompok' => Pejabat::KELOMPOK_PIMPINAN, 'urutan' => 1,
         ]);
 
-        $props = $this->get('http://kepandean.test/struktur-pemerintahan')->inertiaProps();
+        $props = $this->get('http://kepandean.test/profil/struktur-organisasi')->inertiaProps();
         $names = collect($props['groups'])->flatMap(fn ($g) => $g['items'])->pluck('nama')->all();
 
         $this->assertNotContains('Rahasia B', $names);

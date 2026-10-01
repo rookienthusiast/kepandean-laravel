@@ -1,4 +1,4 @@
-import { FileText, Target } from 'lucide-react';
+import { FileText, Landmark, Target } from 'lucide-react';
 import ProfilLayout, { type ProfilData } from './layout';
 import SectionHeading from './section-heading';
 import type { SiteData } from '@/types/site';
@@ -10,22 +10,67 @@ interface PageProps {
     site: SiteData;
 }
 
-export default function VisiMisi({ profil, desa, meta, site }: PageProps) {
+export default function SejarahVisiMisi({
+    profil,
+    desa,
+    meta,
+    site,
+}: PageProps) {
     const desaName = desa?.name ?? 'Desa';
 
     return (
         <ProfilLayout
             title={meta.title}
             description={meta.description}
-            heading={`Visi dan Misi ${desaName}`}
-            intro={`Arah pembangunan ${desaName} yang menjadi tujuan bersama masyarakat ${desaName.toLowerCase()}.`}
-            crumb="Visi dan Misi"
+            heading={`Sejarah & Visi Misi ${desaName}`}
+            intro={`Mengenal lebih dekat sejarah ${desaName} serta arah pembangunan yang menjadi tujuan bersama masyarakat ${desaName.toLowerCase()}.`}
+            crumb="Sejarah & Visi Misi"
             desaName={desaName}
             site={site}
         >
             <section
+                id="sejarah"
+                aria-labelledby="sejarah-heading"
+                className="scroll-mt-24"
+            >
+                <SectionHeading>{`Sejarah ${desaName}`}</SectionHeading>
+                <div className="mt-6 grid gap-8 lg:grid-cols-2">
+                    <figure className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm">
+                        <div className="flex aspect-[4/3] w-full flex-col items-center justify-center bg-gradient-to-br from-desa-900 to-desa-800 p-8 text-center text-white">
+                            <Landmark
+                                className="h-12 w-12 text-white/80"
+                                aria-hidden="true"
+                            />
+                            <figcaption className="mt-4 text-sm leading-6 text-white/80">
+                                Foto gerbang {desaName} menyusul — perangkat
+                                desa akan mengunggah dokumentasi resmi setelah
+                                data dari OpenSID dikonfirmasi.
+                            </figcaption>
+                        </div>
+                    </figure>
+                    <div>
+                        {profil.sejarah ? (
+                            <article
+                                className="max-w-none text-justify text-[15px] leading-7 text-neutral-800 [&_figure]:mb-4 [&_img]:mb-4 [&_img]:w-full [&_img]:rounded-md [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-4 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6"
+                                dangerouslySetInnerHTML={{
+                                    __html: profil.sejarah,
+                                }}
+                            />
+                        ) : (
+                            <p className="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-6 text-[15px] leading-7 text-neutral-500">
+                                Konten sejarah {desaName} belum tersedia.
+                                Perangkat desa akan melengkapinya setelah data
+                                dari OpenSID dikonfirmasi.
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="visi-misi"
                 aria-labelledby="visi-misi-heading"
-                className="-mx-4 bg-slate-50 px-4 py-10 sm:-mx-6 sm:px-6"
+                className="-mx-4 mt-10 scroll-mt-24 bg-slate-50 px-4 py-10 sm:-mx-6 sm:px-6"
             >
                 <div id="visi-misi-heading">
                     <SectionHeading>{`Visi & Misi ${desaName}`}</SectionHeading>

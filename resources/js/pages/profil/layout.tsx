@@ -42,7 +42,7 @@ export default function ProfilLayout({
                         <ol className="flex items-center gap-2">
                             <li>
                                 <Link
-                                    href="/profil/sejarah"
+                                    href="/profil/sejarah-visi-misi"
                                     className="hover:underline"
                                 >
                                     Profil

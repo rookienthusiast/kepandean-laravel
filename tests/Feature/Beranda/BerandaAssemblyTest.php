@@ -81,6 +81,41 @@ class BerandaAssemblyTest extends TestCase
         $this->assertArrayNotHasKey('luas', $lokasi);
     }
 
+    public function test_lokasi_peta_avoids_nominatim_search_and_embeds_directly(): void
+    {
+        $props = $this->get('/')->inertiaProps();
+        $lokasi = $props['lokasi'] ?? [];
+
+        // Tautan _blank harus langsung (?mlat/?mlon), bukan /search?query=
+        // yang memicu "Error contacting nominatim.openstreetmap.org: 400".
+        $this->assertStringNotContainsString('/search?query=', (string) ($lokasi['peta_url'] ?? ''));
+        $this->assertStringContainsString('mlat=-6.913977', (string) ($lokasi['peta_url'] ?? ''));
+        $this->assertStringContainsString('mlon=109.112500', (string) ($lokasi['peta_url'] ?? ''));
+
+        // Peta inline memakai export/embed.html agar selalu ter-render
+        // tanpa JS Leaflet di sisi klien.
+        $this->assertStringContainsString('/export/embed.html', (string) ($lokasi['peta_embed'] ?? ''));
+        $this->assertStringContainsString('marker=-6.913977', (string) ($lokasi['peta_embed'] ?? ''));
+    }
+
+    public function test_nav_groups_struktur_under_profil_and_pemerintahan_lists_lembaga_produk_laporan(): void
+    {
+        $props = $this->get('/')->inertiaProps();
+        $items = collect($props['site']['nav'] ?? []);
+
+        $profil = $items->firstWhere('label', 'Profil Desa');
+        $pemerintahan = $items->firstWhere('label', 'Pemerintahan');
+
+        $this->assertNotEmpty($profil['children'] ?? []);
+        $this->assertContains('Struktur Organisasi', collect($profil['children'])->pluck('label')->all());
+
+        $pemLabels = collect($pemerintahan['children'] ?? [])->pluck('label')->all();
+        $this->assertContains('Lembaga Desa', $pemLabels);
+        $this->assertContains('Produk Hukum', $pemLabels);
+        $this->assertContains('Laporan', $pemLabels);
+        $this->assertNotContains('Struktur Organisasi', $pemLabels);
+    }
+
     public function test_nav_has_no_dead_links_or_intranet_ips(): void
     {
         $props = $this->get('/')->inertiaProps();
@@ -109,9 +144,12 @@ class BerandaAssemblyTest extends TestCase
     public function test_public_pages_all_render_for_footer_parity(): void
     {
         $this->get('/')->assertOk();
-        $this->get('/profil/sejarah')->assertOk();
-        $this->get('/profil/visi-misi')->assertOk();
+        $this->get('/profil/sejarah-visi-misi')->assertOk();
+        $this->get('/profil/struktur-organisasi')->assertOk();
         $this->get('/segera-hadir/layanan')->assertOk();
+        $this->get('/produk-hukum')->assertOk();
+        $this->get('/laporan')->assertOk();
+        $this->get('/lembaga-desa')->assertOk();
     }
 
     public function test_segera_hadir_page_is_honest_under_development(): void

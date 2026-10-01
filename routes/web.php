@@ -31,8 +31,8 @@ Route::get('/', function () {
         'profilExcerpt' => [
             'sejarah' => $sejarah === '' ? null : Str::limit($sejarah, 200),
             'urls' => [
-                'sejarah' => route('profil.sejarah'),
-                'visiMisi' => route('profil.visi-misi'),
+                'sejarah' => route('profil.sejarah-visi-misi', [], false).'#sejarah',
+                'visiMisi' => route('profil.sejarah-visi-misi', [], false).'#visi-misi',
             ],
         ],
         'meta' => [
@@ -43,11 +43,16 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('profil/sejarah', [ProfilController::class, 'sejarah'])->name('profil.sejarah');
-Route::get('profil/visi-misi', [ProfilController::class, 'visiMisi'])->name('profil.visi-misi');
+Route::get('profil/sejarah-visi-misi', [ProfilController::class, 'sejarahVisiMisi'])->name('profil.sejarah-visi-misi');
+Route::get('profil/struktur-organisasi', [PejabatController::class, 'index'])->name('profil.struktur');
+
+// Alias lama: satu halaman gabungan (lihat design "Sejarah & Visi misi.png")
+// + struktur di bawah Profil — diteruskan 301 agar tautan lama tidak patah.
+Route::get('profil/sejarah', fn () => redirect()->route('profil.sejarah-visi-misi', status: 301))->name('profil.sejarah');
+Route::get('profil/visi-misi', fn () => redirect()->route('profil.sejarah-visi-misi', status: 301))->name('profil.visi-misi');
 
 // Issue #15: Struktur Organisasi native (menggantikan mockup segera-hadir).
-Route::get('struktur-pemerintahan', [PejabatController::class, 'index'])->name('struktur');
+Route::get('struktur-pemerintahan', fn () => redirect()->route('profil.struktur', status: 301))->name('struktur');
 
 // Issue #16: Berita end to end (pola baku untuk Pengumuman #17).
 Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
@@ -81,6 +86,8 @@ Route::get('informasi', [InformasiController::class, 'index'])->name('informasi'
 foreach ([
     'pemerintahan' => 'Pemerintahan',
     'lembaga-desa' => 'Lembaga Desa',
+    'produk-hukum' => 'Produk Hukum',
+    'laporan' => 'Laporan',
     'layanan-warga' => 'Layanan Warga',
     'layanan' => 'Layanan',
     'potensi-galeri' => 'Potensi & Galeri',
@@ -121,6 +128,8 @@ Route::get('segera-hadir/{modul}', function (string $modul) {
 })->whereIn('modul', [
     'pemerintahan',
     'lembaga-desa',
+    'produk-hukum',
+    'laporan',
     'layanan-warga',
     'layanan',
     'potensi-galeri',

@@ -16,6 +16,8 @@ class SegeraHadirCanonicalTest extends TestCase
         $cases = [
             '/pemerintahan' => 'Pemerintahan',
             '/lembaga-desa' => 'Lembaga Desa',
+            '/produk-hukum' => 'Produk Hukum',
+            '/laporan' => 'Laporan',
             '/layanan-warga' => 'Layanan Warga',
             '/layanan' => 'Layanan',
             '/potensi-galeri' => 'Potensi & Galeri',

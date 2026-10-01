@@ -18,40 +18,31 @@ class ProfilPublicTest extends TestCase
         $this->seed(DesaSeeder::class);
     }
 
-    public function test_sejarah_page_renders_with_unique_meta(): void
+    public function test_sejarah_visi_misi_page_renders_combined_with_unique_meta(): void
     {
         $desa = Desa::where('slug', 'kepandean')->firstOrFail();
         Profil::forDesa($desa)->update([
             'sejarah' => '<p>Sejarah Kepandean</p>',
-        ]);
-
-        $this->get('/profil/sejarah')
-            ->assertOk()
-            ->assertInertia(function ($page) {
-                $page->component('profil/sejarah');
-                $page->has('profil');
-                $page->where('meta.title', 'Sejarah Desa Kepandean');
-                $page->has('meta.description');
-            });
-    }
-
-    public function test_visi_misi_page_renders_with_unique_meta(): void
-    {
-        $desa = Desa::where('slug', 'kepandean')->firstOrFail();
-        Profil::forDesa($desa)->update([
             'visi' => '<p>Visi</p>',
             'misi' => '<p>Misi</p>',
         ]);
 
-        $this->get('/profil/visi-misi')
+        $this->get('/profil/sejarah-visi-misi')
             ->assertOk()
             ->assertInertia(function ($page) {
-                $page->component('profil/visi-misi');
+                $page->component('profil/sejarah-visi-misi');
+                $page->has('profil');
                 $page->where('profil.visi', '<p>Visi</p>');
                 $page->where('profil.misi', '<p>Misi</p>');
-                $page->where('meta.title', 'Visi dan Misi Desa Kepandean');
+                $page->where('meta.title', 'Sejarah & Visi Misi Desa Kepandean');
                 $page->has('meta.description');
             });
+    }
+
+    public function test_legacy_profil_urls_redirect_to_combined_page(): void
+    {
+        $this->get('/profil/sejarah')->assertRedirect('/profil/sejarah-visi-misi');
+        $this->get('/profil/visi-misi')->assertRedirect('/profil/sejarah-visi-misi');
     }
 
     public function test_malicious_html_never_reaches_public_props(): void
@@ -61,7 +52,7 @@ class ProfilPublicTest extends TestCase
             'sejarah' => '<p>Ok</p><script>alert(1)</script>',
         ]);
 
-        $response = $this->get('/profil/sejarah');
+        $response = $this->get('/profil/sejarah-visi-misi');
 
         $response->assertOk();
 
@@ -79,7 +70,7 @@ class ProfilPublicTest extends TestCase
             'sejarah' => '<p>Rahasia Desa B</p>',
         ]);
 
-        $response = $this->get('http://kepandean.test/profil/sejarah');
+        $response = $this->get('http://kepandean.test/profil/sejarah-visi-misi');
 
         $response->assertOk();
 
@@ -91,10 +82,10 @@ class ProfilPublicTest extends TestCase
 
     public function test_empty_profil_renders_honest_empty_state(): void
     {
-        $this->get('/profil/sejarah')
+        $this->get('/profil/sejarah-visi-misi')
             ->assertOk()
             ->assertInertia(function ($page) {
-                $page->component('profil/sejarah');
+                $page->component('profil/sejarah-visi-misi');
                 $page->where('profil.sejarah', '');
                 $page->where('profil.isEmpty', true);
             });
@@ -109,12 +100,12 @@ class ProfilPublicTest extends TestCase
 
         // Unknown domains fall back to the default desa (issue 13 rule),
         // so the public page shows the default desa profil, never a leak.
-        $this->get('http://unknown-domain.test/profil/sejarah')
+        $this->get('http://unknown-domain.test/profil/sejarah-visi-misi')
             ->assertOk()
             ->assertInertia(function ($page) {
-                $page->component('profil/sejarah');
+                $page->component('profil/sejarah-visi-misi');
                 $page->where('profil.sejarah', '<p>Sejarah Default</p>');
-                $page->where('meta.title', 'Sejarah Desa Kepandean');
+                $page->where('meta.title', 'Sejarah & Visi Misi Desa Kepandean');
             });
     }
 
@@ -125,13 +116,15 @@ class ProfilPublicTest extends TestCase
             'sejarah' => '<p>Cuplikan sejarah desa untuk beranda.</p>',
         ]);
 
+        $canonical = route('profil.sejarah-visi-misi', [], false);
+
         $this->get('/')
             ->assertOk()
-            ->assertInertia(function ($page) {
+            ->assertInertia(function ($page) use ($canonical) {
                 $page->component('welcome');
                 $page->where('profilExcerpt.sejarah', 'Cuplikan sejarah desa untuk beranda.');
-                $page->where('profilExcerpt.urls.sejarah', route('profil.sejarah'));
-                $page->where('profilExcerpt.urls.visiMisi', route('profil.visi-misi'));
+                $page->where('profilExcerpt.urls.sejarah', $canonical.'#sejarah');
+                $page->where('profilExcerpt.urls.visiMisi', $canonical.'#visi-misi');
             });
     }
 

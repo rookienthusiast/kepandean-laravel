@@ -17,9 +17,8 @@ class SitemapController extends Controller
 
         $urls = [
             $this->entry(route('home'), now()),
-            $this->entry(route('profil.sejarah'), now()),
-            $this->entry(route('profil.visi-misi'), now()),
-            $this->entry(route('struktur'), now()),
+            $this->entry(route('profil.sejarah-visi-misi'), now()),
+            $this->entry(route('profil.struktur'), now()),
             $this->entry(route('berita.index'), now()),
             $this->entry(route('pengumuman.index'), now()),
             $this->entry(route('informasi'), now()),

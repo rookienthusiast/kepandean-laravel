@@ -11,28 +11,11 @@ use Inertia\Response;
 
 class ProfilController extends Controller
 {
-    public function sejarah(): Response
-    {
-        return $this->render(
-            'profil/sejarah',
-            'Sejarah',
-            fn (Desa $desa): string => "Sejarah {$desa->name}: latar dan perjalanan desa di portal resmi."
-        );
-    }
-
-    public function visiMisi(): Response
-    {
-        return $this->render(
-            'profil/visi-misi',
-            'Visi dan Misi',
-            fn (Desa $desa): string => "Visi dan misi {$desa->name}: arah pembangunan desa di portal resmi."
-        );
-    }
-
     /**
-     * @param  callable(Desa): string  $description
+     * Satu halaman gabungan Sejarah + Visi Misi
+     * (lihat design "Sejarah & Visi misi.png").
      */
-    private function render(string $component, string $pageLabel, callable $description): Response
+    public function sejarahVisiMisi(): Response
     {
         $desa = PublicSite::currentDesa();
 
@@ -40,7 +23,7 @@ class ProfilController extends Controller
             ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->first()
             : null;
 
-        return Inertia::render($component, [
+        return Inertia::render('profil/sejarah-visi-misi', [
             'profil' => [
                 'sejarah' => HtmlSanitizer::clean($profil?->sejarah),
                 'visi' => HtmlSanitizer::clean($profil?->visi),
@@ -52,8 +35,10 @@ class ProfilController extends Controller
                 'slug' => $desa->slug,
             ] : null,
             'meta' => [
-                'title' => $desa instanceof Desa ? "{$pageLabel} {$desa->name}" : $pageLabel,
-                'description' => $desa instanceof Desa ? $description($desa) : $pageLabel,
+                'title' => $desa instanceof Desa ? "Sejarah & Visi Misi {$desa->name}" : 'Sejarah & Visi Misi',
+                'description' => $desa instanceof Desa
+                    ? "Sejarah {$desa->name} serta visi dan misi: arah pembangunan desa di portal resmi."
+                    : 'Sejarah desa serta visi dan misi di portal resmi.',
             ],
             ...PublicSite::sharedProps($desa),
         ]);

@@ -42,18 +42,19 @@ class PublicSite
             ['label' => 'Beranda', 'href' => route('home', [], false)],
             [
                 'label' => 'Profil Desa',
-                'href' => route('profil.sejarah', [], false),
+                'href' => route('profil.sejarah-visi-misi', [], false),
                 'children' => [
-                    ['label' => 'Sejarah Desa', 'href' => route('profil.sejarah', [], false)],
-                    ['label' => 'Visi dan Misi', 'href' => route('profil.visi-misi', [], false)],
+                    ['label' => 'Sejarah & Visi Misi', 'href' => route('profil.sejarah-visi-misi', [], false)],
+                    ['label' => 'Struktur Organisasi', 'href' => route('profil.struktur', [], false)],
                 ],
             ],
             [
                 'label' => 'Pemerintahan',
-                'href' => $soon('pemerintahan'),
+                'href' => $soon('lembaga-desa'),
                 'children' => [
-                    ['label' => 'Struktur Organisasi', 'href' => route('struktur', [], false)],
                     ['label' => 'Lembaga Desa', 'href' => $soon('lembaga-desa')],
+                    ['label' => 'Produk Hukum', 'href' => $soon('produk-hukum')],
+                    ['label' => 'Laporan', 'href' => $soon('laporan')],
                 ],
             ],
             ['label' => 'Layanan Warga', 'href' => $soon('layanan-warga')],
@@ -75,7 +76,12 @@ class PublicSite
      * Surel + alamat mengikuti design/Homepage.png dan BUTUH konfirmasi
      * perangkat desa (lihat docs/DESIGN.md) — bukan hasil karangan.
      *
-     * @return array{kode_pos: string, koordinat: string, alamat: string, peta_url: string, surel: string}
+     * peta_url memakai tautan OSM langsung (?mlat/?mlon, bukan
+     * /search?query=) agar tidak memicu lookup Nominatim (400) di tab
+     * baru; peta_embed memakai export/embed.html agar peta selalu
+     * ter-render tanpa JS Leaflet di sisi klien.
+     *
+     * @return array{kode_pos: string, koordinat: string, alamat: string, peta_url: string, peta_embed: string, surel: string}
      */
     public static function lokasi(): array
     {
@@ -83,7 +89,8 @@ class PublicSite
             'kode_pos' => '52192',
             'koordinat' => '-6.913977, 109.112500',
             'alamat' => 'Kec. Dukuhturi, Kab. Tegal, Jawa Tengah',
-            'peta_url' => 'https://www.openstreetmap.org/search?query=-6.913977%2C109.112500#map=15/-6.913977/109.112500',
+            'peta_url' => 'https://www.openstreetmap.org/?mlat=-6.913977&mlon=109.112500#map=15/-6.913977/109.112500',
+            'peta_embed' => 'https://www.openstreetmap.org/export/embed.html?bbox=109.092500%2C-6.923977%2C109.132500%2C-6.903977&layer=mapnik&marker=-6.913977%2C109.112500',
             'surel' => 'pemdes@kepandean.desa.id',
         ];
     }

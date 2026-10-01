@@ -159,11 +159,11 @@ function Footer({ site }: { site: SiteData }) {
         { label: 'Aduan Warga', href: '/#aduan' },
     ];
     const cepat = [
-        { label: 'Profil Desa', href: '/profil/sejarah' },
-        { label: 'Sejarah & Visi Misi', href: '/profil/visi-misi' },
+        { label: 'Profil Desa', href: '/profil/sejarah-visi-misi' },
+        { label: 'Sejarah & Visi Misi', href: '/profil/sejarah-visi-misi' },
         {
             label: 'Struktur Organisasi',
-            href: '/struktur-pemerintahan',
+            href: '/profil/struktur-organisasi',
         },
         { label: 'Peta Desa', href: '/kontak-lokasi' },
         { label: 'Transparansi APBDes', href: '/informasi' },

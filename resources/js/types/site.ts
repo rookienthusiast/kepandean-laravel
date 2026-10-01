@@ -38,6 +38,7 @@ export interface LokasiData {
     koordinat: string;
     alamat: string;
     peta_url: string;
+    peta_embed: string;
     surel: string;
 }
 
