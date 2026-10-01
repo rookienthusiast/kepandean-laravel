@@ -36,17 +36,27 @@ export default function SejarahVisiMisi({
                 <SectionHeading>{`Sejarah ${desaName}`}</SectionHeading>
                 <div className="mt-6 grid gap-8 lg:grid-cols-2">
                     <figure className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm">
-                        <div className="flex aspect-[4/3] w-full flex-col items-center justify-center bg-gradient-to-br from-desa-900 to-desa-800 p-8 text-center text-white">
-                            <Landmark
-                                className="h-12 w-12 text-white/80"
-                                aria-hidden="true"
+                        {profil.foto_url ? (
+                            <img
+                                src={profil.foto_url}
+                                alt={`Foto sejarah ${desaName}`}
+                                className="aspect-[4/3] w-full object-cover"
+                                loading="lazy"
                             />
-                            <figcaption className="mt-4 text-sm leading-6 text-white/80">
-                                Foto gerbang {desaName} menyusul — perangkat
-                                desa akan mengunggah dokumentasi resmi setelah
-                                data dari OpenSID dikonfirmasi.
-                            </figcaption>
-                        </div>
+                        ) : (
+                            <div className="flex aspect-[4/3] w-full flex-col items-center justify-center bg-gradient-to-br from-desa-900 to-desa-800 p-8 text-center text-white">
+                                <Landmark
+                                    className="h-12 w-12 text-white/80"
+                                    aria-hidden="true"
+                                />
+                                <figcaption className="mt-4 text-sm leading-6 text-white/80">
+                                    Foto gerbang {desaName} menyusul —
+                                    perangkat desa akan mengunggah dokumentasi
+                                    resmi setelah data dari OpenSID
+                                    dikonfirmasi.
+                                </figcaption>
+                            </div>
+                        )}
                     </figure>
                     <div>
                         {profil.sejarah ? (

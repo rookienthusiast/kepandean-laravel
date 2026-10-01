@@ -10,6 +10,7 @@ use App\Support\HtmlSanitizer;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
@@ -111,6 +112,7 @@ class KelolaProfil extends Page
             'sejarah' => HtmlSanitizer::toPlainText($raw['sejarah'] ?? null),
             'visi' => HtmlSanitizer::toPlainText($raw['visi'] ?? null),
             'misi' => HtmlSanitizer::toPlainText($raw['misi'] ?? null),
+            'foto_path' => $raw['foto_path'] ?? null,
         ];
 
         if (auth()->user() instanceof User && auth()->user()->isTechade()) {
@@ -235,6 +237,14 @@ class KelolaProfil extends Page
                     ->rows(8)
                     ->columnSpanFull()
                     ->helperText('Teks biasa — satu baris menjadi satu baris tampilan.'),
+                FileUpload::make('foto_path')
+                    ->label('Foto Sejarah')
+                    ->image()
+                    ->maxSize(5120)
+                    ->directory('profil')
+                    ->visibility('public')
+                    ->columnSpanFull()
+                    ->helperText('Foto pendamping seksi Sejarah (jpg/png/webp, maks. 5 MB). Kosongkan untuk memakai placeholder.'),
             ]);
     }
 

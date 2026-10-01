@@ -8,6 +8,7 @@ use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\SitemapController;
+use App\Models\Berita;
 use App\Models\Desa;
 use App\Models\Profil;
 use App\Support\HtmlSanitizer;
@@ -26,6 +27,31 @@ Route::get('/', function () {
 
     $sejarah = trim(strip_tags(HtmlSanitizer::clean((string) $profil?->sejarah)));
 
+    // Berita Terkini beranda: 2 terbitan terbaru desa aktif
+    // (hanya published — draft dan desa lain tidak pernah bocor).
+    $beritaTerkini = $desa instanceof Desa
+        ? Berita::publishedForDesa($desa)
+            ->orderByDesc('published_at')
+            ->orderByDesc('id')
+            ->limit(2)
+            ->get()
+            ->map(function (Berita $berita): array {
+                $date = $berita->published_at ?? $berita->created_at ?? now();
+
+                return [
+                    'judul' => $berita->judul,
+                    'tanggal' => $date->format('d M Y'),
+                    'cover_url' => $berita->cover_path ? asset('storage/'.$berita->cover_path) : null,
+                    'url' => route('berita.show', [
+                        'tahun' => $date->format('Y'),
+                        'bulan' => $date->format('m'),
+                        'tanggal' => $date->format('d'),
+                        'slug' => $berita->slug,
+                    ]),
+                ];
+            })->all()
+        : [];
+
     return Inertia::render('welcome', [
         // Excerpt feed for the Beranda assembly in issue 18.
         'profilExcerpt' => [
@@ -35,6 +61,7 @@ Route::get('/', function () {
                 'visiMisi' => route('profil.sejarah-visi-misi', [], false).'#visi-misi',
             ],
         ],
+        'beritaTerkini' => $beritaTerkini,
         'meta' => [
             'title' => "Portal Resmi {$nama}",
             'description' => "Website resmi {$nama}: profil desa, layanan publik, berita terkini, lokasi kantor desa, dan Aduan warga.",

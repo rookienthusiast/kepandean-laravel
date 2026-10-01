@@ -45,6 +45,23 @@ class ProfilPublicTest extends TestCase
         $this->get('/profil/visi-misi')->assertRedirect('/profil/sejarah-visi-misi');
     }
 
+    public function test_sejarah_foto_from_filament_reaches_public_page(): void
+    {
+        $desa = Desa::where('slug', 'kepandean')->firstOrFail();
+        Profil::forDesa($desa)->update(['foto_path' => 'profil/sejarah.jpg']);
+
+        $props = $this->get('/profil/sejarah-visi-misi')->inertiaProps();
+
+        $this->assertStringContainsString('storage/profil/sejarah.jpg', (string) ($props['profil']['foto_url'] ?? ''));
+    }
+
+    public function test_sejarah_foto_empty_without_upload(): void
+    {
+        $props = $this->get('/profil/sejarah-visi-misi')->inertiaProps();
+
+        $this->assertNull($props['profil']['foto_url'] ?? null);
+    }
+
     public function test_malicious_html_never_reaches_public_props(): void
     {
         $desa = Desa::where('slug', 'kepandean')->firstOrFail();

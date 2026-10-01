@@ -7,6 +7,7 @@ export interface ProfilData {
     sejarah: string | null;
     visi: string | null;
     misi: string | null;
+    foto_url: string | null;
     isEmpty: boolean;
 }
 

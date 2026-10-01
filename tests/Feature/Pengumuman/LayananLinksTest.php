@@ -27,7 +27,7 @@ class LayananLinksTest extends TestCase
     /** @return array<int, string> */
     private function allowlistedHosts(): array
     {
-        return ['www.facebook.com', 'www.openstreetmap.org', 'openstreetmap.org'];
+        return ['www.facebook.com', 'maps.app.goo.gl'];
     }
 
     public function test_semua_tautan_halaman_utama_tidak_buntu(): void
@@ -100,7 +100,7 @@ class LayananLinksTest extends TestCase
 
     public function test_halaman_pengumuman_tanpa_sidebar_default(): void
     {
-        foreach (['/pengumuman', '/berita'] as $url) {
+        foreach (['/pengumuman', '/berita', '/informasi'] as $url) {
             $html = $this->get($url)->assertOk()->getContent();
 
             $this->assertIsString($html);

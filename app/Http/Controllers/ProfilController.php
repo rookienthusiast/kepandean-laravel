@@ -28,6 +28,7 @@ class ProfilController extends Controller
                 'sejarah' => HtmlSanitizer::clean($profil?->sejarah),
                 'visi' => HtmlSanitizer::clean($profil?->visi),
                 'misi' => HtmlSanitizer::clean($profil?->misi),
+                'foto_url' => $profil?->foto_path ? asset('storage/'.$profil->foto_path) : null,
                 'isEmpty' => $profil === null || $profil->isEmpty(),
             ],
             'desa' => $desa instanceof Desa ? [

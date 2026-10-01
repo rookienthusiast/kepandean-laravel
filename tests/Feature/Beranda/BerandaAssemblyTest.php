@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Beranda;
 
+use App\Models\Berita;
 use App\Models\Desa;
+use App\Models\Kategori;
 use App\Models\Profil;
 use App\Models\Statistik;
 use Database\Seeders\DesaSeeder;
@@ -35,6 +37,7 @@ class BerandaAssemblyTest extends TestCase
             ->assertInertia(function ($page) {
                 $page->component('welcome');
                 $page->has('profilExcerpt');
+                $page->has('beritaTerkini');
                 $page->has('statistik');
                 $page->has('lokasi');
                 $page->has('site');
@@ -75,27 +78,25 @@ class BerandaAssemblyTest extends TestCase
         $lokasi = $props['lokasi'] ?? [];
 
         $this->assertSame('52192', (string) ($lokasi['kode_pos'] ?? ''));
-        $this->assertStringContainsString('-6.913977', (string) ($lokasi['koordinat'] ?? ''));
-        $this->assertStringContainsString('109.112500', (string) ($lokasi['koordinat'] ?? ''));
+        $this->assertStringContainsString('-6.902522', (string) ($lokasi['koordinat'] ?? ''));
+        $this->assertStringContainsString('109.114750', (string) ($lokasi['koordinat'] ?? ''));
         // Luas belum terkonfirmasi: tidak boleh tampil.
         $this->assertArrayNotHasKey('luas', $lokasi);
     }
 
-    public function test_lokasi_peta_avoids_nominatim_search_and_embeds_directly(): void
+    public function test_lokasi_peta_blanks_to_gmaps_and_embeds_directly(): void
     {
         $props = $this->get('/')->inertiaProps();
         $lokasi = $props['lokasi'] ?? [];
 
-        // Tautan _blank harus langsung (?mlat/?mlon), bukan /search?query=
-        // yang memicu "Error contacting nominatim.openstreetmap.org: 400".
-        $this->assertStringNotContainsString('/search?query=', (string) ($lokasi['peta_url'] ?? ''));
-        $this->assertStringContainsString('mlat=-6.913977', (string) ($lokasi['peta_url'] ?? ''));
-        $this->assertStringContainsString('mlon=109.112500', (string) ($lokasi['peta_url'] ?? ''));
+        // Tombol "Buka Peta Digital" blank ke Google Maps di tab baru —
+        // bukan OSM /search yang memicu error Nominatim 400.
+        $this->assertSame('https://maps.app.goo.gl/S6XXrMWLvmspNv5N9', (string) ($lokasi['peta_url'] ?? ''));
 
         // Peta inline memakai export/embed.html agar selalu ter-render
         // tanpa JS Leaflet di sisi klien.
         $this->assertStringContainsString('/export/embed.html', (string) ($lokasi['peta_embed'] ?? ''));
-        $this->assertStringContainsString('marker=-6.913977', (string) ($lokasi['peta_embed'] ?? ''));
+        $this->assertStringContainsString('marker=-6.902522', (string) ($lokasi['peta_embed'] ?? ''));
     }
 
     public function test_nav_groups_struktur_under_profil_and_pemerintahan_lists_lembaga_produk_laporan(): void
@@ -139,6 +140,50 @@ class BerandaAssemblyTest extends TestCase
         $props = $this->get('http://kepandean.test/')->inertiaProps();
 
         $this->assertNotSame('9999', (string) ($props['statistik']['total_jiwa'] ?? ''));
+    }
+
+    public function test_berita_terkini_syncs_with_published_only(): void
+    {
+        $desa = Desa::where('slug', 'kepandean')->firstOrFail();
+        $kategori = Kategori::create(['desa_id' => $desa->id, 'nama' => 'Kegiatan', 'slug' => 'kegiatan']);
+        Berita::create([
+            'desa_id' => $desa->id, 'kategori_id' => $kategori->id, 'judul' => 'Musyawarah Desa',
+            'slug' => 'musyawarah-desa', 'isi' => '<p>Isi</p>',
+            'status' => Berita::STATUS_PUBLISHED, 'published_at' => now(),
+        ]);
+        Berita::create([
+            'desa_id' => $desa->id, 'kategori_id' => $kategori->id, 'judul' => 'Masih Draft',
+            'slug' => 'masih-draft', 'isi' => '<p>Draft</p>', 'status' => Berita::STATUS_DRAFT,
+        ]);
+
+        $props = $this->get('/')->inertiaProps();
+        $items = collect($props['beritaTerkini'] ?? []);
+
+        $this->assertCount(1, $items);
+        $this->assertSame('Musyawarah Desa', $items->first()['judul']);
+        $this->assertStringContainsString('musyawarah-desa', $items->first()['url']);
+    }
+
+    public function test_berita_terkini_never_leaks_other_desa(): void
+    {
+        $desaB = Desa::where('slug', 'desa-b')->firstOrFail();
+        $kategoriB = Kategori::create(['desa_id' => $desaB->id, 'nama' => 'Kegiatan', 'slug' => 'kegiatan']);
+        Berita::create([
+            'desa_id' => $desaB->id, 'kategori_id' => $kategoriB->id, 'judul' => 'Rahasia B',
+            'slug' => 'rahasia-b', 'isi' => '<p>B</p>',
+            'status' => Berita::STATUS_PUBLISHED, 'published_at' => now(),
+        ]);
+
+        $props = $this->get('http://kepandean.test/')->inertiaProps();
+
+        $this->assertSame([], $props['beritaTerkini'] ?? null);
+    }
+
+    public function test_berita_terkini_empty_without_published(): void
+    {
+        $props = $this->get('/')->inertiaProps();
+
+        $this->assertSame([], $props['beritaTerkini'] ?? null);
     }
 
     public function test_public_pages_all_render_for_footer_parity(): void

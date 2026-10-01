@@ -15,6 +15,7 @@ import {
 import type { FormEventHandler } from 'react';
 import PublicLayout from '@/layouts/public-layout';
 import type {
+    BeritaTerkiniItem,
     LokasiData,
     MetaData,
     ProfilExcerpt,
@@ -24,6 +25,7 @@ import type {
 
 interface WelcomeProps {
     profilExcerpt: ProfilExcerpt;
+    beritaTerkini: BeritaTerkiniItem[];
     statistik: StatistikMap;
     lokasi: LokasiData;
     site: SiteData;
@@ -135,7 +137,13 @@ function LayananPublik() {
     );
 }
 
-function SekilasSejarah({ excerpt }: { excerpt: ProfilExcerpt }) {
+function SekilasSejarah({
+    excerpt,
+    beritaTerkini,
+}: {
+    excerpt: ProfilExcerpt;
+    beritaTerkini: BeritaTerkiniItem[];
+}) {
     return (
         <section
             aria-labelledby="sekilas-sejarah"
@@ -202,11 +210,56 @@ function SekilasSejarah({ excerpt }: { excerpt: ProfilExcerpt }) {
                             Lihat semua →
                         </Link>
                     </div>
-                    <p className="mt-3 rounded-md bg-neutral-50 p-4 text-sm text-neutral-500">
-                        Kabar terbaru desa akan tampil di sini setelah modul
-                        Berita (#16) native. Arsip lama tetap dapat dibaca di
-                        situs sebelumnya.
-                    </p>
+                    {beritaTerkini.length > 0 ? (
+                        <ul className="mt-3 space-y-3">
+                            {beritaTerkini.map((item) => (
+                                <li key={item.url}>
+                                    <Link
+                                        href={item.url}
+                                        className="group flex items-center gap-3 rounded-md bg-neutral-50 p-3 hover:bg-neutral-100"
+                                    >
+                                        {item.cover_url ? (
+                                            <img
+                                                src={item.cover_url}
+                                                alt={`Cover ${item.judul}`}
+                                                className="h-14 w-20 shrink-0 rounded object-cover"
+                                                loading="lazy"
+                                            />
+                                        ) : (
+                                            <span
+                                                aria-hidden="true"
+                                                className="flex h-14 w-20 shrink-0 items-center justify-center rounded bg-desa-800/10"
+                                            >
+                                                <Newspaper
+                                                    className="h-6 w-6 text-desa-800"
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                        )}
+                                        <span className="min-w-0 flex-1">
+                                            <span className="block truncate text-sm font-medium group-hover:underline">
+                                                {item.judul}
+                                            </span>
+                                            <span className="mt-0.5 block text-xs text-neutral-500">
+                                                {item.tanggal}
+                                            </span>
+                                        </span>
+                                        <span
+                                            aria-hidden="true"
+                                            className="shrink-0 text-neutral-400 group-hover:text-desa-800"
+                                        >
+                                            ›
+                                        </span>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="mt-3 rounded-md bg-neutral-50 p-4 text-sm text-neutral-500">
+                            Belum ada berita yang diterbitkan. Arsip lama
+                            tetap dapat dibaca di situs sebelumnya.
+                        </p>
+                    )}
                 </aside>
             </div>
         </section>
@@ -602,6 +655,7 @@ function StatistikRingkas({ statistik }: { statistik: StatistikMap }) {
 
 export default function Welcome({
     profilExcerpt,
+    beritaTerkini,
     statistik,
     lokasi,
     site,
@@ -615,7 +669,10 @@ export default function Welcome({
         >
             <Hero siteName={site.nama} />
             <LayananPublik />
-            <SekilasSejarah excerpt={profilExcerpt} />
+            <SekilasSejarah
+                excerpt={profilExcerpt}
+                beritaTerkini={beritaTerkini}
+            />
             <LokasiDesa lokasi={lokasi} />
             <FormAduan />
             <StatistikRingkas statistik={statistik} />

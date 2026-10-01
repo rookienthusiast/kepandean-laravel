@@ -76,10 +76,13 @@ class PublicSite
      * Surel + alamat mengikuti design/Homepage.png dan BUTUH konfirmasi
      * perangkat desa (lihat docs/DESIGN.md) — bukan hasil karangan.
      *
-     * peta_url memakai tautan OSM langsung (?mlat/?mlon, bukan
-     * /search?query=) agar tidak memicu lookup Nominatim (400) di tab
-     * baru; peta_embed memakai export/embed.html agar peta selalu
-     * ter-render tanpa JS Leaflet di sisi klien.
+     * peta_url adalah tautan tombol "Buka Peta Digital" (blank ke tab
+     * baru); peta_embed memakai export/embed.html OSM agar peta inline
+     * selalu ter-render tanpa JS Leaflet di sisi klien.
+     *
+     * Satu-satunya tempat ganti lokasi peta: ubah koordinat + peta_url
+     * di bawah — frontend Inertia (welcome.tsx) hanya membaca props
+     * `lokasi`, tidak ada URL peta yang di-hardcode di sana.
      *
      * @return array{kode_pos: string, koordinat: string, alamat: string, peta_url: string, peta_embed: string, surel: string}
      */
@@ -87,10 +90,10 @@ class PublicSite
     {
         return [
             'kode_pos' => '52192',
-            'koordinat' => '-6.913977, 109.112500',
+            'koordinat' => '-6.902522, 109.114750',
             'alamat' => 'Kec. Dukuhturi, Kab. Tegal, Jawa Tengah',
-            'peta_url' => 'https://www.openstreetmap.org/?mlat=-6.913977&mlon=109.112500#map=15/-6.913977/109.112500',
-            'peta_embed' => 'https://www.openstreetmap.org/export/embed.html?bbox=109.092500%2C-6.923977%2C109.132500%2C-6.903977&layer=mapnik&marker=-6.913977%2C109.112500',
+            'peta_url' => 'https://maps.app.goo.gl/S6XXrMWLvmspNv5N9',
+            'peta_embed' => 'https://www.openstreetmap.org/export/embed.html?bbox=109.094750%2C-6.912522%2C109.134750%2C-6.892522&layer=mapnik&marker=-6.902522%2C109.114750',
             'surel' => 'pemdes@kepandean.desa.id',
         ];
     }

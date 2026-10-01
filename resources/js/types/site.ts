@@ -50,6 +50,13 @@ export interface StatistikMap {
     [key: string]: string;
 }
 
+export interface BeritaTerkiniItem {
+    judul: string;
+    tanggal: string;
+    cover_url: string | null;
+    url: string;
+}
+
 export interface MetaData {
     title: string;
     description: string;
