@@ -47,7 +47,7 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
             <section className="bg-desa-900/95 px-4 py-10 text-white sm:px-6">
                 <div className="mx-auto w-full max-w-7xl">
                     <p className="text-sm text-white/70">
-                        Profil — {desaName}
+                        Profil {desaName}
                     </p>
                     <h1 className="mt-2 text-3xl font-bold tracking-tight">
                         Struktur Organisasi {desaName}

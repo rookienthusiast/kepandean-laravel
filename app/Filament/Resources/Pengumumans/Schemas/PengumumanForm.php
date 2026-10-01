@@ -50,6 +50,7 @@ class PengumumanForm
                 FileUpload::make('cover_path')
                     ->label('Cover')
                     ->image()
+                    ->disk('public')
                     ->maxSize(5120)
                     ->directory('pengumuman')
                     ->visibility('public')

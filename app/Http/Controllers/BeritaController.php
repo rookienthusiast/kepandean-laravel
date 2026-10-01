@@ -106,7 +106,7 @@ class BeritaController extends Controller
                 ]),
             ],
             'meta' => [
-                'title' => "{$berita->judul} — {$nama}",
+                'title' => "{$berita->judul} ({$nama})",
                 'description' => Str::limit(trim(strip_tags($isi)), 150),
             ],
             ...PublicSite::sharedProps($desa),

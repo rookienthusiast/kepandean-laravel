@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\SitemapController;
 use App\Models\Berita;
 use App\Models\Desa;
+use App\Models\HeroSlide;
 use App\Models\Profil;
 use App\Support\HtmlSanitizer;
 use App\Support\PublicSite;
@@ -52,6 +53,22 @@ Route::get('/', function () {
             })->all()
         : [];
 
+    // Hero slider Beranda: maksimal 5 slide aktif desa ini
+    // (urutan lalu id; nonaktif dan desa lain tidak pernah bocor).
+    // Kosong → frontend menyembunyikan slider total.
+    $heroSlides = $desa instanceof Desa
+        ? HeroSlide::activeForDesa($desa)
+            ->limit(HeroSlide::MAX_ACTIVE)
+            ->get()
+            ->map(fn (HeroSlide $slide): array => [
+                'judul' => $slide->judul,
+                'subjudul' => $slide->subjudul,
+                'gambar_url' => $slide->gambar_path ? asset('storage/'.$slide->gambar_path) : null,
+                'tautan_label' => $slide->tautan_label,
+                'tautan_url' => $slide->tautan_url,
+            ])->all()
+        : [];
+
     return Inertia::render('welcome', [
         // Excerpt feed for the Beranda assembly in issue 18.
         'profilExcerpt' => [
@@ -62,6 +79,7 @@ Route::get('/', function () {
             ],
         ],
         'beritaTerkini' => $beritaTerkini,
+        'heroSlides' => $heroSlides,
         'meta' => [
             'title' => "Portal Resmi {$nama}",
             'description' => "Website resmi {$nama}: profil desa, layanan publik, berita terkini, lokasi kantor desa, dan Aduan warga.",

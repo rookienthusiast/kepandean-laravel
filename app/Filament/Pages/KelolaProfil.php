@@ -226,20 +226,21 @@ class KelolaProfil extends Page
                     ->label('Sejarah')
                     ->rows(8)
                     ->columnSpanFull()
-                    ->helperText('Teks biasa — baris kosong menjadi paragraf baru.'),
+                    ->helperText('Teks biasa. Baris kosong menjadi paragraf baru.'),
                 Textarea::make('visi')
                     ->label('Visi')
                     ->rows(4)
                     ->columnSpanFull()
-                    ->helperText('Teks biasa — baris kosong menjadi paragraf baru.'),
+                    ->helperText('Teks biasa. Baris kosong menjadi paragraf baru.'),
                 Textarea::make('misi')
                     ->label('Misi')
                     ->rows(8)
                     ->columnSpanFull()
-                    ->helperText('Teks biasa — satu baris menjadi satu baris tampilan.'),
+                    ->helperText('Teks biasa. Satu baris menjadi satu baris tampilan.'),
                 FileUpload::make('foto_path')
                     ->label('Foto Sejarah')
                     ->image()
+                    ->disk('public')
                     ->maxSize(5120)
                     ->directory('profil')
                     ->visibility('public')

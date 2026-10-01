@@ -59,8 +59,8 @@ export default function SegeraHadir({ modul, meta, site }: SegeraHadirProps) {
                     </h2>
                     <p className="mx-auto mt-2 max-w-xl text-neutral-600">
                         Mohon maaf, modul {label} sedang disiapkan oleh
-                        perangkat desa. Tidak ada tautan mati di portal ini —
-                        semua menu yang belum siap mengarah ke halaman ini
+                        perangkat desa. Tidak ada tautan mati di portal ini.
+                        Semua menu yang belum siap mengarah ke halaman ini
                         dengan jujur.
                     </p>
                     <Link

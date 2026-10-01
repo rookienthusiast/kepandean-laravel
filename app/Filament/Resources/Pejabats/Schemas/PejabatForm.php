@@ -37,6 +37,7 @@ class PejabatForm
                 FileUpload::make('foto_path')
                     ->label('Foto')
                     ->image()
+                    ->disk('public')
                     ->maxSize(5120)
                     ->directory('pejabat')
                     ->visibility('public'),

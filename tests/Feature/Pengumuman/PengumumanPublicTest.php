@@ -121,7 +121,7 @@ class PengumumanPublicTest extends TestCase
             ->assertInertia(function ($page) use ($pengumuman) {
                 $page->component('pengumuman/detail');
                 $page->where('pengumuman.judul', 'Jadwal Posyandu');
-                $page->where('meta.title', "Jadwal Posyandu — {$pengumuman->desa->name}");
+                $page->where('meta.title', "Jadwal Posyandu ({$pengumuman->desa->name})");
                 $page->has('meta.description');
             });
 

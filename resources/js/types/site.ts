@@ -36,6 +36,8 @@ export interface SiteData {
 export interface LokasiData {
     kode_pos: string;
     koordinat: string;
+    latitude: number;
+    longitude: number;
     alamat: string;
     peta_url: string;
     peta_embed: string;
@@ -55,6 +57,14 @@ export interface BeritaTerkiniItem {
     tanggal: string;
     cover_url: string | null;
     url: string;
+}
+
+export interface HeroSlideItem {
+    judul: string;
+    subjudul: string | null;
+    gambar_url: string | null;
+    tautan_label: string | null;
+    tautan_url: string | null;
 }
 
 export interface MetaData {

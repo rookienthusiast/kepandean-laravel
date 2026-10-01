@@ -81,7 +81,7 @@ export default function BeritaIndex({
             <section className="bg-desa-900/95 px-4 py-10 text-white sm:px-6">
                 <div className="mx-auto w-full max-w-7xl">
                     <p className="text-sm text-white/70">
-                        Informasi — {desaName}
+                        Informasi {desaName}
                     </p>
                     <h1 className="mt-2 text-3xl font-bold tracking-tight">
                         Berita {desaName}

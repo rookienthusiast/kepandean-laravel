@@ -60,7 +60,7 @@ export default function ProfilLayout({
                             aria-hidden="true"
                             className="inline-block h-0.5 w-10 bg-white"
                         />
-                        Profil Desa — {desaName}
+                        Profil Desa {desaName}
                     </p>
                     <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
                         {heading}

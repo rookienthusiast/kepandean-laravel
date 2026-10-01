@@ -191,7 +191,7 @@ function Footer({ site }: { site: SiteData }) {
                                 aria-hidden="true"
                             />
                             <span>
-                                Kec. Dukuhturi, Kab. Tegal, Jawa Tengah — Kode
+                                Kec. Dukuhturi, Kab. Tegal, Jawa Tengah, Kode
                                 Pos 52192
                             </span>
                         </li>

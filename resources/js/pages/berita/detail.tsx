@@ -65,7 +65,7 @@ export default function BeritaDetail({ berita, desa, meta, site }: PageProps) {
                         aria-hidden="true"
                         className="mb-8 flex w-full items-center justify-center rounded-md bg-[#efedea] py-10 text-sm text-[#706f6c] dark:bg-[#2a2a28] dark:text-[#A1A09A]"
                     >
-                        Berita {desaName} — tanpa gambar sampul
+                        Berita {desaName}, tanpa gambar sampul
                     </div>
                 )}
                 <article

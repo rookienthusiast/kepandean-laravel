@@ -50,8 +50,8 @@ export default function SejarahVisiMisi({
                                     aria-hidden="true"
                                 />
                                 <figcaption className="mt-4 text-sm leading-6 text-white/80">
-                                    Foto gerbang {desaName} menyusul —
-                                    perangkat desa akan mengunggah dokumentasi
+                                    Foto gerbang {desaName} menyusul.
+                                    Perangkat desa akan mengunggah dokumentasi
                                     resmi setelah data dari OpenSID
                                     dikonfirmasi.
                                 </figcaption>

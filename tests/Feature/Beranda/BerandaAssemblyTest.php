@@ -4,6 +4,7 @@ namespace Tests\Feature\Beranda;
 
 use App\Models\Berita;
 use App\Models\Desa;
+use App\Models\HeroSlide;
 use App\Models\Kategori;
 use App\Models\Profil;
 use App\Models\Statistik;
@@ -38,6 +39,7 @@ class BerandaAssemblyTest extends TestCase
                 $page->component('welcome');
                 $page->has('profilExcerpt');
                 $page->has('beritaTerkini');
+                $page->has('heroSlides');
                 $page->has('statistik');
                 $page->has('lokasi');
                 $page->has('site');
@@ -80,6 +82,9 @@ class BerandaAssemblyTest extends TestCase
         $this->assertSame('52192', (string) ($lokasi['kode_pos'] ?? ''));
         $this->assertStringContainsString('-6.902522', (string) ($lokasi['koordinat'] ?? ''));
         $this->assertStringContainsString('109.114750', (string) ($lokasi['koordinat'] ?? ''));
+        // Koordinat numerik untuk peta Leaflet client-only.
+        $this->assertEqualsWithDelta(-6.902522, (float) ($lokasi['latitude'] ?? 0), 0.000001);
+        $this->assertEqualsWithDelta(109.114750, (float) ($lokasi['longitude'] ?? 0), 0.000001);
         // Luas belum terkonfirmasi: tidak boleh tampil.
         $this->assertArrayNotHasKey('luas', $lokasi);
     }
@@ -184,6 +189,81 @@ class BerandaAssemblyTest extends TestCase
         $props = $this->get('/')->inertiaProps();
 
         $this->assertSame([], $props['beritaTerkini'] ?? null);
+    }
+
+    public function test_hero_slider_empty_by_default(): void
+    {
+        $props = $this->get('/')->inertiaProps();
+
+        $this->assertSame([], $props['heroSlides'] ?? null);
+    }
+
+    public function test_hero_slider_syncs_max_five_active_in_order(): void
+    {
+        $desa = Desa::where('slug', 'kepandean')->firstOrFail();
+
+        for ($i = 6; $i >= 1; $i--) {
+            HeroSlide::create([
+                'desa_id' => $desa->id,
+                'judul' => "Slide {$i}",
+                'urutan' => $i,
+                'aktif' => true,
+            ]);
+        }
+        HeroSlide::create([
+            'desa_id' => $desa->id,
+            'judul' => 'Nonaktif',
+            'urutan' => 0,
+            'aktif' => false,
+        ]);
+
+        $props = $this->get('/')->inertiaProps();
+        $items = collect($props['heroSlides'] ?? []);
+
+        // Maksimal 5 aktif, nonaktif disembunyikan, urut menaik.
+        $this->assertCount(5, $items);
+        $this->assertSame(
+            ['Slide 1', 'Slide 2', 'Slide 3', 'Slide 4', 'Slide 5'],
+            $items->pluck('judul')->all()
+        );
+        $this->assertNotContains('Nonaktif', $items->pluck('judul')->all());
+    }
+
+    public function test_hero_slider_never_leaks_other_desa(): void
+    {
+        $desaB = Desa::where('slug', 'desa-b')->firstOrFail();
+        HeroSlide::create([
+            'desa_id' => $desaB->id,
+            'judul' => 'Rahasia B',
+            'urutan' => 0,
+            'aktif' => true,
+        ]);
+
+        $props = $this->get('http://kepandean.test/')->inertiaProps();
+
+        $this->assertSame([], $props['heroSlides'] ?? null);
+    }
+
+    public function test_hero_slider_maps_gambar_and_tautan(): void
+    {
+        $desa = Desa::where('slug', 'kepandean')->firstOrFail();
+        HeroSlide::create([
+            'desa_id' => $desa->id,
+            'judul' => 'Musyawarah',
+            'subjudul' => 'Sub',
+            'tautan_label' => 'Selengkapnya',
+            'tautan_url' => '/profil/sejarah-visi-misi',
+            'urutan' => 0,
+            'aktif' => true,
+        ]);
+
+        $props = $this->get('/')->inertiaProps();
+        $item = collect($props['heroSlides'] ?? [])->first();
+
+        $this->assertSame('Musyawarah', $item['judul']);
+        $this->assertSame('Sub', $item['subjudul']);
+        $this->assertSame('Selengkapnya', $item['tautan_label']);
+        $this->assertSame('/profil/sejarah-visi-misi', $item['tautan_url']);
     }
 
     public function test_public_pages_all_render_for_footer_parity(): void

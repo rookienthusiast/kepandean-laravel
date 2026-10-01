@@ -225,7 +225,7 @@ class BeritaPublicTest extends TestCase
             ->assertInertia(function ($page) use ($berita) {
                 $page->component('berita/detail');
                 $page->where('berita.judul', 'Panen Raya');
-                $page->where('meta.title', "Panen Raya — {$berita->desa->name}");
+                $page->where('meta.title', "Panen Raya ({$berita->desa->name})");
                 $page->has('meta.description');
             });
 

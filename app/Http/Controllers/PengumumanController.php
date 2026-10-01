@@ -60,7 +60,7 @@ class PengumumanController extends Controller
                 'url' => route('pengumuman.show', ['slug' => $pengumuman->slug]),
             ],
             'meta' => [
-                'title' => "{$pengumuman->judul} — {$nama}",
+                'title' => "{$pengumuman->judul} ({$nama})",
                 'description' => Str::limit(trim(strip_tags($isi)), 150),
             ],
             ...PublicSite::sharedProps($desa),

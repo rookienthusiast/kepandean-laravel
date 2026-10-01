@@ -2,6 +2,8 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 import {
     ArrowRight,
     Bell,
+    ChevronLeft,
+    ChevronRight,
     FileText,
     IdCard,
     Info,
@@ -13,9 +15,12 @@ import {
     Users,
 } from 'lucide-react';
 import type { FormEventHandler } from 'react';
+import { useEffect, useState } from 'react';
+import LokasiMap from '@/components/lokasi-map';
 import PublicLayout from '@/layouts/public-layout';
 import type {
     BeritaTerkiniItem,
+    HeroSlideItem,
     LokasiData,
     MetaData,
     ProfilExcerpt,
@@ -26,6 +31,7 @@ import type {
 interface WelcomeProps {
     profilExcerpt: ProfilExcerpt;
     beritaTerkini: BeritaTerkiniItem[];
+    heroSlides: HeroSlideItem[];
     statistik: StatistikMap;
     lokasi: LokasiData;
     site: SiteData;
@@ -65,28 +71,175 @@ const LAYANAN = [
     },
 ];
 
-function Hero({ siteName }: { siteName: string }) {
+function Hero({ siteName, slides }: { siteName: string; slides: HeroSlideItem[] }) {
+    const [indeks, setIndeks] = useState(0);
+    const [jeda, setJeda] = useState(false);
+    const jumlah = slides.length;
+
+    useEffect(() => {
+        if (indeks >= jumlah && jumlah > 0) {
+            setIndeks(0);
+        }
+    }, [indeks, jumlah]);
+
+    useEffect(() => {
+        if (jumlah <= 1 || jeda) {
+            return;
+        }
+
+        if (
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+            return;
+        }
+
+        const id = window.setInterval(() => {
+            setIndeks((i) => (i + 1) % jumlah);
+        }, 5000);
+
+        return () => window.clearInterval(id);
+    }, [jumlah, jeda]);
+
+    if (jumlah === 0) {
+        return (
+            <section className="bg-desa-900 px-4 py-16 text-white sm:px-6 sm:py-20">
+                <div className="mx-auto w-full max-w-7xl">
+                    <p className="text-sm text-white/75">
+                        Selamat datang di
+                    </p>
+                    <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
+                        {siteName}
+                    </h1>
+                    <p className="mt-1 text-lg text-white/85">
+                        Kecamatan Dukuhturi, Kabupaten Tegal
+                    </p>
+                    <p className="mt-4 max-w-xl text-sm leading-6 text-white/75">
+                        Mengenali lebih dekat profil, informasi, pelayanan, dan
+                        potensi {siteName}.
+                    </p>
+                    <Link
+                        href="#layanan"
+                        className="mt-6 inline-flex items-center gap-2 rounded-md bg-desa-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-desa-800"
+                    >
+                        Jelajahi Desa
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                </div>
+            </section>
+        );
+    }
+
+    const aktif = slides[indeks] ?? slides[0];
+    const sebelumnya = () =>
+        setIndeks((i) => (i - 1 + jumlah) % jumlah);
+    const berikutnya = () => setIndeks((i) => (i + 1) % jumlah);
+
     return (
-        <section className="bg-desa-900 px-4 py-16 text-white sm:px-6 sm:py-20">
-            <div className="mx-auto w-full max-w-7xl">
-                <p className="text-sm text-white/75">— Selamat Datang di</p>
-                <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
-                    {siteName}
+        <section
+            aria-roledescription="carousel"
+            aria-label="Sorotan Desa Kepandean"
+            onMouseEnter={() => setJeda(true)}
+            onMouseLeave={() => setJeda(false)}
+            onFocus={() => setJeda(true)}
+            onBlur={() => setJeda(false)}
+            className="relative overflow-hidden bg-desa-900 text-white"
+        >
+            {aktif.gambar_url && (
+                <img
+                    key={aktif.gambar_url}
+                    src={aktif.gambar_url}
+                    alt=""
+                    loading={indeks === 0 ? 'eager' : 'lazy'}
+                    fetchPriority={indeks === 0 ? 'high' : 'auto'}
+                    className="absolute inset-0 h-full w-full object-cover"
+                />
+            )}
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-desa-900/70"
+            />
+            <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
+                <p className="text-sm text-white/75">
+                    Selamat datang di {siteName}
+                </p>
+                <h1 className="mt-2 max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
+                    {aktif.judul}
                 </h1>
-                <p className="mt-1 text-lg text-white/85">
-                    Kecamatan Dukuhturi, Kabupaten Tegal
+                {aktif.subjudul && (
+                    <p className="mt-3 max-w-xl text-sm leading-6 text-white/85">
+                        {aktif.subjudul}
+                    </p>
+                )}
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                    {aktif.tautan_label && aktif.tautan_url && (
+                        <Link
+                            href={aktif.tautan_url}
+                            className="inline-flex items-center gap-2 rounded-md bg-desa-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-desa-800"
+                        >
+                            {aktif.tautan_label}
+                            <ArrowRight
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                            />
+                        </Link>
+                    )}
+                    <Link
+                        href="#layanan"
+                        className="inline-flex items-center gap-2 rounded-md border border-white/40 px-5 py-2.5 text-sm font-medium text-white hover:bg-white/10"
+                    >
+                        Jelajahi Desa
+                    </Link>
+                </div>
+                {jumlah > 1 && (
+                    <div className="mt-8 flex items-center gap-4">
+                        <button
+                            type="button"
+                            onClick={sebelumnya}
+                            aria-label="Tampilkan slide sebelumnya"
+                            className="rounded-full border border-white/40 p-2 hover:bg-white/10"
+                        >
+                            <ChevronLeft
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                            />
+                        </button>
+                        <div
+                            role="tablist"
+                            aria-label="Pilih slide"
+                            className="flex items-center gap-2"
+                        >
+                            {slides.map((s, i) => (
+                                <button
+                                    key={`${s.judul}-${i}`}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={i === indeks}
+                                    aria-label={`Tampilkan slide ${i + 1}: ${s.judul}`}
+                                    onClick={() => setIndeks(i)}
+                                    className={
+                                        i === indeks
+                                            ? 'h-2.5 w-6 rounded-full bg-white'
+                                            : 'h-2.5 w-2.5 rounded-full bg-white/40 hover:bg-white/70'
+                                    }
+                                />
+                            ))}
+                        </div>
+                        <button
+                            type="button"
+                            onClick={berikutnya}
+                            aria-label="Tampilkan slide berikutnya"
+                            className="rounded-full border border-white/40 p-2 hover:bg-white/10"
+                        >
+                            <ChevronRight
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </div>
+                )}
+                <p aria-live="polite" className="sr-only">
+                    Slide {indeks + 1} dari {jumlah}: {aktif.judul}
                 </p>
-                <p className="mt-4 max-w-xl text-sm leading-6 text-white/75">
-                    Mengenali lebih dekat profil, informasi, pelayanan, dan
-                    potensi {siteName}.
-                </p>
-                <Link
-                    href="#layanan"
-                    className="mt-6 inline-flex items-center gap-2 rounded-md bg-desa-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-desa-800"
-                >
-                    Jelajahi Desa
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
             </div>
         </section>
     );
@@ -207,7 +360,7 @@ function SekilasSejarah({
                             href="/berita"
                             className="text-xs font-medium text-desa-800 hover:underline"
                         >
-                            Lihat semua →
+                            Lihat semua
                         </Link>
                     </div>
                     {beritaTerkini.length > 0 ? (
@@ -284,12 +437,20 @@ function LokasiDesa({ lokasi }: { lokasi: LokasiData }) {
                 </h2>
                 <div className="mt-6 grid gap-4 lg:grid-cols-3">
                     <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm lg:col-span-2">
-                        <iframe
-                            title="Peta lokasi Kantor Balai Desa Kepandean"
-                            src={lokasi.peta_embed}
-                            className="h-64 w-full rounded-md border-0"
-                            loading="lazy"
+                        <LokasiMap
+                            latitude={lokasi.latitude}
+                            longitude={lokasi.longitude}
+                            petaUrl={lokasi.peta_url}
+                            namaKantor="Kantor Balai Desa Kepandean"
                         />
+                        <noscript>
+                            <iframe
+                                title="Peta lokasi Kantor Balai Desa Kepandean"
+                                src={lokasi.peta_embed}
+                                className="h-64 w-full rounded-md border-0"
+                                loading="lazy"
+                            />
+                        </noscript>
                         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                             <p className="flex items-center gap-1.5 text-sm font-medium">
                                 <MapPin
@@ -615,12 +776,12 @@ function StatistikRingkas({ statistik }: { statistik: StatistikMap }) {
                     </div>
                     <div className="mt-1 flex justify-between text-xs text-neutral-600">
                         <span>
-                            Laki-laki ({fmt(statistik.laki_laki)}) —{' '}
-                            {persenLaki}%
+                            Laki-laki ({fmt(statistik.laki_laki)},{' '}
+                            {persenLaki}%)
                         </span>
                         <span>
-                            Perempuan ({fmt(statistik.perempuan)}) —{' '}
-                            {persenPerempuan}%
+                            Perempuan ({fmt(statistik.perempuan)},{' '}
+                            {persenPerempuan}%)
                         </span>
                     </div>
                 </div>
@@ -644,7 +805,7 @@ function StatistikRingkas({ statistik }: { statistik: StatistikMap }) {
                                   ).toLocaleString('id-ID', {
                                       maximumFractionDigits: 1,
                                   })
-                                : '—'}
+                                : '-'}
                         </dd>
                     </div>
                 </dl>
@@ -656,6 +817,7 @@ function StatistikRingkas({ statistik }: { statistik: StatistikMap }) {
 export default function Welcome({
     profilExcerpt,
     beritaTerkini,
+    heroSlides,
     statistik,
     lokasi,
     site,
@@ -667,7 +829,7 @@ export default function Welcome({
             description={meta.description}
             site={site}
         >
-            <Hero siteName={site.nama} />
+            <Hero siteName={site.nama} slides={heroSlides} />
             <LayananPublik />
             <SekilasSejarah
                 excerpt={profilExcerpt}
