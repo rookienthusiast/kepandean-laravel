@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Pengumumans\Tables;
 
 use App\Models\Pengumuman;
+use App\Support\Filament\DesaScoping;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -18,6 +19,11 @@ class PengumumansTable
         return $table
             ->columns([
                 ImageColumn::make('cover_path')->label('Cover')->circular(),
+                TextColumn::make('desa.name')
+                    ->label('Desa')
+                    ->searchable()
+                    ->sortable()
+                    ->visible(fn (): bool => DesaScoping::isTechadeContext()),
                 TextColumn::make('judul')->label('Judul')->searchable()->limit(50),
                 TextColumn::make('status')
                     ->label('Status')
@@ -27,6 +33,10 @@ class PengumumansTable
                 TextColumn::make('expired_at')->label('Kedaluarsa')->dateTime('d M Y H:i')->sortable(),
             ])
             ->filters([
+                SelectFilter::make('desa_id')
+                    ->label('Desa')
+                    ->relationship('desa', 'name')
+                    ->visible(fn (): bool => DesaScoping::isTechadeContext()),
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options(Pengumuman::statusOptions()),

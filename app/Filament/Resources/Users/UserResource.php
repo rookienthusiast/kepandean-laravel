@@ -8,6 +8,7 @@ use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -29,24 +30,7 @@ class UserResource extends Resource
     /** @return Builder<User> */
     public static function getEloquentQuery(): Builder
     {
-        $query = User::query();
-
-        $user = auth()->user();
-
-        if (! $user instanceof User) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        // Techade: akses semua desa, tanpa scope desa_id.
-        if ($user->isTechade()) {
-            return $query;
-        }
-
-        if ($user->desa_id === null) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->where('desa_id', $user->desa_id);
+        return DesaScoping::scopeForAdmin(User::query());
     }
 
     public static function form(Schema $schema): Schema

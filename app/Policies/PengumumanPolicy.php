@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Pengumuman;
 use App\Models\User;
+use App\Support\Filament\DesaScoping;
 
 /**
  * Issue #17: meniru BeritaPolicy (#16) — editor hanya boleh menulis draft,
@@ -18,11 +19,11 @@ class PengumumanPolicy
 
     public function view(User $user, Pengumuman $model): bool
     {
-        if ($user->isTechade()) {
+        if (DesaScoping::canSeeAllDesa($user)) {
             return true;
         }
 
-        return ($user->isEditor() || $user->isAdminDesa()) && $user->desa_id === $model->desa_id;
+        return ($user->isEditor() || $user->isAdminDesa()) && DesaScoping::sameDesa($user, $model->desa_id);
     }
 
     public function create(User $user): bool
@@ -32,21 +33,21 @@ class PengumumanPolicy
 
     public function update(User $user, Pengumuman $model): bool
     {
-        if ($user->isTechade()) {
+        if (DesaScoping::canSeeAllDesa($user)) {
             return true;
         }
 
         // Publish tetap dikunci terpisah via gate publish-content di halaman Create/Edit.
-        return ($user->isEditor() || $user->isAdminDesa()) && $user->desa_id === $model->desa_id;
+        return ($user->isEditor() || $user->isAdminDesa()) && DesaScoping::sameDesa($user, $model->desa_id);
     }
 
     public function delete(User $user, Pengumuman $model): bool
     {
-        if ($user->isTechade()) {
+        if (DesaScoping::canSeeAllDesa($user)) {
             return true;
         }
 
-        return $user->isAdminDesa() && $user->desa_id === $model->desa_id;
+        return $user->isAdminDesa() && DesaScoping::sameDesa($user, $model->desa_id);
     }
 
     public function deleteAny(User $user): bool

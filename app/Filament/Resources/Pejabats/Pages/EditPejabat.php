@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Pejabats\Pages;
 
 use App\Filament\Resources\Pejabats\PejabatResource;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
@@ -20,12 +20,8 @@ class EditPejabat extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $user = auth()->user();
-
-        // Admin desa tidak boleh memindahkan baris ke desa lain.
-        if (! ($user instanceof User && $user->isTechade())) {
-            unset($data['desa_id']);
-        }
+        // Admin desa tidak boleh memindahkan baris ke desa lain (dikunci eksplisit).
+        $data = DesaScoping::lockDesaIdForSave($data);
 
         return $data;
     }

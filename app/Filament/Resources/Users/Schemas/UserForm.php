@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use App\Models\Desa;
 use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -25,15 +25,7 @@ class UserForm
                     ->required()
                     ->maxLength(255)
                     ->unique(table: User::class, column: 'email', ignoreRecord: true),
-                Select::make('desa_id')
-                    ->label('Desa')
-                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
-                    ->required()
-                    ->live()
-                    ->searchable()
-                    ->helperText('Techade wajib memilih desa; admin desa dikunci ke desanya otomatis.')
-                    // Hanya techade yang memilih desa; admin_desa dikunci ke desanya sendiri.
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                DesaScoping::desaSelect(),
                 Select::make('role')
                     ->label('Role')
                     ->helperText('Hanya techade yang boleh memberi role techade.')

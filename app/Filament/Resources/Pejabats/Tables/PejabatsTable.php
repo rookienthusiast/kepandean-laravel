@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Pejabats\Tables;
 
 use App\Models\Pejabat;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -23,7 +23,7 @@ class PejabatsTable
                     ->label('Desa')
                     ->searchable()
                     ->sortable()
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                    ->visible(fn (): bool => DesaScoping::isTechadeContext()),
                 TextColumn::make('nama')->label('Nama')->searchable()->sortable(),
                 TextColumn::make('jabatan')->label('Jabatan')->searchable()->sortable(),
                 TextColumn::make('kelompok')
@@ -38,7 +38,7 @@ class PejabatsTable
                 SelectFilter::make('desa_id')
                     ->label('Desa')
                     ->relationship('desa', 'name')
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                    ->visible(fn (): bool => DesaScoping::isTechadeContext()),
                 SelectFilter::make('kelompok')
                     ->label('Kelompok')
                     ->options(Pejabat::kelompokOptions()),

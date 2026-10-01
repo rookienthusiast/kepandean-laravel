@@ -6,6 +6,7 @@ use App\Filament\Resources\Beritas\BeritaResource;
 use App\Models\Berita;
 use App\Models\Kategori;
 use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use App\Support\HtmlSanitizer;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Gate;
@@ -20,14 +21,7 @@ class CreateBerita extends CreateRecord
 
         abort_unless($user instanceof User, 403);
 
-        // Techade wajib memilih desa di form; selain itu dikunci ke desa sendiri.
-        if ($user->isTechade()) {
-            abort_unless(filled($data['desa_id'] ?? null), 422);
-        } else {
-            abort_unless($user->desa_id !== null, 403);
-
-            $data['desa_id'] = $user->desa_id;
-        }
+        $data = DesaScoping::resolveDesaIdForCreate($data);
 
         // Editor boleh simpan draft; tombol publish ditolak (aturan #13).
         if (($data['status'] ?? Berita::STATUS_DRAFT) === Berita::STATUS_PUBLISHED) {

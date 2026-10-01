@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\Kategoris\Schemas;
 
-use App\Models\Desa;
-use App\Models\User;
-use Filament\Forms\Components\Select;
+use App\Support\Filament\DesaScoping;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -18,11 +16,7 @@ class KategoriForm
     {
         return $schema
             ->components([
-                Select::make('desa_id')
-                    ->label('Desa')
-                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
-                    ->required()
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                DesaScoping::desaSelect(),
                 TextInput::make('nama')
                     ->label('Nama')
                     ->required()
@@ -41,13 +35,7 @@ class KategoriForm
                         column: 'slug',
                         ignoreRecord: true,
                         modifyRuleUsing: function (Unique $rule, Get $get): Unique {
-                            $user = auth()->user();
-
-                            $desaId = $user instanceof User && ! $user->isTechade()
-                                ? $user->desa_id
-                                : $get('desa_id');
-
-                            return $rule->where('desa_id', $desaId);
+                            return DesaScoping::uniqueInDesa($rule, DesaScoping::desaIdForUnique($get));
                         },
                     ),
             ]);

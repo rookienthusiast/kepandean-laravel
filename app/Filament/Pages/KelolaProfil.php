@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\Desa;
 use App\Models\Profil;
 use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use App\Support\HtmlSanitizer;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -210,10 +211,10 @@ class KelolaProfil extends Page
             ->components([
                 Select::make('desa_id')
                     ->label('Desa')
-                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
+                    ->options(fn (): array => DesaScoping::desaOptions())
                     ->required()
                     ->live()
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade())
+                    ->visible(fn (): bool => DesaScoping::isTechadeContext())
                     ->afterStateUpdated(function ($state, $livewire): void {
                         if ($livewire instanceof KelolaProfil && filled($state)) {
                             $livewire->switchDesa((int) $state);

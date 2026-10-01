@@ -8,7 +8,7 @@ use App\Filament\Resources\Beritas\Pages\ListBeritas;
 use App\Filament\Resources\Beritas\Schemas\BeritaForm;
 use App\Filament\Resources\Beritas\Tables\BeritasTable;
 use App\Models\Berita;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -44,24 +44,7 @@ class BeritaResource extends Resource
     /** @return Builder<Berita> */
     public static function getEloquentQuery(): Builder
     {
-        $query = Berita::query();
-
-        $user = auth()->user();
-
-        if (! $user instanceof User) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        // Techade: akses semua desa, tanpa scope desa_id.
-        if ($user->isTechade()) {
-            return $query;
-        }
-
-        if ($user->desa_id === null) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->where('desa_id', $user->desa_id);
+        return DesaScoping::scopeForAdmin(Berita::query());
     }
 
     public static function form(Schema $schema): Schema

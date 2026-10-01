@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Pejabats\Schemas;
 
-use App\Models\Desa;
 use App\Models\Pejabat;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -16,14 +15,7 @@ class PejabatForm
     {
         return $schema
             ->components([
-                Select::make('desa_id')
-                    ->label('Desa')
-                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
-                    ->required()
-                    ->live()
-                    ->searchable()
-                    ->helperText('Techade wajib memilih desa; admin desa dikunci ke desanya otomatis.')
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                DesaScoping::desaSelect(),
                 TextInput::make('nama')
                     ->label('Nama')
                     ->required()

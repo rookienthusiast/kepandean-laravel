@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Kategori;
 use App\Models\User;
+use App\Support\Filament\DesaScoping;
 
 /**
  * Issue #16 (revisi): sama seperti Berita — editor boleh kelola
@@ -18,11 +19,11 @@ class KategoriPolicy
 
     public function view(User $user, Kategori $model): bool
     {
-        if ($user->isTechade()) {
+        if (DesaScoping::canSeeAllDesa($user)) {
             return true;
         }
 
-        return ($user->isEditor() || $user->isAdminDesa()) && $user->desa_id === $model->desa_id;
+        return ($user->isEditor() || $user->isAdminDesa()) && DesaScoping::sameDesa($user, $model->desa_id);
     }
 
     public function create(User $user): bool
@@ -32,20 +33,20 @@ class KategoriPolicy
 
     public function update(User $user, Kategori $model): bool
     {
-        if ($user->isTechade()) {
+        if (DesaScoping::canSeeAllDesa($user)) {
             return true;
         }
 
-        return ($user->isEditor() || $user->isAdminDesa()) && $user->desa_id === $model->desa_id;
+        return ($user->isEditor() || $user->isAdminDesa()) && DesaScoping::sameDesa($user, $model->desa_id);
     }
 
     public function delete(User $user, Kategori $model): bool
     {
-        if ($user->isTechade()) {
+        if (DesaScoping::canSeeAllDesa($user)) {
             return true;
         }
 
-        return $user->isAdminDesa() && $user->desa_id === $model->desa_id;
+        return $user->isAdminDesa() && DesaScoping::sameDesa($user, $model->desa_id);
     }
 
     public function deleteAny(User $user): bool

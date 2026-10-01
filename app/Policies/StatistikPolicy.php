@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Statistik;
 use App\Models\User;
+use App\Support\Filament\DesaScoping;
 
 /**
  * Revisi peran: Statistik bukan konten editor. Hanya admin_desa
@@ -18,11 +19,11 @@ class StatistikPolicy
 
     public function view(User $user, Statistik $model): bool
     {
-        if ($user->isTechade()) {
+        if (DesaScoping::canSeeAllDesa($user)) {
             return true;
         }
 
-        return $user->isAdminDesa() && $user->desa_id === $model->desa_id;
+        return $user->isAdminDesa() && DesaScoping::sameDesa($user, $model->desa_id);
     }
 
     public function create(User $user): bool
@@ -32,20 +33,20 @@ class StatistikPolicy
 
     public function update(User $user, Statistik $model): bool
     {
-        if ($user->isTechade()) {
+        if (DesaScoping::canSeeAllDesa($user)) {
             return true;
         }
 
-        return $user->isAdminDesa() && $user->desa_id === $model->desa_id;
+        return $user->isAdminDesa() && DesaScoping::sameDesa($user, $model->desa_id);
     }
 
     public function delete(User $user, Statistik $model): bool
     {
-        if ($user->isTechade()) {
+        if (DesaScoping::canSeeAllDesa($user)) {
             return true;
         }
 
-        return $user->isAdminDesa() && $user->desa_id === $model->desa_id;
+        return $user->isAdminDesa() && DesaScoping::sameDesa($user, $model->desa_id);
     }
 
     public function deleteAny(User $user): bool

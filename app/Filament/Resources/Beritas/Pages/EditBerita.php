@@ -6,6 +6,7 @@ use App\Filament\Resources\Beritas\BeritaResource;
 use App\Models\Berita;
 use App\Models\Kategori;
 use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use App\Support\HtmlSanitizer;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
@@ -29,11 +30,7 @@ class EditBerita extends EditRecord
         abort_unless($user instanceof User, 403);
 
         // Desa dikunci: non-techade tidak bisa memindahkan berita antar desa.
-        if (! $user->isTechade()) {
-            abort_unless($user->desa_id !== null, 403);
-
-            $data['desa_id'] = $user->desa_id;
-        }
+        $data = DesaScoping::lockDesaIdForSave($data);
 
         // Editor boleh simpan draft; tombol publish ditolak (aturan #13).
         if (($data['status'] ?? Berita::STATUS_DRAFT) === Berita::STATUS_PUBLISHED) {

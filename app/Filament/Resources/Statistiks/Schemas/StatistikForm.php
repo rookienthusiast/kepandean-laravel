@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Statistiks\Schemas;
 
-use App\Models\Desa;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Validation\Rules\Unique;
 
@@ -15,14 +15,7 @@ class StatistikForm
     {
         return $schema
             ->components([
-                Select::make('desa_id')
-                    ->label('Desa')
-                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
-                    ->required()
-                    ->live()
-                    ->searchable()
-                    ->helperText('Techade wajib memilih desa; admin desa dikunci ke desanya otomatis.')
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                DesaScoping::desaSelect(),
                 Select::make('kunci')
                     ->label('Kunci')
                     ->options([
@@ -38,16 +31,8 @@ class StatistikForm
                         table: 'statistiks',
                         column: 'kunci',
                         ignoreRecord: true,
-                        modifyRuleUsing: function (Unique $rule): Unique {
-                            $user = auth()->user();
-
-                            // Techade memilih desa di form: cakupkan unik ke desa yang dipilih
-                            // bila tersedia; selain itu pakai desa user sendiri.
-                            $desaId = request()->input('data.desa_id')
-                                ?? request()->input('desa_id')
-                                ?? ($user instanceof User ? $user->desa_id : null);
-
-                            return $desaId === null ? $rule : $rule->where('desa_id', $desaId);
+                        modifyRuleUsing: function (Unique $rule, Get $get): Unique {
+                            return DesaScoping::uniqueInDesa($rule, DesaScoping::desaIdForUnique($get));
                         },
                     ),
                 TextInput::make('nilai')

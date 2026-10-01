@@ -8,7 +8,7 @@ use App\Filament\Resources\Kategoris\Pages\ListKategoris;
 use App\Filament\Resources\Kategoris\Schemas\KategoriForm;
 use App\Filament\Resources\Kategoris\Tables\KategorisTable;
 use App\Models\Kategori;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -44,24 +44,7 @@ class KategoriResource extends Resource
     /** @return Builder<Kategori> */
     public static function getEloquentQuery(): Builder
     {
-        $query = Kategori::query();
-
-        $user = auth()->user();
-
-        if (! $user instanceof User) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        // Techade: akses semua desa, tanpa scope desa_id.
-        if ($user->isTechade()) {
-            return $query;
-        }
-
-        if ($user->desa_id === null) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->where('desa_id', $user->desa_id);
+        return DesaScoping::scopeForAdmin(Kategori::query());
     }
 
     public static function form(Schema $schema): Schema

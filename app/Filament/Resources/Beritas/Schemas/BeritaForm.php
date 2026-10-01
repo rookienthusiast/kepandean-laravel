@@ -3,9 +3,7 @@
 namespace App\Filament\Resources\Beritas\Schemas;
 
 use App\Models\Berita;
-use App\Models\Desa;
-use App\Models\Kategori;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -23,25 +21,10 @@ class BeritaForm
     {
         return $schema
             ->components([
-                Select::make('desa_id')
-                    ->label('Desa')
-                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
-                    ->required()
-                    ->live()
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                DesaScoping::desaSelect(),
                 Select::make('kategori_id')
                     ->label('Kategori')
-                    ->options(function (): array {
-                        $user = auth()->user();
-
-                        $query = Kategori::query()->orderBy('nama');
-
-                        if ($user instanceof User && ! $user->isTechade() && $user->desa_id !== null) {
-                            $query->where('desa_id', $user->desa_id);
-                        }
-
-                        return $query->pluck('nama', 'id')->all();
-                    })
+                    ->options(fn (Get $get): array => DesaScoping::kategoriOptions(null, $get('desa_id')))
                     ->required()
                     ->searchable(),
                 TextInput::make('judul')
@@ -62,13 +45,7 @@ class BeritaForm
                         column: 'slug',
                         ignoreRecord: true,
                         modifyRuleUsing: function (Unique $rule, Get $get): Unique {
-                            $user = auth()->user();
-
-                            $desaId = $user instanceof User && ! $user->isTechade()
-                                ? $user->desa_id
-                                : $get('desa_id');
-
-                            return $rule->where('desa_id', $desaId);
+                            return DesaScoping::uniqueInDesa($rule, DesaScoping::desaIdForUnique($get));
                         },
                     ),
                 RichEditor::make('isi')

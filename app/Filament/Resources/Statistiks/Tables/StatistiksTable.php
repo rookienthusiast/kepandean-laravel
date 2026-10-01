@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Statistiks\Tables;
 
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -31,7 +31,7 @@ class StatistiksTable
                     ->label('Desa')
                     ->searchable()
                     ->sortable()
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                    ->visible(fn (): bool => DesaScoping::isTechadeContext()),
                 TextColumn::make('kunci')
                     ->label('Kunci')
                     ->badge()
@@ -45,7 +45,7 @@ class StatistiksTable
                 SelectFilter::make('desa_id')
                     ->label('Desa')
                     ->relationship('desa', 'name')
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                    ->visible(fn (): bool => DesaScoping::isTechadeContext()),
                 SelectFilter::make('kunci')
                     ->label('Kunci')
                     ->options(self::kunciOptions()),

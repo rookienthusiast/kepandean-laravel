@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Pengumumans\Schemas;
 
-use App\Models\Desa;
 use App\Models\Pengumuman;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -22,12 +21,7 @@ class PengumumanForm
     {
         return $schema
             ->components([
-                Select::make('desa_id')
-                    ->label('Desa')
-                    ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
-                    ->required()
-                    ->live()
-                    ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
+                DesaScoping::desaSelect(),
                 TextInput::make('judul')
                     ->label('Judul')
                     ->required()
@@ -46,13 +40,7 @@ class PengumumanForm
                         column: 'slug',
                         ignoreRecord: true,
                         modifyRuleUsing: function (Unique $rule, Get $get): Unique {
-                            $user = auth()->user();
-
-                            $desaId = $user instanceof User && ! $user->isTechade()
-                                ? $user->desa_id
-                                : $get('desa_id');
-
-                            return $rule->where('desa_id', $desaId);
+                            return DesaScoping::uniqueInDesa($rule, DesaScoping::desaIdForUnique($get));
                         },
                     ),
                 RichEditor::make('isi')

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Pengumumans\Pages;
 use App\Filament\Resources\Pengumumans\PengumumanResource;
 use App\Models\Pengumuman;
 use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use App\Support\HtmlSanitizer;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
@@ -28,11 +29,7 @@ class EditPengumuman extends EditRecord
         abort_unless($user instanceof User, 403);
 
         // Desa dikunci: non-techade tidak bisa memindahkan pengumuman antar desa.
-        if (! $user->isTechade()) {
-            abort_unless($user->desa_id !== null, 403);
-
-            $data['desa_id'] = $user->desa_id;
-        }
+        $data = DesaScoping::lockDesaIdForSave($data);
 
         // Editor boleh simpan draft; tombol publish ditolak (aturan #13).
         if (($data['status'] ?? Pengumuman::STATUS_DRAFT) === Pengumuman::STATUS_PUBLISHED) {

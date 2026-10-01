@@ -8,7 +8,7 @@ use App\Filament\Resources\Pengumumans\Pages\ListPengumumans;
 use App\Filament\Resources\Pengumumans\Schemas\PengumumanForm;
 use App\Filament\Resources\Pengumumans\Tables\PengumumansTable;
 use App\Models\Pengumuman;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -48,24 +48,7 @@ class PengumumanResource extends Resource
     /** @return Builder<Pengumuman> */
     public static function getEloquentQuery(): Builder
     {
-        $query = Pengumuman::query();
-
-        $user = auth()->user();
-
-        if (! $user instanceof User) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        // Techade: akses semua desa, tanpa scope desa_id.
-        if ($user->isTechade()) {
-            return $query;
-        }
-
-        if ($user->desa_id === null) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->where('desa_id', $user->desa_id);
+        return DesaScoping::scopeForAdmin(Pengumuman::query());
     }
 
     public static function form(Schema $schema): Schema

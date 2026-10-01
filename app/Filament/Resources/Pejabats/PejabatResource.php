@@ -8,7 +8,7 @@ use App\Filament\Resources\Pejabats\Pages\ListPejabats;
 use App\Filament\Resources\Pejabats\Schemas\PejabatForm;
 use App\Filament\Resources\Pejabats\Tables\PejabatsTable;
 use App\Models\Pejabat;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -44,24 +44,7 @@ class PejabatResource extends Resource
     /** @return Builder<Pejabat> */
     public static function getEloquentQuery(): Builder
     {
-        $query = Pejabat::query();
-
-        $user = auth()->user();
-
-        if (! $user instanceof User) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        // Techade: akses semua desa, tanpa scope desa_id.
-        if ($user->isTechade()) {
-            return $query;
-        }
-
-        if ($user->desa_id === null) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->where('desa_id', $user->desa_id);
+        return DesaScoping::scopeForAdmin(Pejabat::query());
     }
 
     public static function form(Schema $schema): Schema

@@ -8,7 +8,7 @@ use App\Filament\Resources\Statistiks\Pages\ListStatistiks;
 use App\Filament\Resources\Statistiks\Schemas\StatistikForm;
 use App\Filament\Resources\Statistiks\Tables\StatistiksTable;
 use App\Models\Statistik;
-use App\Models\User;
+use App\Support\Filament\DesaScoping;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -34,24 +34,7 @@ class StatistikResource extends Resource
     /** @return Builder<Statistik> */
     public static function getEloquentQuery(): Builder
     {
-        $query = Statistik::query();
-
-        $user = auth()->user();
-
-        if (! $user instanceof User) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        // Techade: akses semua desa, tanpa scope desa_id.
-        if ($user->isTechade()) {
-            return $query;
-        }
-
-        if ($user->desa_id === null) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->where('desa_id', $user->desa_id);
+        return DesaScoping::scopeForAdmin(Statistik::query());
     }
 
     public static function form(Schema $schema): Schema
