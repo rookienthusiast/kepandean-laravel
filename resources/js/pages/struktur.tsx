@@ -45,7 +45,7 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
             site={site}
         >
             <section className="bg-desa-900/95 px-4 py-10 text-white sm:px-6">
-                <div className="mx-auto w-full max-w-6xl">
+                <div className="mx-auto w-full max-w-7xl">
                     <p className="text-sm text-white/70">
                         Pemerintahan — {desaName}
                     </p>
@@ -54,7 +54,7 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
                     </h1>
                 </div>
             </section>
-            <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
+            <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">
                 <input
                     type="search"
                     value={query}

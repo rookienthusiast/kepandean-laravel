@@ -19,6 +19,9 @@ class StatistikForm
                     ->label('Desa')
                     ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
                     ->required()
+                    ->live()
+                    ->searchable()
+                    ->helperText('Techade wajib memilih desa; admin desa dikunci ke desanya otomatis.')
                     ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
                 Select::make('kunci')
                     ->label('Kunci')

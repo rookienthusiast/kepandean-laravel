@@ -23,7 +23,7 @@ interface PublicLayoutProps {
 function TopBar() {
     return (
         <div className="bg-desa-900 text-xs text-white">
-            <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-1.5 sm:px-6">
+            <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-1.5 sm:px-6">
                 <p className="truncate">
                     Website Resmi Pemerintah Desa Kepandean | Kec. Dukuhturi,
                     Kab. Tegal, Jawa Tengah
@@ -171,7 +171,7 @@ function Footer({ site }: { site: SiteData }) {
 
     return (
         <footer className="border-t border-neutral-200 bg-white">
-            <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+            <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
                 <div>
                     <p className="text-sm font-bold tracking-wide text-desa-800">
                         DESA KEPANDEAN
@@ -281,7 +281,7 @@ function Footer({ site }: { site: SiteData }) {
                 </div>
             </div>
             <div className="border-t border-neutral-200 bg-indigo-50/50">
-                <div className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3 text-xs text-neutral-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <div className="mx-auto flex w-full max-w-7xl flex-col gap-1 px-4 py-3 text-xs text-neutral-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                     <p className="flex items-center gap-1">
                         <Clock className="h-3.5 w-3.5" aria-hidden="true" />©
                         2026 Pemerintah Desa Kepandean, Kecamatan Dukuhturi,
@@ -310,7 +310,7 @@ export default function PublicLayout({
             <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900">
                 <TopBar />
                 <header className="sticky top-0 z-40 bg-desa-900 shadow">
-                    <div className="relative mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+                    <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
                         <Link href="/" className="flex items-center gap-3">
                             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-desa-800">
                                 K

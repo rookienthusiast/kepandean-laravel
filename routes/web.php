@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\AduanController;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\ProfilController;
@@ -69,16 +70,19 @@ Route::get('segera-hadir/pengumuman', function () {
 // Issue #16: sitemap otomatis memuat URL berita yang baru terbit.
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-// Modul belum-siap memakai slug kanonisnya sendiri (/informasi,
-// bukan /segera-hadir/informasi) dengan status under-development
+// Issue gabungan: halaman Informasi agregat Berita + Pengumuman
+// (tab/filter/paginasi terpisah, bukan load semua sekaligus).
+Route::get('informasi', [InformasiController::class, 'index'])->name('informasi');
+
+// Modul belum-siap memakai slug kanonisnya sendiri (/pemerintahan,
+// bukan /segera-hadir/...) dengan status under-development
 // eksplisit — tidak pernah 404 / link mati / hash.
-// (Pengumuman sudah native via issue #17, bukan mockup lagi.)
+// (Pengumuman sudah native via issue #17, Informasi native via agregat.)
 foreach ([
     'pemerintahan' => 'Pemerintahan',
     'lembaga-desa' => 'Lembaga Desa',
     'layanan-warga' => 'Layanan Warga',
     'layanan' => 'Layanan',
-    'informasi' => 'Informasi',
     'potensi-galeri' => 'Potensi & Galeri',
     'kontak-lokasi' => 'Kontak & Lokasi',
 ] as $slug => $label) {
@@ -98,6 +102,10 @@ foreach ([
 }
 
 // Alias lama dipertahankan agar tautan lama tidak patah (tetap 200).
+// Alias lama /segera-hadir/informasi diteruskan ke rute native (301).
+Route::get('segera-hadir/informasi', function () {
+    return redirect()->route('informasi', status: 301);
+});
 Route::get('segera-hadir/{modul}', function (string $modul) {
     $desa = PublicSite::currentDesa();
     $nama = PublicSite::displayName($desa);
@@ -115,7 +123,6 @@ Route::get('segera-hadir/{modul}', function (string $modul) {
     'lembaga-desa',
     'layanan-warga',
     'layanan',
-    'informasi',
     'potensi-galeri',
     'kontak-lokasi',
 ])->name('segera-hadir');

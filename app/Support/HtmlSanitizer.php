@@ -13,7 +13,9 @@ class HtmlSanitizer
      */
     private const ALLOWED_TAGS = [
         'p', 'br', 'strong', 'b', 'em', 'i', 'u',
-        'ul', 'ol', 'li', 'a', 'h2', 'h3', 'h4', 'blockquote',
+        'ul', 'ol', 'li', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote',
+        'img', 'figure', 'figcaption', 'hr', 'pre', 'code', 'table', 'thead',
+        'tbody', 'tr', 'th', 'td',
     ];
 
     /**
@@ -170,7 +172,8 @@ class HtmlSanitizer
             }
 
             if (in_array($name, ['href', 'src'], true)) {
-                $allowed = $tag === 'a' && $name === 'href' && self::isSafeUrl($value);
+                $allowed = ($tag === 'a' && $name === 'href' && self::isSafeUrl($value))
+                    || ($tag === 'img' && $name === 'src' && self::isSafeImageSrc($value));
 
                 if (! $allowed) {
                     $toRemove[] = $attribute->nodeName;
@@ -179,7 +182,7 @@ class HtmlSanitizer
                 continue;
             }
 
-            if (! in_array($name, ['title'], true)) {
+            if (! in_array($name, ['title', 'alt', 'width', 'height', 'loading'], true)) {
                 $toRemove[] = $attribute->nodeName;
             }
         }
@@ -197,6 +200,25 @@ class HtmlSanitizer
 
         if (preg_match('#^\s*(javascript|data|vbscript)\s*:#i', $url)) {
             return false;
+        }
+
+        return true;
+    }
+
+    private static function isSafeImageSrc(string $url): bool
+    {
+        if ($url === '') {
+            return false;
+        }
+
+        // Tolak skema aktif; izinkan http(s), path relatif (/storage/...),
+        // dan data:image yang aman (hasil RichEditor Cropper).
+        if (preg_match('#^\s*(javascript|vbscript)\s*:#i', $url)) {
+            return false;
+        }
+
+        if (preg_match('#^\s*data\s*:#i', $url)) {
+            return (bool) preg_match('#^\s*data:image/(png|jpe?g|gif|webp);base64,#i', $url);
         }
 
         return true;

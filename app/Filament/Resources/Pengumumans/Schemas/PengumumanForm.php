@@ -6,6 +6,7 @@ use App\Models\Desa;
 use App\Models\Pengumuman;
 use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -58,6 +59,13 @@ class PengumumanForm
                     ->label('Isi')
                     ->required()
                     ->columnSpanFull(),
+                FileUpload::make('cover_path')
+                    ->label('Cover')
+                    ->image()
+                    ->maxSize(5120)
+                    ->directory('pengumuman')
+                    ->visibility('public')
+                    ->helperText('Opsional. Gambar sampul (jpg/png/webp/gif/svg).'),
                 Select::make('status')
                     ->label('Status')
                     ->options(Pengumuman::statusOptions())

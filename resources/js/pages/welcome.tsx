@@ -67,7 +67,7 @@ const LAYANAN = [
 function Hero({ siteName }: { siteName: string }) {
     return (
         <section className="bg-desa-900 px-4 py-16 text-white sm:px-6 sm:py-20">
-            <div className="mx-auto w-full max-w-6xl">
+            <div className="mx-auto w-full max-w-7xl">
                 <p className="text-sm text-white/75">— Selamat Datang di</p>
                 <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
                     {siteName}
@@ -95,7 +95,7 @@ function SorotanProfil({ excerpt }: { excerpt: ProfilExcerpt }) {
     return (
         <section
             aria-labelledby="sorotan-profil"
-            className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6"
+            className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6"
         >
             <h2
                 id="sorotan-profil"
@@ -147,7 +147,7 @@ function LayananPublik() {
         <section
             id="layanan"
             aria-labelledby="layanan-publik"
-            className="mx-auto w-full max-w-6xl scroll-mt-24 px-4 py-10 sm:px-6"
+            className="mx-auto w-full max-w-7xl scroll-mt-24 px-4 py-10 sm:px-6"
         >
             <h2
                 id="layanan-publik"
@@ -191,7 +191,7 @@ function SekilasSejarah({ excerpt }: { excerpt: ProfilExcerpt }) {
     return (
         <section
             aria-labelledby="sekilas-sejarah"
-            className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6"
+            className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6"
         >
             <div className="grid gap-6 lg:grid-cols-3">
                 <article className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm lg:col-span-2">
@@ -271,7 +271,7 @@ function LokasiDesa({ lokasi }: { lokasi: LokasiData }) {
             aria-labelledby="lokasi-desa"
             className="bg-violet-50/50 px-4 py-10 sm:px-6"
         >
-            <div className="mx-auto w-full max-w-6xl">
+            <div className="mx-auto w-full max-w-7xl">
                 <p className="text-xs font-semibold tracking-widest text-desa-800 uppercase">
                     Peta &amp; Aksesibilitas
                 </p>
@@ -367,7 +367,7 @@ function FormAduan() {
         <section
             id="aduan"
             aria-labelledby="aduan-warga"
-            className="mx-auto w-full max-w-6xl scroll-mt-24 px-4 py-10 sm:px-6"
+            className="mx-auto w-full max-w-7xl scroll-mt-24 px-4 py-10 sm:px-6"
         >
             <div className="rounded-lg bg-gradient-to-r from-teal-800 to-sky-700 p-6 text-white sm:p-8">
                 <div className="grid items-center gap-6 lg:grid-cols-2">
@@ -575,7 +575,7 @@ function StatistikRingkas({ statistik }: { statistik: StatistikMap }) {
     return (
         <section
             aria-labelledby="statistik-penduduk"
-            className="mx-auto w-full max-w-6xl px-4 pb-12 sm:px-6"
+            className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6"
         >
             <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
                 <div className="flex items-center justify-between">

@@ -11,13 +11,13 @@ class SegeraHadirCanonicalTest extends TestCase
 
     public function test_modul_belum_siap_pakai_slug_kanonis(): void
     {
-        // NB issue #17: /pengumuman sudah native, bukan mockup lagi.
+        // NB issue #17: /pengumuman sudah native, /informasi agregat native —
+        // keduanya bukan mockup lagi.
         $cases = [
             '/pemerintahan' => 'Pemerintahan',
             '/lembaga-desa' => 'Lembaga Desa',
             '/layanan-warga' => 'Layanan Warga',
             '/layanan' => 'Layanan',
-            '/informasi' => 'Informasi',
             '/potensi-galeri' => 'Potensi & Galeri',
             '/kontak-lokasi' => 'Kontak & Lokasi',
         ];
@@ -36,6 +36,11 @@ class SegeraHadirCanonicalTest extends TestCase
     {
         // NB issue #17: alias lama 301 ke rute native (bukan 200 mockup).
         $this->get('/segera-hadir/pengumuman')->assertStatus(301)->assertRedirect('/pengumuman');
+    }
+
+    public function test_alias_lama_informasi_diteruskan_ke_native(): void
+    {
+        $this->get('/segera-hadir/informasi')->assertStatus(301)->assertRedirect('/informasi');
     }
 
     public function test_nav_memakai_url_kanonis(): void

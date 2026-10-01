@@ -54,6 +54,7 @@ class PengumumanController extends Controller
                 'judul' => $pengumuman->judul,
                 'slug' => $pengumuman->slug,
                 'isi' => $isi,
+                'cover_url' => $pengumuman->cover_path ? asset('storage/'.$pengumuman->cover_path) : null,
                 'tanggal' => $date->format('d M Y'),
                 'kedaluarsa' => $pengumuman->expired_at?->format('d M Y'),
                 'url' => route('pengumuman.show', ['slug' => $pengumuman->slug]),
@@ -76,6 +77,7 @@ class PengumumanController extends Controller
             'judul' => $pengumuman->judul,
             'slug' => $pengumuman->slug,
             'excerpt' => $excerpt === '' ? null : $excerpt,
+            'cover_url' => $pengumuman->cover_path ? asset('storage/'.$pengumuman->cover_path) : null,
             'tanggal' => $date->format('d M Y'),
             'url' => route('pengumuman.show', ['slug' => $pengumuman->slug]),
         ];

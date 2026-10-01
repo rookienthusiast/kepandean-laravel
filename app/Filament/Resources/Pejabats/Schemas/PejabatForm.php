@@ -20,6 +20,9 @@ class PejabatForm
                     ->label('Desa')
                     ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
                     ->required()
+                    ->live()
+                    ->searchable()
+                    ->helperText('Techade wajib memilih desa; admin desa dikunci ke desanya otomatis.')
                     ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
                 TextInput::make('nama')
                     ->label('Nama')
@@ -28,7 +31,8 @@ class PejabatForm
                 TextInput::make('jabatan')
                     ->label('Jabatan')
                     ->required()
-                    ->maxLength(120),
+                    ->maxLength(120)
+                    ->helperText('Mis. Kepala Desa, Sekretaris Desa, Ketua RW 05.'),
                 Select::make('kelompok')
                     ->label('Kelompok')
                     ->options(Pejabat::kelompokOptions())
@@ -49,7 +53,8 @@ class PejabatForm
                     ->numeric()
                     ->minValue(0)
                     ->default(0)
-                    ->required(),
+                    ->required()
+                    ->helperText('Urutan tampil di halaman Struktur Organisasi.'),
             ]);
     }
 }

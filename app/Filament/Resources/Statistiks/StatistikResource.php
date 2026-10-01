@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 /**
  * Issue #18: admin ubah angka Statistik tanpa developer; Beranda membaca
@@ -25,6 +26,8 @@ class StatistikResource extends Resource
     protected static ?string $model = Statistik::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
+
+    protected static UnitEnum|string|null $navigationGroup = 'Konten';
 
     protected static ?string $recordTitleAttribute = 'kunci';
 

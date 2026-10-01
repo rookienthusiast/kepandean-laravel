@@ -32,7 +32,7 @@ export default function SegeraHadir({ modul, meta, site }: SegeraHadirProps) {
             site={site}
         >
             <section className="bg-desa-900/95 px-4 py-12 text-white sm:px-6">
-                <div className="mx-auto w-full max-w-6xl">
+                <div className="mx-auto w-full max-w-7xl">
                     <p className="text-sm text-white/70">
                         <Link href="/" className="hover:underline">
                             Beranda
@@ -48,7 +48,7 @@ export default function SegeraHadir({ modul, meta, site }: SegeraHadirProps) {
                     </p>
                 </div>
             </section>
-            <section className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
+            <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6">
                 <div className="rounded-lg bg-slate-100 px-6 py-16 text-center">
                     <p className="text-6xl font-black tracking-tight sm:text-7xl">
                         Segera Hadir

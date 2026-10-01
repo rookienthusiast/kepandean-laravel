@@ -59,7 +59,7 @@ class PublicSite
             ['label' => 'Layanan Warga', 'href' => $soon('layanan-warga')],
             [
                 'label' => 'Informasi',
-                'href' => $soon('informasi'),
+                'href' => route('informasi', [], false),
                 'children' => [
                     ['label' => 'Berita Desa', 'href' => route('berita.index', [], false)],
                     ['label' => 'Pengumuman', 'href' => route('pengumuman.index', [], false)],

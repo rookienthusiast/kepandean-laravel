@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 /**
  * Issue #15: Struktur Organisasi + roster RT/RW, terurut by nomor urut.
@@ -25,6 +26,8 @@ class PejabatResource extends Resource
     protected static ?string $model = Pejabat::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
+
+    protected static UnitEnum|string|null $navigationGroup = 'Konten';
 
     protected static ?string $recordTitleAttribute = 'nama';
 

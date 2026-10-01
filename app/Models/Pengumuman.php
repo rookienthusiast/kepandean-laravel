@@ -22,6 +22,7 @@ class Pengumuman extends Model
         'judul',
         'slug',
         'isi',
+        'cover_path',
         'status',
         'published_at',
         'expired_at',

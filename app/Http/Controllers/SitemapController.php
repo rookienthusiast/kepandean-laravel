@@ -22,6 +22,7 @@ class SitemapController extends Controller
             $this->entry(route('struktur'), now()),
             $this->entry(route('berita.index'), now()),
             $this->entry(route('pengumuman.index'), now()),
+            $this->entry(route('informasi'), now()),
         ];
 
         if ($desa instanceof Desa) {

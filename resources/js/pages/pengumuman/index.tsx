@@ -7,6 +7,7 @@ interface PengumumanCard {
     judul: string;
     slug: string;
     excerpt: string | null;
+    cover_url: string | null;
     tanggal: string;
     url: string;
 }
@@ -57,7 +58,7 @@ export default function PengumumanIndex({
             site={site}
         >
             <section className="bg-desa-900/95 px-4 py-10 text-white sm:px-6">
-                <div className="mx-auto w-full max-w-6xl">
+                <div className="mx-auto w-full max-w-7xl">
                     <p className="text-sm text-white/70">
                         Informasi — {desaName}
                     </p>
@@ -66,7 +67,7 @@ export default function PengumumanIndex({
                     </h1>
                 </div>
             </section>
-            <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
+            <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">
                 {pengumuman.data.length > 0 ? (
                     <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {pengumuman.data.map((item) => (
@@ -74,6 +75,14 @@ export default function PengumumanIndex({
                                 key={item.slug}
                                 className="flex min-h-[44px] flex-col overflow-hidden rounded-md border border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]"
                             >
+                                {item.cover_url && (
+                                    <img
+                                        src={item.cover_url}
+                                        alt={`Cover ${item.judul}`}
+                                        className="aspect-video w-full object-cover"
+                                        loading="lazy"
+                                    />
+                                )}
                                 <div className="flex flex-1 flex-col p-4">
                                     <p className="mb-2 flex items-center gap-2 text-xs text-[#706f6c] dark:text-[#A1A09A]">
                                         <span className="inline-flex items-center gap-1 rounded-full bg-[#efedea] px-2 py-0.5 font-medium text-[#37352f] dark:bg-[#2a2a28] dark:text-[#E8E7E3]">

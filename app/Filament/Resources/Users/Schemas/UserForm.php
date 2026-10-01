@@ -16,9 +16,11 @@ class UserForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Nama')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('email')
+                    ->label('Surel')
                     ->email()
                     ->required()
                     ->maxLength(255)
@@ -27,9 +29,14 @@ class UserForm
                     ->label('Desa')
                     ->options(fn (): array => Desa::query()->orderBy('name')->pluck('name', 'id')->all())
                     ->required()
+                    ->live()
+                    ->searchable()
+                    ->helperText('Techade wajib memilih desa; admin desa dikunci ke desanya otomatis.')
                     // Hanya techade yang memilih desa; admin_desa dikunci ke desanya sendiri.
                     ->visible(fn (): bool => auth()->user() instanceof User && auth()->user()->isTechade()),
                 Select::make('role')
+                    ->label('Role')
+                    ->helperText('Hanya techade yang boleh memberi role techade.')
                     ->options(function (): array {
                         $user = auth()->user();
 
@@ -48,8 +55,10 @@ class UserForm
                     })
                     ->required(),
                 TextInput::make('password')
+                    ->label('Kata sandi')
                     ->password()
                     ->revealable()
+                    ->helperText('Kosongkan bila tidak ingin mengubah kata sandi.')
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create'),
