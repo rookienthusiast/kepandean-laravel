@@ -51,7 +51,11 @@ interface PageProps {
 
 function tabHref(
     tab: string,
-    opts: { kategori?: string | null; beritaPage?: number; pengumumanPage?: number },
+    opts: {
+        kategori?: string | null;
+        beritaPage?: number;
+        pengumumanPage?: number;
+    },
 ) {
     const params = new URLSearchParams();
     params.set('tab', tab);
@@ -135,8 +139,8 @@ export default function InformasiIndex({
                         Informasi {desaName}
                     </h1>
                     <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">
-                        Satu pintu informasi {desaName}: arsip berita
-                        terkini dan pengumuman resmi perangkat desa.
+                        Satu pintu informasi {desaName}: arsip berita terkini
+                        dan pengumuman resmi perangkat desa.
                     </p>
                 </div>
             </section>

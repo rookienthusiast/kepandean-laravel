@@ -42,7 +42,7 @@ export default function Sejarah({ profil, desa, meta, site }: PageProps) {
                     <div>
                         {profil.sejarah ? (
                             <article
-                                className="max-w-none text-justify text-[15px] leading-7 text-neutral-800 [&_figure]:mb-4 [&_img]:mb-4 [&_img]:rounded-md [&_img]:w-full [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-4 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6"
+                                className="max-w-none text-justify text-[15px] leading-7 text-neutral-800 [&_figure]:mb-4 [&_img]:mb-4 [&_img]:w-full [&_img]:rounded-md [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-4 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6"
                                 dangerouslySetInnerHTML={{
                                     __html: profil.sejarah,
                                 }}
