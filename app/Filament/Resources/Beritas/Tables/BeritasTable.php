@@ -29,6 +29,10 @@ class BeritasTable
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        Berita::STATUS_PUBLISHED => 'success',
+                        default => 'gray',
+                    })
                     ->formatStateUsing(fn (string $state): string => Berita::statusOptions()[$state] ?? $state),
                 TextColumn::make('published_at')->label('Terbit')->dateTime('d M Y H:i')->sortable(),
             ])
