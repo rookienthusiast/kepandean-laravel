@@ -2,11 +2,12 @@ import { Link } from '@inertiajs/react';
 import PageHero from '@/components/page-hero';
 import SegeraHadirPanel from '@/components/segera-hadir-panel';
 import PublicLayout from '@/layouts/public-layout';
-import type { MetaData, SiteData } from '@/types/site';
+import type { MetaData, SchemaData, SiteData } from '@/types/site';
 
 interface SegeraHadirProps {
     modul: string;
     meta: MetaData;
+    schema?: SchemaData | null;
     site: SiteData;
 }
 
@@ -35,16 +36,17 @@ const GRUP: Record<string, string> = {
     laporan: 'Pemerintahan',
 };
 
-export default function SegeraHadir({ modul, meta, site }: SegeraHadirProps) {
+export default function SegeraHadir({
+    modul,
+    meta,
+    schema,
+    site,
+}: SegeraHadirProps) {
     const label = LABELS[modul] ?? modul;
     const grup = GRUP[modul] ?? null;
 
     return (
-        <PublicLayout
-            title={meta.title}
-            description={meta.description}
-            site={site}
-        >
+        <PublicLayout meta={meta} schema={schema} site={site}>
             <PageHero
                 eyebrow={
                     <>

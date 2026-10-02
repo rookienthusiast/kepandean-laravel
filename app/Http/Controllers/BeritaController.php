@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Berita;
 use App\Models\Desa;
 use App\Models\Kategori;
+use App\Support\Media;
 use App\Support\PublicSite;
+use App\Support\Seo;
 use App\Support\Terbitan;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -44,6 +46,14 @@ class BeritaController extends Controller
 
         $title = $active instanceof Kategori ? "Berita {$active->nama} {$nama}" : "Berita {$nama}";
 
+        $description = $active instanceof Kategori
+            ? "Arsip berita {$active->nama} {$nama} di portal resmi."
+            : "Arsip berita terkini {$nama} di portal resmi.";
+
+        $canonical = $active instanceof Kategori
+            ? route('berita.index', ['kategori' => $active->slug])
+            : route('berita.index');
+
         return Inertia::render('berita/index', [
             'berita' => $paginator,
             'kategoris' => $kategoris->map(fn (Kategori $kategori): array => [
@@ -51,12 +61,8 @@ class BeritaController extends Controller
                 'slug' => $kategori->slug,
             ])->all(),
             'activeKategori' => $active instanceof Kategori ? $active->slug : null,
-            'meta' => [
-                'title' => $title,
-                'description' => $active instanceof Kategori
-                    ? "Arsip berita {$active->nama} {$nama} di portal resmi."
-                    : "Arsip berita terkini {$nama} di portal resmi.",
-            ],
+            'meta' => Seo::meta($title, $description, $canonical),
+            'schema' => Seo::collectionSchema($title, $canonical, $description),
             ...PublicSite::sharedProps($desa),
         ]);
     }
@@ -85,18 +91,29 @@ class BeritaController extends Controller
 
         $isi = Terbitan::cleanedIsi($berita);
         $nama = PublicSite::displayName($desa);
+        $url = self::showUrl($berita);
+        $description = Terbitan::metaDescription($isi);
 
         return Inertia::render('berita/detail', [
             'berita' => Terbitan::detail(
                 $berita,
-                self::showUrl($berita),
+                $url,
                 $isi,
                 ['kategori' => self::kategoriArray($berita)],
             ),
-            'meta' => [
-                'title' => "{$berita->judul} ({$nama})",
-                'description' => Terbitan::metaDescription($isi),
-            ],
+            'meta' => Seo::meta(
+                "{$berita->judul} ({$nama})",
+                $description,
+                $url,
+                Media::url($berita->cover_path),
+            ),
+            'schema' => Seo::articleSchema(
+                $berita->judul,
+                $url,
+                Terbitan::displayDate($berita)->toAtomString(),
+                $description,
+                Media::url($berita->cover_path),
+            ),
             ...PublicSite::sharedProps($desa),
         ]);
     }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PageHero from '@/components/page-hero';
 import PublicLayout from '@/layouts/public-layout';
-import type { SiteData } from '@/types/site';
+import type { MetaData, SchemaData, SiteData } from '@/types/site';
 
 interface PejabatItem {
     nama: string;
@@ -19,11 +19,18 @@ interface PejabatGroup {
 interface PageProps {
     groups: PejabatGroup[];
     desa: { name: string; slug: string } | null;
-    meta: { title: string; description: string };
+    meta: MetaData;
+    schema?: SchemaData | null;
     site: SiteData;
 }
 
-export default function Struktur({ groups, desa, meta, site }: PageProps) {
+export default function Struktur({
+    groups,
+    desa,
+    meta,
+    schema,
+    site,
+}: PageProps) {
     const desaName = desa?.name ?? 'Desa';
     const [query, setQuery] = useState('');
     const q = query.trim().toLowerCase();
@@ -40,11 +47,7 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
     }));
 
     return (
-        <PublicLayout
-            title={meta.title}
-            description={meta.description}
-            site={site}
-        >
+        <PublicLayout meta={meta} schema={schema} site={site}>
             <PageHero
                 eyebrow={`Profil ${desaName}`}
                 title={`Struktur Organisasi ${desaName}`}
@@ -85,6 +88,7 @@ export default function Struktur({ groups, desa, meta, site }: PageProps) {
                                                 alt={`Foto ${item.nama}`}
                                                 className="h-14 w-14 rounded-full object-cover"
                                                 loading="lazy"
+                                                decoding="async"
                                             />
                                         ) : (
                                             <span

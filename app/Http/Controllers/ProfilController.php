@@ -6,6 +6,7 @@ use App\Models\Desa;
 use App\Models\Profil;
 use App\Support\HtmlSanitizer;
 use App\Support\PublicSite;
+use App\Support\Seo;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,6 +24,11 @@ class ProfilController extends Controller
             ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->first()
             : null;
 
+        $title = $desa instanceof Desa ? "Sejarah & Visi Misi {$desa->name}" : 'Sejarah & Visi Misi';
+        $description = $desa instanceof Desa
+            ? "Sejarah {$desa->name} serta visi dan misi: arah pembangunan desa di portal resmi."
+            : 'Sejarah desa serta visi dan misi di portal resmi.';
+
         return Inertia::render('profil/sejarah-visi-misi', [
             'profil' => [
                 'sejarah' => HtmlSanitizer::clean($profil?->sejarah),
@@ -35,12 +41,8 @@ class ProfilController extends Controller
                 'name' => $desa->name,
                 'slug' => $desa->slug,
             ] : null,
-            'meta' => [
-                'title' => $desa instanceof Desa ? "Sejarah & Visi Misi {$desa->name}" : 'Sejarah & Visi Misi',
-                'description' => $desa instanceof Desa
-                    ? "Sejarah {$desa->name} serta visi dan misi: arah pembangunan desa di portal resmi."
-                    : 'Sejarah desa serta visi dan misi di portal resmi.',
-            ],
+            'meta' => Seo::meta($title, $description, route('profil.sejarah-visi-misi')),
+            'schema' => Seo::profileSchema($title, route('profil.sejarah-visi-misi'), $description),
             ...PublicSite::sharedProps($desa),
         ]);
     }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengumuman;
+use App\Support\Media;
 use App\Support\PublicSite;
+use App\Support\Seo;
 use App\Support\Terbitan;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -26,10 +28,16 @@ class PengumumanController extends Controller
 
         return Inertia::render('pengumuman/index', [
             'pengumuman' => $paginator,
-            'meta' => [
-                'title' => "Pengumuman {$nama}",
-                'description' => "Pengumuman resmi {$nama} di portal resmi.",
-            ],
+            'meta' => Seo::meta(
+                "Pengumuman {$nama}",
+                "Pengumuman resmi {$nama} di portal resmi.",
+                route('pengumuman.index'),
+            ),
+            'schema' => Seo::collectionSchema(
+                "Pengumuman {$nama}",
+                route('pengumuman.index'),
+                "Pengumuman resmi {$nama} di portal resmi.",
+            ),
             ...PublicSite::sharedProps($desa),
         ]);
     }
@@ -44,18 +52,29 @@ class PengumumanController extends Controller
 
         $isi = Terbitan::cleanedIsi($pengumuman);
         $nama = PublicSite::displayName($desa);
+        $url = route('pengumuman.show', ['slug' => $pengumuman->slug]);
+        $description = Terbitan::metaDescription($isi);
 
         return Inertia::render('pengumuman/detail', [
             'pengumuman' => Terbitan::detail(
                 $pengumuman,
-                route('pengumuman.show', ['slug' => $pengumuman->slug]),
+                $url,
                 $isi,
                 ['kedaluarsa' => $pengumuman->expired_at?->format('d M Y')],
             ),
-            'meta' => [
-                'title' => "{$pengumuman->judul} ({$nama})",
-                'description' => Terbitan::metaDescription($isi),
-            ],
+            'meta' => Seo::meta(
+                "{$pengumuman->judul} ({$nama})",
+                $description,
+                $url,
+                Media::url($pengumuman->cover_path),
+            ),
+            'schema' => Seo::articleSchema(
+                $pengumuman->judul,
+                $url,
+                Terbitan::displayDate($pengumuman)->toAtomString(),
+                $description,
+                Media::url($pengumuman->cover_path),
+            ),
             ...PublicSite::sharedProps($desa),
         ]);
     }

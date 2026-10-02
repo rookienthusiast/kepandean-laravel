@@ -9,14 +9,65 @@ use App\Models\Pengumuman;
 use App\Support\PublicSite;
 use App\Support\Terbitan;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 
 class SitemapController extends Controller
 {
+    public const CACHE_TTL_SECONDS = 3600;
+
     public function index(): HttpResponse
     {
         $desa = PublicSite::currentDesa();
+        $desaKey = $desa instanceof Desa ? (string) $desa->getKey() : 'guest';
 
+        $urls = Cache::remember(
+            'sitemap.xml.desa.'.$desaKey,
+            self::CACHE_TTL_SECONDS,
+            fn (): array => $this->buildUrls($desa),
+        );
+
+        $xml = view('sitemap', ['urls' => $urls])->render();
+
+        return Response::make($xml, 200, [
+            'Content-Type' => 'text/xml; charset=UTF-8',
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function robots(): HttpResponse
+    {
+        $lines = [
+            'User-agent: *',
+            'Allow: /',
+            'Disallow: /admin/',
+            'Disallow: /dashboard',
+            'Disallow: /login',
+            '',
+            'Sitemap: '.url('/sitemap.xml'),
+            '',
+        ];
+
+        return Response::make(implode("\n", $lines), 200, [
+            'Content-Type' => 'text/plain; charset=UTF-8',
+            'Cache-Control' => 'public, max-age=86400',
+        ]);
+    }
+
+    public static function forgetCache(): void
+    {
+        foreach (Desa::query()->pluck('id')->all() as $id) {
+            Cache::forget('sitemap.xml.desa.'.$id);
+        }
+
+        Cache::forget('sitemap.xml.desa.guest');
+    }
+
+    /**
+     * @return array<int, array{loc: string, lastmod: string}>
+     */
+    private function buildUrls(?Desa $desa): array
+    {
         // Entri statis diturunkan dari nav: laman native baru otomatis
         // masuk sitemap tanpa edit kedua.
         $urls = array_map(
@@ -42,7 +93,7 @@ class SitemapController extends Controller
             }
 
             // Issue #17: sitemap memuat pengumuman yang tayang saja
-            // (published + belum kedaluarsa).
+            // (published dan belum kedaluarsa).
             $pengumumans = Terbitan::archiveFor($desa, Pengumuman::class, 'visibleForDesa')->get();
 
             foreach ($pengumumans as $pengumuman) {
@@ -62,9 +113,7 @@ class SitemapController extends Controller
             }
         }
 
-        $xml = view('sitemap', ['urls' => $urls])->render();
-
-        return Response::make($xml, 200, ['Content-Type' => 'text/xml; charset=UTF-8']);
+        return $urls;
     }
 
     /**

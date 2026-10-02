@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
     Clock,
@@ -11,12 +11,18 @@ import {
     X,
 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
-import type { NavItem, SiteData } from '@/types/site';
+import type {
+    AnalyticsData,
+    MetaData,
+    NavItem,
+    SchemaData,
+    SiteData,
+} from '@/types/site';
 
 interface PublicLayoutProps {
-    title: string;
-    description: string;
+    meta: MetaData;
     site: SiteData;
+    schema?: SchemaData | null;
     children: ReactNode;
 }
 
@@ -287,15 +293,73 @@ function Footer({ site }: { site: SiteData }) {
 }
 
 export default function PublicLayout({
-    title,
-    description,
+    meta,
     site,
+    schema,
     children,
 }: PublicLayoutProps) {
+    const { props } = usePage<{ analytics?: AnalyticsData }>();
+    const analytics = props.analytics;
+    const gaId =
+        typeof analytics?.ga_id === 'string' && analytics.ga_id !== ''
+            ? analytics.ga_id
+            : null;
+    const scVerification =
+        typeof analytics?.search_console_verification === 'string' &&
+        analytics.search_console_verification !== ''
+            ? analytics.search_console_verification
+            : null;
+    const ogType =
+        schema !== null &&
+        schema !== undefined &&
+        (schema as Record<string, unknown>)['@type'] === 'NewsArticle'
+            ? 'article'
+            : 'website';
+
     return (
         <>
-            <Head title={title}>
-                <meta name="description" content={description} />
+            <Head title={meta.title}>
+                <meta name="description" content={meta.description} />
+                {meta.canonical_url ? (
+                    <link rel="canonical" href={meta.canonical_url} />
+                ) : null}
+                <meta property="og:type" content={ogType} />
+                <meta property="og:title" content={meta.title} />
+                <meta property="og:description" content={meta.description} />
+                {meta.canonical_url ? (
+                    <meta property="og:url" content={meta.canonical_url} />
+                ) : null}
+                {meta.og_image ? (
+                    <meta property="og:image" content={meta.og_image} />
+                ) : null}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={meta.title} />
+                <meta name="twitter:description" content={meta.description} />
+                {meta.og_image ? (
+                    <meta name="twitter:image" content={meta.og_image} />
+                ) : null}
+                {scVerification ? (
+                    <meta
+                        name="google-site-verification"
+                        content={scVerification}
+                    />
+                ) : null}
+                {schema ? (
+                    <script type="application/ld+json">
+                        {JSON.stringify(schema)}
+                    </script>
+                ) : null}
+                {gaId ? (
+                    <script
+                        async
+                        src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+                    />
+                ) : null}
+                {gaId ? (
+                    <script>
+                        {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}
+                    </script>
+                ) : null}
             </Head>
             <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900">
                 {/* Navbar overlay transparan agar menyatu dengan hero; gradasi hanya penjamin keterbacaan teks. */}

@@ -30,6 +30,7 @@ import type {
     LokasiData,
     MetaData,
     ProfilExcerpt,
+    SchemaData,
     SiteData,
     StatistikMap,
 } from '@/types/site';
@@ -42,6 +43,7 @@ interface WelcomeProps {
     lokasi: LokasiData;
     site: SiteData;
     meta: MetaData;
+    schema?: SchemaData | null;
 }
 
 const LAYANAN = [
@@ -208,6 +210,7 @@ function Hero({
                                     alt=""
                                     loading={i === 0 ? 'eager' : 'lazy'}
                                     fetchPriority={i === 0 ? 'high' : 'auto'}
+                                    decoding="async"
                                     draggable={false}
                                     className="absolute inset-0 h-full w-full object-cover"
                                 />
@@ -220,9 +223,18 @@ function Hero({
                                 <p className="text-base text-white/75">
                                     Selamat datang di {siteName}
                                 </p>
-                                <h1 className="mt-2 max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                                    {s.judul}
-                                </h1>
+                                {isAktif ? (
+                                    <h1 className="mt-2 max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                                        {s.judul}
+                                    </h1>
+                                ) : (
+                                    <h2
+                                        aria-hidden="true"
+                                        className="mt-2 max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
+                                    >
+                                        {s.judul}
+                                    </h2>
+                                )}
                                 {s.subjudul && (
                                     <p className="mt-3 max-w-xl text-base leading-7 text-white/85">
                                         {s.subjudul}
@@ -341,7 +353,7 @@ function LayananPublik() {
                                 />
                             </span>
                             <span>
-                                <span className="block font-semibold text-base">
+                                <span className="block text-base font-semibold">
                                     {l.judul}
                                 </span>
                                 <span className="mt-0.5 block text-sm text-neutral-600">
@@ -443,6 +455,7 @@ function SekilasSejarah({
                                                 alt={`Cover ${item.judul}`}
                                                 className="h-14 w-20 shrink-0 rounded object-cover"
                                                 loading="lazy"
+                                                decoding="async"
                                             />
                                         ) : (
                                             <span
@@ -888,13 +901,10 @@ export default function Welcome({
     lokasi,
     site,
     meta,
+    schema,
 }: WelcomeProps) {
     return (
-        <PublicLayout
-            title={meta.title}
-            description={meta.description}
-            site={site}
-        >
+        <PublicLayout meta={meta} schema={schema} site={site}>
             <Hero siteName={site.nama} slides={heroSlides} />
             <LayananPublik />
             <SekilasSejarah

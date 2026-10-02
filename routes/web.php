@@ -16,6 +16,7 @@ use App\Models\Profil;
 use App\Support\HtmlSanitizer;
 use App\Support\Media;
 use App\Support\PublicSite;
+use App\Support\Seo;
 use App\Support\Terbitan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -72,10 +73,16 @@ Route::get('/', function () {
         ],
         'beritaTerkini' => $beritaTerkini,
         'heroSlides' => $heroSlides,
-        'meta' => [
-            'title' => "Portal Resmi {$nama}",
-            'description' => "Website resmi {$nama}: profil desa, layanan publik, berita terkini, lokasi kantor desa, dan Aduan warga.",
-        ],
+        'meta' => Seo::meta(
+            "Portal Resmi {$nama}",
+            "Website resmi {$nama}: profil desa, layanan publik, berita terkini, lokasi kantor desa, dan Aduan warga.",
+            route('home'),
+        ),
+        'schema' => Seo::websiteSchema(
+            "Portal Resmi {$nama}",
+            route('home'),
+            "Website resmi {$nama}: profil desa, layanan publik, berita terkini, lokasi kantor desa, dan Aduan warga.",
+        ),
         ...PublicSite::sharedProps($desa),
     ]);
 })->name('home');
@@ -122,7 +129,10 @@ Route::get('segera-hadir/kegiatan', function () {
 });
 
 // Issue #16: sitemap otomatis memuat URL berita yang baru terbit.
+// Issue #20: robots.txt sebagai route (bukan file statis) agar URL
+// sitemap selalu absolut mengikuti APP_URL.
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 // Issue gabungan: halaman Informasi agregat Berita + Pengumuman
 // (tab/filter/paginasi terpisah, bukan load semua sekaligus).
@@ -145,13 +155,13 @@ foreach ([
     Route::get($slug, function () use ($slug, $label) {
         $desa = PublicSite::currentDesa();
         $nama = PublicSite::displayName($desa);
+        $title = "{$label} {$nama}";
+        $description = "Modul {$label} {$nama} sedang disiapkan dan akan segera hadir di portal resmi.";
 
         return Inertia::render('segera-hadir', [
             'modul' => $slug,
-            'meta' => [
-                'title' => "{$label} {$nama}",
-                'description' => "Modul {$label} {$nama} sedang disiapkan dan akan segera hadir di portal resmi.",
-            ],
+            'meta' => Seo::meta($title, $description, url($slug)),
+            'schema' => Seo::collectionSchema($title, url($slug), $description),
             ...PublicSite::sharedProps($desa),
         ]);
     })->name("segera-hadir.{$slug}");
@@ -165,13 +175,13 @@ Route::get('segera-hadir/informasi', function () {
 Route::get('segera-hadir/{modul}', function (string $modul) {
     $desa = PublicSite::currentDesa();
     $nama = PublicSite::displayName($desa);
+    $title = "Segera Hadir di {$nama}";
+    $description = "Modul {$modul} {$nama} sedang disiapkan dan akan segera hadir di portal resmi.";
 
     return Inertia::render('segera-hadir', [
         'modul' => $modul,
-        'meta' => [
-            'title' => "Segera Hadir di {$nama}",
-            'description' => "Modul {$modul} {$nama} sedang disiapkan dan akan segera hadir di portal resmi.",
-        ],
+        'meta' => Seo::meta($title, $description, url("segera-hadir/{$modul}")),
+        'schema' => Seo::collectionSchema($title, url("segera-hadir/{$modul}"), $description),
         ...PublicSite::sharedProps($desa),
     ]);
 })->whereIn('modul', [

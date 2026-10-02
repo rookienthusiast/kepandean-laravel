@@ -65,6 +65,8 @@ export default function PageHero({
                     src={resolved}
                     alt=""
                     loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                     className="absolute inset-0 h-full w-full object-cover"
                 />
             )}

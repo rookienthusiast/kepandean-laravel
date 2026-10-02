@@ -273,6 +273,10 @@ class PublicSite
             ],
             'lokasi' => static::lokasi(),
             'statistik' => Statistik::currentMap(),
+            'analytics' => [
+                'ga_id' => config('analytics.ga_id'),
+                'search_console_verification' => config('analytics.search_console_verification'),
+            ],
         ];
     }
 }

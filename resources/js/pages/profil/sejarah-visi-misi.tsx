@@ -1,12 +1,13 @@
 import { FileText, Landmark, Target } from 'lucide-react';
 import ProfilLayout, { type ProfilData } from './layout';
 import SectionHeading from './section-heading';
-import type { SiteData } from '@/types/site';
+import type { MetaData, SchemaData, SiteData } from '@/types/site';
 
 interface PageProps {
     profil: ProfilData;
     desa: { name: string; slug: string } | null;
-    meta: { title: string; description: string };
+    meta: MetaData;
+    schema?: SchemaData | null;
     site: SiteData;
 }
 
@@ -14,14 +15,15 @@ export default function SejarahVisiMisi({
     profil,
     desa,
     meta,
+    schema,
     site,
 }: PageProps) {
     const desaName = desa?.name ?? 'Desa';
 
     return (
         <ProfilLayout
-            title={meta.title}
-            description={meta.description}
+            meta={meta}
+            schema={schema}
             heading={`Sejarah & Visi Misi ${desaName}`}
             intro={`Mengenal lebih dekat sejarah ${desaName} serta arah pembangunan yang menjadi tujuan bersama masyarakat ${desaName.toLowerCase()}.`}
             crumb="Sejarah & Visi Misi"
@@ -44,6 +46,7 @@ export default function SejarahVisiMisi({
                                 alt={`Foto sejarah ${desaName}`}
                                 className="aspect-[4/3] w-full object-cover"
                                 loading="lazy"
+                                decoding="async"
                             />
                         ) : (
                             <div className="flex aspect-[4/3] w-full flex-col items-center justify-center bg-gradient-to-br from-desa-900 to-desa-800 p-8 text-center text-white">
