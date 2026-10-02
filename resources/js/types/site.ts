@@ -83,7 +83,16 @@ export interface HeroSlideItem {
 export interface MetaData {
     title: string;
     description: string;
+    canonical_url?: string | null;
+    og_image?: string | null;
 }
+
+export interface AnalyticsData {
+    ga_id?: string | null;
+    search_console_verification?: string | null;
+}
+
+export type SchemaData = Record<string, unknown>;
 
 export interface ProfilExcerpt {
     sejarah: string | null;

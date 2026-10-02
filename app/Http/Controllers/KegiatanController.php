@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Support\Media;
 use App\Support\PublicSite;
+use App\Support\Seo;
 use App\Support\Terbitan;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -26,10 +28,16 @@ class KegiatanController extends Controller
 
         return Inertia::render('kegiatan/index', [
             'kegiatan' => $paginator,
-            'meta' => [
-                'title' => "Kegiatan {$nama}",
-                'description' => "Kegiatan resmi {$nama} di portal resmi.",
-            ],
+            'meta' => Seo::meta(
+                "Kegiatan {$nama}",
+                "Kegiatan resmi {$nama} di portal resmi.",
+                route('kegiatan.index'),
+            ),
+            'schema' => Seo::collectionSchema(
+                "Kegiatan {$nama}",
+                route('kegiatan.index'),
+                "Kegiatan resmi {$nama} di portal resmi.",
+            ),
             ...PublicSite::sharedProps($desa),
         ]);
     }
@@ -44,18 +52,29 @@ class KegiatanController extends Controller
 
         $isi = Terbitan::cleanedIsi($kegiatan);
         $nama = PublicSite::displayName($desa);
+        $url = route('kegiatan.show', ['slug' => $kegiatan->slug]);
+        $description = Terbitan::metaDescription($isi);
 
         return Inertia::render('kegiatan/detail', [
             'kegiatan' => Terbitan::detail(
                 $kegiatan,
-                route('kegiatan.show', ['slug' => $kegiatan->slug]),
+                $url,
                 $isi,
                 ['kedaluarsa' => $kegiatan->expired_at?->format('d M Y')],
             ),
-            'meta' => [
-                'title' => "{$kegiatan->judul} ({$nama})",
-                'description' => Terbitan::metaDescription($isi),
-            ],
+            'meta' => Seo::meta(
+                "{$kegiatan->judul} ({$nama})",
+                $description,
+                $url,
+                Media::url($kegiatan->cover_path),
+            ),
+            'schema' => Seo::articleSchema(
+                $kegiatan->judul,
+                $url,
+                Terbitan::displayDate($kegiatan)->toAtomString(),
+                $description,
+                Media::url($kegiatan->cover_path),
+            ),
             ...PublicSite::sharedProps($desa),
         ]);
     }

@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 import { CalendarDays, Megaphone } from 'lucide-react';
 import PageHero from '@/components/page-hero';
 import PublicLayout from '@/layouts/public-layout';
-import type { SiteData } from '@/types/site';
+import type { MetaData, SchemaData, SiteData } from '@/types/site';
 
 interface BeritaCard {
     judul: string;
@@ -56,7 +56,8 @@ interface PageProps {
     activeKategori: string | null;
     counts: { berita: number; pengumuman: number; kegiatan: number };
     desa: { name: string; slug: string } | null;
-    meta: { title: string; description: string };
+    meta: MetaData;
+    schema?: SchemaData | null;
     site: SiteData;
 }
 
@@ -134,6 +135,7 @@ export default function InformasiIndex({
     counts,
     desa,
     meta,
+    schema,
     site,
 }: PageProps) {
     const desaName = desa?.name ?? 'Desa';
@@ -141,11 +143,7 @@ export default function InformasiIndex({
     const isPengumuman = tab === 'pengumuman';
 
     return (
-        <PublicLayout
-            title={meta.title}
-            description={meta.description}
-            site={site}
-        >
+        <PublicLayout meta={meta} schema={schema} site={site}>
             <PageHero
                 eyebrow={`Informasi ${desaName}`}
                 title={`Informasi ${desaName}`}
@@ -267,6 +265,7 @@ export default function InformasiIndex({
                                                 alt={`Cover ${item.judul}`}
                                                 className="aspect-video w-full object-cover"
                                                 loading="lazy"
+                                                decoding="async"
                                             />
                                         )}
                                         <div className="flex flex-1 flex-col p-4">
@@ -324,6 +323,7 @@ export default function InformasiIndex({
                                                 alt={`Cover ${item.judul}`}
                                                 className="aspect-video w-full object-cover"
                                                 loading="lazy"
+                                                decoding="async"
                                             />
                                         )}
                                         <div className="flex flex-1 flex-col p-4">
@@ -380,6 +380,7 @@ export default function InformasiIndex({
                                                 alt={`Cover ${item.judul}`}
                                                 className="aspect-video w-full object-cover"
                                                 loading="lazy"
+                                                decoding="async"
                                             />
                                         )}
                                         <div className="flex flex-1 flex-col p-4">

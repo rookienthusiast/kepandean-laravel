@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import PublicLayout from '@/layouts/public-layout';
-import type { SiteData } from '@/types/site';
+import type { MetaData, SchemaData, SiteData } from '@/types/site';
 
 interface BeritaDetail {
     judul: string;
@@ -15,19 +15,22 @@ interface BeritaDetail {
 interface PageProps {
     berita: BeritaDetail;
     desa: { name: string; slug: string } | null;
-    meta: { title: string; description: string };
+    meta: MetaData;
+    schema?: SchemaData | null;
     site: SiteData;
 }
 
-export default function BeritaDetail({ berita, desa, meta, site }: PageProps) {
+export default function BeritaDetail({
+    berita,
+    desa,
+    meta,
+    schema,
+    site,
+}: PageProps) {
     const desaName = desa?.name ?? 'Desa';
 
     return (
-        <PublicLayout
-            title={meta.title}
-            description={meta.description}
-            site={site}
-        >
+        <PublicLayout meta={meta} schema={schema} site={site}>
             <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:px-6">
                 <nav aria-label="Navigasi berita" className="mb-6">
                     <Link
@@ -59,6 +62,7 @@ export default function BeritaDetail({ berita, desa, meta, site }: PageProps) {
                         alt={`Cover ${berita.judul}`}
                         className="mb-8 w-full rounded-md object-cover"
                         loading="lazy"
+                        decoding="async"
                     />
                 ) : (
                     <div

@@ -8,6 +8,7 @@ use App\Models\Kategori;
 use App\Models\Kegiatan;
 use App\Models\Pengumuman;
 use App\Support\PublicSite;
+use App\Support\Seo;
 use App\Support\Terbitan;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -86,10 +87,16 @@ class InformasiController extends Controller
                 'pengumuman' => $pengumumanPaginator->total(),
                 'kegiatan' => $kegiatanPaginator->total(),
             ],
-            'meta' => [
-                'title' => "Informasi {$nama}",
-                'description' => "Informasi {$nama}: arsip berita terkini, pengumuman, dan kegiatan resmi di portal resmi.",
-            ],
+            'meta' => Seo::meta(
+                "Informasi {$nama}",
+                "Informasi {$nama}: arsip berita terkini, pengumuman, dan kegiatan resmi di portal resmi.",
+                route('informasi'),
+            ),
+            'schema' => Seo::collectionSchema(
+                "Informasi {$nama}",
+                route('informasi'),
+                "Informasi {$nama}: arsip berita terkini, pengumuman, dan kegiatan resmi di portal resmi.",
+            ),
             ...PublicSite::sharedProps($desa),
         ]);
     }

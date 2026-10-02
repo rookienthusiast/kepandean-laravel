@@ -3,7 +3,7 @@ import { CalendarDays } from 'lucide-react';
 import PageHero from '@/components/page-hero';
 import SegeraHadirPanel from '@/components/segera-hadir-panel';
 import PublicLayout from '@/layouts/public-layout';
-import type { SiteData } from '@/types/site';
+import type { MetaData, SchemaData, SiteData } from '@/types/site';
 
 interface KegiatanCard {
     judul: string;
@@ -32,7 +32,8 @@ interface PageProps {
         next_page_url: string | null;
     };
     desa: { name: string; slug: string } | null;
-    meta: { title: string; description: string };
+    meta: MetaData;
+    schema?: SchemaData | null;
     site: SiteData;
 }
 
@@ -40,6 +41,7 @@ export default function KegiatanIndex({
     kegiatan,
     desa,
     meta,
+    schema,
     site,
 }: PageProps) {
     const desaName = desa?.name ?? 'Desa';
@@ -54,11 +56,7 @@ export default function KegiatanIndex({
             : null;
 
     return (
-        <PublicLayout
-            title={meta.title}
-            description={meta.description}
-            site={site}
-        >
+        <PublicLayout meta={meta} schema={schema} site={site}>
             <PageHero
                 eyebrow={`Informasi ${desaName}`}
                 title={`Kegiatan ${desaName}`}
@@ -80,6 +78,7 @@ export default function KegiatanIndex({
                                         alt={`Cover ${item.judul}`}
                                         className="aspect-video w-full object-cover"
                                         loading="lazy"
+                                        decoding="async"
                                     />
                                 )}
                                 <div className="flex flex-1 flex-col p-4">

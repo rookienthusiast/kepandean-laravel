@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Desa;
 use App\Models\Pejabat;
 use App\Support\PublicSite;
+use App\Support\Seo;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -32,14 +33,15 @@ class PejabatController extends Controller
             ];
         }
 
+        $title = $desa instanceof Desa ? "Struktur Organisasi {$desa->name}" : 'Struktur Organisasi';
+        $description = $desa instanceof Desa
+            ? "Struktur organisasi {$desa->name}: pimpinan, perangkat, dan ketua RT/RW yang bisa dihubungi warga."
+            : 'Struktur organisasi desa: pimpinan, perangkat, dan ketua RT/RW.';
+
         return Inertia::render('struktur', [
             'groups' => $groups,
-            'meta' => [
-                'title' => $desa instanceof Desa ? "Struktur Organisasi {$desa->name}" : 'Struktur Organisasi',
-                'description' => $desa instanceof Desa
-                    ? "Struktur organisasi {$desa->name}: pimpinan, perangkat, dan ketua RT/RW yang bisa dihubungi warga."
-                    : 'Struktur organisasi desa: pimpinan, perangkat, dan ketua RT/RW.',
-            ],
+            'meta' => Seo::meta($title, $description, route('profil.struktur')),
+            'schema' => Seo::profileSchema($title, route('profil.struktur'), $description),
             ...PublicSite::sharedProps($desa),
         ]);
     }

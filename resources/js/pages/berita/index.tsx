@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 import PageHero from '@/components/page-hero';
 import SegeraHadirPanel from '@/components/segera-hadir-panel';
 import PublicLayout from '@/layouts/public-layout';
-import type { SiteData } from '@/types/site';
+import type { MetaData, SchemaData, SiteData } from '@/types/site';
 
 interface BeritaCard {
     judul: string;
@@ -39,7 +39,8 @@ interface PageProps {
     kategoris: KategoriItem[];
     activeKategori: string | null;
     desa: { name: string; slug: string } | null;
-    meta: { title: string; description: string };
+    meta: MetaData;
+    schema?: SchemaData | null;
     site: SiteData;
 }
 
@@ -49,6 +50,7 @@ export default function BeritaIndex({
     activeKategori,
     desa,
     meta,
+    schema,
     site,
 }: PageProps) {
     const desaName = desa?.name ?? 'Desa';
@@ -75,11 +77,7 @@ export default function BeritaIndex({
     };
 
     return (
-        <PublicLayout
-            title={meta.title}
-            description={meta.description}
-            site={site}
-        >
+        <PublicLayout meta={meta} schema={schema} site={site}>
             <PageHero
                 eyebrow={`Informasi ${desaName}`}
                 title={`Berita ${desaName}`}
@@ -135,6 +133,7 @@ export default function BeritaIndex({
                                         alt={`Cover ${item.judul}`}
                                         className="aspect-video w-full object-cover"
                                         loading="lazy"
+                                        decoding="async"
                                     />
                                 )}
                                 <div className="flex flex-1 flex-col p-4">

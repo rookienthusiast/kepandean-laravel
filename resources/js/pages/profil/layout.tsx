@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import PublicLayout from '@/layouts/public-layout';
 import { resolveHeroUrl } from '@/components/page-hero';
-import type { SiteData } from '@/types/site';
+import type { MetaData, SchemaData, SiteData } from '@/types/site';
 export interface ProfilData {
     sejarah: string | null;
     visi: string | null;
@@ -12,8 +12,8 @@ export interface ProfilData {
 }
 
 interface ProfilLayoutProps {
-    title: string;
-    description: string;
+    meta: MetaData;
+    schema?: SchemaData | null;
     heading: string;
     intro: string;
     crumb: string;
@@ -25,8 +25,8 @@ interface ProfilLayoutProps {
 }
 
 export default function ProfilLayout({
-    title,
-    description,
+    meta,
+    schema,
     heading,
     intro,
     crumb,
@@ -44,13 +44,15 @@ export default function ProfilLayout({
     });
 
     return (
-        <PublicLayout title={title} description={description} site={site}>
+        <PublicLayout meta={meta} schema={schema} site={site}>
             <section className="relative flex min-h-[340px] items-center overflow-hidden bg-desa-900 text-white sm:min-h-[400px]">
                 {gambarUrl && (
                     <img
                         src={gambarUrl}
                         alt=""
                         loading="eager"
+                        fetchPriority="high"
+                        decoding="async"
                         className="absolute inset-0 h-full w-full object-cover"
                     />
                 )}
