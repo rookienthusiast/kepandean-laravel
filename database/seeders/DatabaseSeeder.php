@@ -12,40 +12,41 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(DesaSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
         $kepandean = Desa::where('slug', 'kepandean')->first();
 
-        User::factory()->create([
-            'name' => 'Admin Kepandean',
-            'email' => 'admin@kepandean.id',
-            'password' => 'password',
-            'desa_id' => $kepandean?->id,
-            'role' => 'admin_desa',
-            'email_verified_at' => now(),
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@kepandean.id'],
+            [
+                'name' => 'Admin Kepandean',
+                'password' => 'password',
+                'desa_id' => $kepandean?->id,
+                'role' => 'admin_desa',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Techade',
-            'email' => 'admin@techade.dev',
-            'password' => 'Sukses2026!',
-            'desa_id' => null,
-            'role' => 'techade',
-            'email_verified_at' => now(),
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@techade.dev'],
+            [
+                'name' => 'Techade',
+                'password' => 'Sukses2026!',
+                'desa_id' => null,
+                'role' => 'techade',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Editor Kepandean',
-            'email' => 'editor@kepandean.id',
-            'password' => 'password',
-            'desa_id' => $kepandean?->id,
-            'role' => 'editor',
-            'email_verified_at' => now(),
-        ]);
+        User::firstOrCreate(
+            ['email' => 'editor@kepandean.id'],
+            [
+                'name' => 'Editor Kepandean',
+                'password' => 'password',
+                'desa_id' => $kepandean?->id,
+                'role' => 'editor',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        $this->call(PejabatSeeder::class);
+        $this->call(ContentFigmaSeeder::class);
     }
 }
