@@ -38,9 +38,10 @@ interface PageHeroProps {
 }
 
 // Kepala hero statis tiap halaman dalam: foto asli halaman (atau foto
-// sejarah sebagai cadangan), lapisan hijau tipis agar foto tetap hidup,
-// dan ruang atas untuk navbar overlay yang transparan. Tinggi dikunci
-// (min-h) agar rasio konsisten di semua laman, apa pun fotonya.
+// sejarah sebagai cadangan) dengan lapisan hijau tipis agar foto tetap
+// hidup. Navbar kini sticky berlatar solid sehingga hero tidak butuh
+// ruang atas clearance. Tinggi dikunci (min-h) agar rasio konsisten di
+// semua laman, apa pun fotonya.
 export default function PageHero({
     eyebrow,
     title,
@@ -74,7 +75,7 @@ export default function PageHero({
                 aria-hidden="true"
                 className="absolute inset-0 bg-desa-900/50"
             />
-            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-28 pb-10 sm:px-8 sm:pt-32">
+            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-10 pb-10 sm:px-8 sm:pt-14">
                 <p className="text-sm text-white/70">{eyebrow}</p>
                 <h1 className="mt-2 text-3xl font-bold tracking-tight">
                     {title}

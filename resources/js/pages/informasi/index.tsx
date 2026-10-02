@@ -105,7 +105,7 @@ function Pagination({
             {prev && (
                 <Link
                     href={prev}
-                    className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium dark:border-[#3E3E3A]"
+                    className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                 >
                     Sebelumnya
                 </Link>
@@ -116,7 +116,7 @@ function Pagination({
             {next && (
                 <Link
                     href={next}
-                    className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium dark:border-[#3E3E3A]"
+                    className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                 >
                     Berikutnya
                 </Link>
@@ -178,8 +178,8 @@ export default function InformasiIndex({
                         aria-selected={isBerita}
                         className={`rounded-full border px-4 py-2 text-sm font-medium ${
                             isBerita
-                                ? 'border-transparent bg-desa-900 text-white'
-                                : 'border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]'
+                                ? 'border-transparent bg-emerald-800 text-white'
+                                : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                         }`}
                     >
                         Berita Desa ({counts.berita})
@@ -190,8 +190,8 @@ export default function InformasiIndex({
                         aria-selected={isPengumuman}
                         className={`rounded-full border px-4 py-2 text-sm font-medium ${
                             isPengumuman
-                                ? 'border-transparent bg-desa-900 text-white'
-                                : 'border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]'
+                                ? 'border-transparent bg-emerald-800 text-white'
+                                : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                         }`}
                     >
                         Pengumuman ({counts.pengumuman})
@@ -202,8 +202,8 @@ export default function InformasiIndex({
                         aria-selected={!isBerita && !isPengumuman}
                         className={`rounded-full border px-4 py-2 text-sm font-medium ${
                             !isBerita && !isPengumuman
-                                ? 'border-transparent bg-desa-900 text-white'
-                                : 'border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]'
+                                ? 'border-transparent bg-emerald-800 text-white'
+                                : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                         }`}
                     >
                         Kegiatan ({counts.kegiatan})
@@ -224,8 +224,8 @@ export default function InformasiIndex({
                                     }
                                     className={`rounded-full border px-4 py-2 text-sm font-medium ${
                                         activeKategori
-                                            ? 'border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]'
-                                            : 'border-transparent bg-desa-900 text-white'
+                                            ? 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
+                                            : 'border-transparent bg-emerald-800 text-white'
                                     }`}
                                 >
                                     Semua
@@ -243,8 +243,8 @@ export default function InformasiIndex({
                                         }
                                         className={`rounded-full border px-4 py-2 text-sm font-medium ${
                                             activeKategori === kategori.slug
-                                                ? 'border-transparent bg-desa-900 text-white'
-                                                : 'border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]'
+                                                ? 'border-transparent bg-emerald-800 text-white'
+                                                : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                                         }`}
                                     >
                                         {kategori.nama}
@@ -271,7 +271,7 @@ export default function InformasiIndex({
                                         <div className="flex flex-1 flex-col p-4">
                                             <p className="mb-2 flex items-center gap-2 text-xs text-[#706f6c] dark:text-[#A1A09A]">
                                                 {item.kategori && (
-                                                    <span className="rounded-full bg-[#efedea] px-2 py-0.5 font-medium dark:bg-[#2a2a28]">
+                                                    <span className="rounded-full bg-[#efedea] px-2 py-0.5 font-medium text-[#37352f] dark:bg-[#2a2a28] dark:text-[#E8E7E3]">
                                                         {item.kategori.nama}
                                                     </span>
                                                 )}
@@ -279,7 +279,7 @@ export default function InformasiIndex({
                                             </p>
                                             <Link
                                                 href={item.url}
-                                                className="text-lg font-semibold underline-offset-4 hover:underline"
+                                                className="text-lg font-semibold text-slate-900 underline-offset-4 hover:underline dark:text-slate-100"
                                             >
                                                 {item.judul}
                                             </Link>
@@ -293,7 +293,7 @@ export default function InformasiIndex({
                                 ))}
                             </ul>
                         ) : (
-                            <p className="rounded-md border border-[#e3e3e0] bg-white p-6 text-[15px] dark:border-[#3E3E3A] dark:bg-[#161615]">
+                            <p className="rounded-md border border-[#e3e3e0] bg-white p-6 text-[15px] text-neutral-700 dark:border-[#3E3E3A] dark:bg-[#161615] dark:text-neutral-200">
                                 Belum ada berita
                                 {activeKategori
                                     ? ' pada kategori ini.'
@@ -339,7 +339,7 @@ export default function InformasiIndex({
                                             </p>
                                             <Link
                                                 href={item.url}
-                                                className="text-lg font-semibold underline-offset-4 hover:underline"
+                                                className="text-lg font-semibold text-slate-900 underline-offset-4 hover:underline dark:text-slate-100"
                                             >
                                                 {item.judul}
                                             </Link>
@@ -353,7 +353,7 @@ export default function InformasiIndex({
                                 ))}
                             </ul>
                         ) : (
-                            <p className="rounded-md border border-[#e3e3e0] bg-white p-6 text-[15px] dark:border-[#3E3E3A] dark:bg-[#161615]">
+                            <p className="rounded-md border border-[#e3e3e0] bg-white p-6 text-[15px] text-neutral-700 dark:border-[#3E3E3A] dark:bg-[#161615] dark:text-neutral-200">
                                 Belum ada pengumuman yang diterbitkan.
                             </p>
                         )}
@@ -396,7 +396,7 @@ export default function InformasiIndex({
                                             </p>
                                             <Link
                                                 href={item.url}
-                                                className="text-lg font-semibold underline-offset-4 hover:underline"
+                                                className="text-lg font-semibold text-slate-900 underline-offset-4 hover:underline dark:text-slate-100"
                                             >
                                                 {item.judul}
                                             </Link>
@@ -410,7 +410,7 @@ export default function InformasiIndex({
                                 ))}
                             </ul>
                         ) : (
-                            <p className="rounded-md border border-[#e3e3e0] bg-white p-6 text-[15px] dark:border-[#3E3E3A] dark:bg-[#161615]">
+                            <p className="rounded-md border border-[#e3e3e0] bg-white p-6 text-[15px] text-neutral-700 dark:border-[#3E3E3A] dark:bg-[#161615] dark:text-neutral-200">
                                 Belum ada kegiatan yang diterbitkan.
                             </p>
                         )}

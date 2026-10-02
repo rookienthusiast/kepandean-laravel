@@ -27,7 +27,9 @@ class LayananLinksTest extends TestCase
     /** @return array<int, string> */
     private function allowlistedHosts(): array
     {
-        return ['www.facebook.com', 'maps.app.goo.gl'];
+        // wa.me: CTA "Hubungi via WhatsApp" pada banner Hotline Aduan
+        // Beranda (outbound resmi terdaftar, DESIGN.md §2).
+        return ['www.facebook.com', 'maps.app.goo.gl', 'wa.me'];
     }
 
     public function test_semua_tautan_halaman_utama_tidak_buntu(): void

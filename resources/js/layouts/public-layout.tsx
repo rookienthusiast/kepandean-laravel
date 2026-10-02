@@ -10,7 +10,7 @@ import {
     ShieldCheck,
     X,
 } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import type {
     AnalyticsData,
     MetaData,
@@ -38,7 +38,7 @@ function TopBar() {
                     Website Resmi Pemerintah Desa Kepandean | Kec. Dukuhturi,
                     Kab. Tegal, Jawa Tengah
                 </p>
-                <div className="flex shrink-0 items-center gap-3">
+                <div className="hidden shrink-0 items-center gap-3 sm:flex">
                     <Link href="/layanan-warga" className="hover:underline">
                         Layanan Mandiri
                     </Link>
@@ -106,6 +106,21 @@ function MobileNav({
 }) {
     const [open, setOpen] = useState(false);
 
+    // Menu seluler bisa ditutup dengan Escape; tautan menutup menu saat
+    // diklik agar tidak menutupi konten tujuan.
+    useEffect(() => {
+        if (!open) {
+            return;
+        }
+        const tutup = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                setOpen(false);
+            }
+        };
+        window.addEventListener('keydown', tutup);
+        return () => window.removeEventListener('keydown', tutup);
+    }, [open]);
+
     return (
         <div className="lg:hidden">
             <button
@@ -114,7 +129,7 @@ function MobileNav({
                 aria-expanded={open}
                 aria-controls="navigasi-seluler"
                 aria-label={open ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
-                className="rounded-md p-2 text-white hover:bg-white/10"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-white hover:bg-white/10"
             >
                 {open ? (
                     <X className="h-6 w-6" aria-hidden="true" />
@@ -126,14 +141,15 @@ function MobileNav({
                 <nav
                     id="navigasi-seluler"
                     aria-label={`Navigasi utama ${siteName}`}
-                    className="absolute inset-x-0 top-full z-50 border-t border-white/10 bg-desa-900 px-4 py-3"
+                    className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-white/10 bg-desa-900 px-4 py-3"
                 >
                     <ul className="flex flex-col">
                         {items.map((item) => (
                             <li key={item.label}>
                                 <Link
                                     href={item.href}
-                                    className="block rounded-md px-3 py-2.5 text-sm font-medium text-white hover:bg-white/10"
+                                    onClick={() => setOpen(false)}
+                                    className="flex min-h-[44px] items-center rounded-md px-3 py-2.5 text-sm font-medium text-white hover:bg-white/10"
                                 >
                                     {item.label}
                                 </Link>
@@ -143,7 +159,10 @@ function MobileNav({
                                             <li key={child.label}>
                                                 <Link
                                                     href={child.href}
-                                                    className="block rounded-md px-3 py-2 text-sm text-white/85 hover:bg-white/10"
+                                                    onClick={() =>
+                                                        setOpen(false)
+                                                    }
+                                                    className="flex min-h-[44px] items-center rounded-md px-3 py-2 text-sm text-white/85 hover:bg-white/10"
                                                 >
                                                     {child.label}
                                                 </Link>
@@ -362,44 +381,41 @@ export default function PublicLayout({
                 ) : null}
             </Head>
             <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900">
-                {/* Navbar overlay transparan agar menyatu dengan hero; gradasi hanya penjamin keterbacaan teks. */}
-                <div className="absolute inset-x-0 top-0 z-40 bg-gradient-to-b from-black/60 via-black/25 to-transparent">
-                    <TopBar />
-                    <header>
-                        <div className="relative mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-8">
-                            <Link href="/" className="flex items-center gap-3">
-                                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-desa-800">
-                                    K
+                <TopBar />
+                {/* Header sticky berlatar solid hijau desa: selalu terbaca,
+                    tidak tertembus konten saat scroll, dan menu seluler
+                    menempel tepat di bawahnya. */}
+                <header className="sticky top-0 z-50 bg-desa-900">
+                    <div className="relative mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-8">
+                        <Link href="/" className="flex items-center gap-3">
+                            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-desa-800">
+                                K
+                            </span>
+                            <span className="leading-tight">
+                                <span className="block text-base font-bold tracking-wide text-white">
+                                    PEMERINTAH DESA KEPANDEAN
                                 </span>
-                                <span className="leading-tight">
-                                    <span className="block text-base font-bold tracking-wide text-white">
-                                        PEMERINTAH DESA KEPANDEAN
-                                    </span>
-                                    <span className="block text-sm text-white/75">
-                                        Kecamatan Dukuhturi - Kabupaten Tegal
-                                    </span>
+                                <span className="block text-sm text-white/75">
+                                    Kecamatan Dukuhturi - Kabupaten Tegal
                                 </span>
-                            </Link>
-                            <DesktopNav items={site.nav} />
-                            <div className="flex items-center gap-2">
-                                <Link
-                                    href="/layanan-warga"
-                                    className="hidden items-center gap-1.5 rounded-md bg-desa-700 px-4 py-2 text-sm font-medium text-white hover:bg-desa-800 lg:inline-flex"
-                                >
-                                    <ShieldCheck
-                                        className="h-4 w-4"
-                                        aria-hidden="true"
-                                    />
-                                    Layanan Mandiri Warga
-                                </Link>
-                                <MobileNav
-                                    items={site.nav}
-                                    siteName={site.nama}
+                            </span>
+                        </Link>
+                        <DesktopNav items={site.nav} />
+                        <div className="flex items-center gap-2">
+                            <Link
+                                href="/layanan-warga"
+                                className="hidden items-center gap-1.5 rounded-md bg-desa-700 px-4 py-2 text-sm font-medium text-white hover:bg-desa-800 lg:inline-flex"
+                            >
+                                <ShieldCheck
+                                    className="h-4 w-4"
+                                    aria-hidden="true"
                                 />
-                            </div>
+                                Layanan Mandiri Warga
+                            </Link>
+                            <MobileNav items={site.nav} siteName={site.nama} />
                         </div>
-                    </header>
-                </div>
+                    </div>
+                </header>
                 <main className="flex-1">{children}</main>
                 <Footer site={site} />
             </div>

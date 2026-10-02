@@ -1,4 +1,4 @@
-import { Link, useForm, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import {
     ArrowRight,
     Bell,
@@ -8,13 +8,11 @@ import {
     IdCard,
     Info,
     MapPin,
-    Megaphone,
+    MessageCircle,
     MessageSquareWarning,
     Newspaper,
-    Send,
     Users,
 } from 'lucide-react';
-import type { FormEventHandler } from 'react';
 import {
     useEffect,
     useRef,
@@ -114,7 +112,7 @@ function Hero({
 
     if (jumlah === 0) {
         return (
-            <section className="flex min-h-[540px] items-center bg-desa-900 px-4 pt-28 pb-16 text-white sm:min-h-[620px] sm:px-8 sm:pt-36 sm:pb-20">
+            <section className="flex min-h-[540px] items-center bg-desa-900 px-4 pt-12 pb-14 text-white sm:min-h-[620px] sm:px-8 sm:pt-16 sm:pb-20">
                 <div className="mx-auto w-full max-w-[1440px]">
                     <p className="text-base text-white/75">Selamat datang di</p>
                     <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
@@ -219,7 +217,7 @@ function Hero({
                                 aria-hidden="true"
                                 className="absolute inset-0 bg-desa-900/50"
                             />
-                            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-28 pb-24 sm:px-8 sm:pt-36 sm:pb-28">
+                            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-12 pb-20 sm:px-8 sm:pt-16 sm:pb-24">
                                 <p className="text-base text-white/75">
                                     Selamat datang di {siteName}
                                 </p>
@@ -589,25 +587,13 @@ function LokasiDesa({ lokasi }: { lokasi: LokasiData }) {
     );
 }
 
-function FormAduan() {
-    const { props } = usePage<{ status?: string }>();
-    const { data, setData, post, processing, errors, reset } = useForm({
-        nama: '',
-        kontak: '',
-        pesan: '',
-        lokasi: '',
-        foto: null as File | null,
-    });
+// TODO: ganti nomor placeholder di bawah dengan nomor WhatsApp hotline
+// resmi perangkat desa (format 628..., tanpa +, spasi, atau tanda hubung)
+// sebelum rilis ke production.
+const WA_HOTLINE_URL =
+    'https://wa.me/6281234567890?text=Halo%20Admin%20Desa%20Kepandean%2C%20saya%20ingin%20mengajukan%20aduan.';
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post('/aduan', {
-            forceFormData: true,
-            preserveScroll: true,
-            onSuccess: () => reset('pesan', 'foto'),
-        });
-    };
-
+function HotlineAduan() {
     return (
         <section
             id="aduan"
@@ -628,180 +614,49 @@ function FormAduan() {
                             Lingkungan Anda?
                         </h2>
                         <p className="mt-2 text-sm leading-6 text-white/85">
-                            Laporkan secara mudah dengan foto lokasi melalui
-                            layanan Aduan Kepandean. Petugas akan meninjau
-                            langsung ke lokasi.
+                            Sampaikan langsung lewat WhatsApp hotline resmi
+                            desa. Sertakan foto dan patokan lokasi agar petugas
+                            bisa meninjau langsung ke lokasi.
                         </p>
                     </div>
-                    <form
-                        onSubmit={submit}
-                        className="rounded-lg bg-white p-5 text-neutral-900 shadow"
-                    >
+                    <div className="rounded-lg bg-white p-5 text-neutral-900 shadow sm:p-6">
                         <h3 className="flex items-center gap-2 font-semibold">
-                            <Megaphone
+                            <MessageCircle
                                 className="h-5 w-5 text-desa-800"
                                 aria-hidden="true"
                             />
-                            Formulir Aduan
+                            Hotline Aduan Warga
                         </h3>
-                        {props.status && (
-                            <p
-                                role="status"
-                                className="mt-3 rounded-md bg-emerald-50 p-3 text-sm text-emerald-800"
-                            >
-                                {props.status}
-                            </p>
-                        )}
-                        <div className="mt-3 space-y-3">
-                            <div>
-                                <label
-                                    htmlFor="aduan-nama"
-                                    className="text-sm font-medium"
-                                >
-                                    Nama{' '}
-                                    <span className="text-neutral-400">
-                                        (opsional)
-                                    </span>
-                                </label>
-                                <input
-                                    id="aduan-nama"
-                                    type="text"
-                                    value={data.nama}
-                                    onChange={(e) =>
-                                        setData('nama', e.target.value)
-                                    }
-                                    className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-                                    autoComplete="name"
-                                />
-                                {errors.nama && (
-                                    <p className="mt-1 text-xs text-red-600">
-                                        {errors.nama}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="aduan-kontak"
-                                    className="text-sm font-medium"
-                                >
-                                    Kontak{' '}
-                                    <span className="text-neutral-400">
-                                        (opsional)
-                                    </span>
-                                </label>
-                                <input
-                                    id="aduan-kontak"
-                                    type="text"
-                                    value={data.kontak}
-                                    onChange={(e) =>
-                                        setData('kontak', e.target.value)
-                                    }
-                                    className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-                                    autoComplete="tel"
-                                />
-                                {errors.kontak && (
-                                    <p className="mt-1 text-xs text-red-600">
-                                        {errors.kontak}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="aduan-pesan"
-                                    className="text-sm font-medium"
-                                >
-                                    Pesan Aduan{' '}
-                                    <span
-                                        aria-hidden="true"
-                                        className="text-red-600"
-                                    >
-                                        *
-                                    </span>
-                                </label>
-                                <textarea
-                                    id="aduan-pesan"
-                                    required
-                                    value={data.pesan}
-                                    onChange={(e) =>
-                                        setData('pesan', e.target.value)
-                                    }
-                                    rows={3}
-                                    className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-                                />
-                                {errors.pesan && (
-                                    <p className="mt-1 text-xs text-red-600">
-                                        {errors.pesan}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="aduan-lokasi"
-                                    className="text-sm font-medium"
-                                >
-                                    Lokasi Kejadian{' '}
-                                    <span
-                                        aria-hidden="true"
-                                        className="text-red-600"
-                                    >
-                                        *
-                                    </span>
-                                </label>
-                                <input
-                                    id="aduan-lokasi"
-                                    type="text"
-                                    required
-                                    value={data.lokasi}
-                                    onChange={(e) =>
-                                        setData('lokasi', e.target.value)
-                                    }
-                                    placeholder="cth. RT 02 / RW 03, Gang Mawar"
-                                    className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-                                />
-                                {errors.lokasi && (
-                                    <p className="mt-1 text-xs text-red-600">
-                                        {errors.lokasi}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="aduan-foto"
-                                    className="text-sm font-medium"
-                                >
-                                    Foto{' '}
-                                    <span className="text-neutral-400">
-                                        (opsional, maks. 5 MB)
-                                    </span>
-                                </label>
-                                <input
-                                    id="aduan-foto"
-                                    type="file"
-                                    accept="image/jpeg,image/png,image/webp"
-                                    onChange={(e) =>
-                                        setData(
-                                            'foto',
-                                            e.target.files?.[0] ?? null,
-                                        )
-                                    }
-                                    className="mt-1 w-full text-sm"
-                                />
-                                {errors.foto && (
-                                    <p className="mt-1 text-xs text-red-600">
-                                        {errors.foto}
-                                    </p>
-                                )}
-                            </div>
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-amber-500 px-4 py-2.5 text-sm font-semibold text-neutral-900 hover:bg-amber-400 disabled:opacity-60"
-                            >
-                                <Send className="h-4 w-4" aria-hidden="true" />
-                                {processing ? 'Mengirim…' : 'Kirim Aduan'}
-                            </button>
-                        </div>
-                    </form>
+                        <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-sm leading-6 text-neutral-600">
+                            <li>
+                                Tekan tombol WhatsApp di bawah untuk membuka
+                                chat hotline desa.
+                            </li>
+                            <li>
+                                Tulis aduan beserta foto dan patokan lokasi
+                                (cth. RT 02 / RW 03, Gang Mawar).
+                            </li>
+                            <li>
+                                Petugas meninjau laporan dan menindaklanjuti
+                                langsung ke lokasi.
+                            </li>
+                        </ol>
+                        <a
+                            href={WA_HOTLINE_URL}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="mt-4 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-md bg-sky-500 px-4 py-2.5 text-sm font-semibold text-sky-950 hover:bg-sky-400"
+                        >
+                            <MessageCircle
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                            />
+                            Hubungi via WhatsApp
+                        </a>
+                        <p className="mt-2 text-center text-xs text-neutral-500">
+                            Chat langsung, tanpa formulir dan tanpa akun.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -912,7 +767,7 @@ export default function Welcome({
                 beritaTerkini={beritaTerkini}
             />
             <LokasiDesa lokasi={lokasi} />
-            <FormAduan />
+            <HotlineAduan />
             <StatistikRingkas statistik={statistik} />
         </PublicLayout>
     );

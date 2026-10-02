@@ -94,7 +94,7 @@ export default function KegiatanIndex({
                                     </p>
                                     <Link
                                         href={item.url}
-                                        className="text-lg font-semibold underline-offset-4 hover:underline"
+                                        className="text-lg font-semibold text-slate-900 underline-offset-4 hover:underline dark:text-slate-100"
                                     >
                                         {item.judul}
                                     </Link>
@@ -118,7 +118,7 @@ export default function KegiatanIndex({
                         {kegiatan.prev_page_url && (
                             <Link
                                 href={kegiatan.prev_page_url}
-                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium dark:border-[#3E3E3A]"
+                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                             >
                                 Sebelumnya
                             </Link>
@@ -129,7 +129,7 @@ export default function KegiatanIndex({
                         {kegiatan.next_page_url && (
                             <Link
                                 href={kegiatan.next_page_url}
-                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium dark:border-[#3E3E3A]"
+                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                             >
                                 Berikutnya
                             </Link>
