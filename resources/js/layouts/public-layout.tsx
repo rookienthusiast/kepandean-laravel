@@ -66,7 +66,7 @@ function DesktopNav({ items }: { items: NavItem[] }) {
                     <div key={item.label} className="group relative">
                         <Link
                             href={item.href}
-                            className="flex items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-2 text-sm font-medium text-white hover:bg-white/10"
+                            className="flex items-center gap-1 rounded-md px-2.5 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-white/10"
                         >
                             {item.label}
                             <ChevronDown
@@ -90,7 +90,7 @@ function DesktopNav({ items }: { items: NavItem[] }) {
                     <Link
                         key={item.label}
                         href={item.href}
-                        className="whitespace-nowrap rounded-md px-2.5 py-2 text-sm font-medium text-white hover:bg-white/10"
+                        className="rounded-md px-2.5 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-white/10"
                     >
                         {item.label}
                     </Link>
@@ -434,7 +434,7 @@ export default function PublicLayout({
                         >
                             <SiteLogo url={site.logo_url} inisial />
                             <span className="min-w-0 leading-tight">
-                                <span className="block truncate whitespace-nowrap text-sm font-bold tracking-wide text-white sm:text-base">
+                                <span className="block truncate text-sm font-bold tracking-wide whitespace-nowrap text-white sm:text-base">
                                     <span className="sm:hidden">
                                         DESA KEPANDEAN
                                     </span>
@@ -442,7 +442,7 @@ export default function PublicLayout({
                                         PEMERINTAH DESA KEPANDEAN
                                     </span>
                                 </span>
-                                <span className="mt-0.5 block truncate whitespace-nowrap text-xs text-white/75 sm:text-sm">
+                                <span className="mt-0.5 block truncate text-xs whitespace-nowrap text-white/75 sm:text-sm">
                                     <span className="sm:hidden">
                                         Kec. Dukuhturi, Kab. Tegal
                                     </span>
@@ -456,7 +456,7 @@ export default function PublicLayout({
                         <div className="flex shrink-0 items-center gap-2">
                             <Link
                                 href="/layanan-warga"
-                                className="hidden items-center gap-1.5 whitespace-nowrap rounded-md bg-desa-700 px-4 py-2 text-sm font-medium text-white hover:bg-desa-800 2xl:inline-flex"
+                                className="hidden items-center gap-1.5 rounded-md bg-desa-700 px-4 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-desa-800 2xl:inline-flex"
                             >
                                 <ShieldCheck
                                     className="h-4 w-4"

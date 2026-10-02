@@ -11,6 +11,7 @@ use App\Support\Media;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
@@ -111,7 +112,7 @@ class KelolaProfil extends Page
         $data = [
             'sejarah' => HtmlSanitizer::toPlainText($raw['sejarah'] ?? null),
             'visi' => HtmlSanitizer::toPlainText($raw['visi'] ?? null),
-            'misi' => HtmlSanitizer::toPlainText($raw['misi'] ?? null),
+            'misi' => HtmlSanitizer::fromRichOrPlain($raw['misi'] ?? null),
             'foto_path' => $raw['foto_path'] ?? null,
             'logo_path' => $raw['logo_path'] ?? null,
         ];
@@ -134,10 +135,13 @@ class KelolaProfil extends Page
     protected function mutateFormDataBeforeSave(array $data): array
     {
         // Input teks biasa dibungkus jadi paragraf HTML tersanitasi.
-        foreach (['sejarah', 'visi', 'misi'] as $field) {
+        foreach (['sejarah', 'visi'] as $field) {
             $value = $data[$field] ?? null;
             $data[$field] = is_string($value) ? HtmlSanitizer::fromPlainText($value) : '';
         }
+
+        // Misi memakai editor numbering/bullet: HTML-nya disanitasi, bukan di-escape.
+        $data['misi'] = HtmlSanitizer::fromRichOrPlain(is_string($data['misi'] ?? null) ? $data['misi'] : null);
 
         unset($data['desa_id']);
 
@@ -233,11 +237,11 @@ class KelolaProfil extends Page
                     ->rows(4)
                     ->columnSpanFull()
                     ->helperText('Teks biasa. Baris kosong menjadi paragraf baru.'),
-                Textarea::make('misi')
+                RichEditor::make('misi')
                     ->label('Misi')
-                    ->rows(8)
+                    ->toolbarButtons([['bold', 'italic'], ['orderedList', 'bulletList'], ['undo', 'redo']])
                     ->columnSpanFull()
-                    ->helperText('Teks biasa. Satu baris menjadi satu baris tampilan.'),
+                    ->helperText('Gunakan tombol daftar bernomor atau berpoin; satu poin per baris.'),
                 Media::upload('logo_path', 'profil', 'Logo Desa')
                     ->columnSpanFull()
                     ->helperText('Tampil di header dan footer situs (jpg/png/webp, maks. 5 MB). Disarankan PNG transparan. Kosongkan untuk memakai huruf inisial.'),

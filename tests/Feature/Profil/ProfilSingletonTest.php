@@ -6,6 +6,7 @@ use App\Filament\Pages\KelolaProfil;
 use App\Models\Desa;
 use App\Models\Profil;
 use App\Models\User;
+use App\Support\HtmlSanitizer;
 use Database\Seeders\DesaSeeder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -91,7 +92,43 @@ class ProfilSingletonTest extends TestCase
 
         $this->assertStringNotContainsString('<script', (string) $profil->sejarah);
         $this->assertStringContainsString('<p>Sejarah singkat.</p>', (string) $profil->sejarah);
-        $this->assertStringContainsString('<p>Poin satu<br>', (string) $profil->misi);
+        $this->assertStringContainsString('<p>Poin satu', (string) $profil->misi);
+    }
+
+    public function test_misi_dari_editor_tersimpan_sebagai_daftar_bernomor_dan_aman(): void
+    {
+        $admin = $this->makeUser('admin_desa', 'kepandean');
+
+        $this->actingAs($admin, 'web');
+
+        Livewire::test(KelolaProfil::class)
+            ->fillForm([
+                'sejarah' => 'Sejarah',
+                'visi' => 'Visi',
+                'misi' => '<ol><li>Satu</li><li>Dua<script>alert(1)</script></li></ol>',
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $profil = Profil::withoutGlobalScope('desa')->where('desa_id', $admin->desa_id)->firstOrFail();
+
+        $this->assertStringContainsString('<ol><li>Satu</li>', (string) $profil->misi);
+        $this->assertStringNotContainsString('<script', (string) $profil->misi);
+    }
+
+    public function test_misi_teks_lama_bernomor_dirender_sebagai_daftar(): void
+    {
+        $this->assertSame(
+            '<ol><li>Satu</li><li>Dua</li></ol>',
+            HtmlSanitizer::fromRichOrPlain('1. Satu
+2. Dua'),
+        );
+        $this->assertSame(
+            '<ul><li>a</li><li>b</li></ul>',
+            HtmlSanitizer::fromRichOrPlain('- a
+- b'),
+        );
+        $this->assertSame('', HtmlSanitizer::fromRichOrPlain('<p></p>'));
     }
 
     public function test_admin_desa_can_open_profil_page(): void

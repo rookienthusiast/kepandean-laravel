@@ -86,6 +86,45 @@ class HtmlSanitizer
     }
 
     /**
+     * Isi editor kaya (mis. Misi) menjadi HTML tersanitasi. HTML dari editor
+     * dipakai apa adanya; teks biasa lama ("1. a\n2. b" atau "- a\n- b")
+     * dikenali sebagai daftar bernomor/berpoin, selain itu jadi paragraf.
+     */
+    public static function fromRichOrPlain(?string $value): string
+    {
+        if ($value === null || trim($value) === '') {
+            return '';
+        }
+
+        if (preg_match('#<\s*(p|ol|ul|li|br|div|h[1-6]|blockquote)\b#i', $value)) {
+            // Editor membungkus isi tiap poin dengan <p>; dilepas agar jarak antar poin rapat.
+            $clean = preg_replace('#<li>\s*<p>(.*?)</p>\s*</li>#s', '<li>$1</li>', self::clean($value)) ?? '';
+
+            return trim(strip_tags($clean)) === '' ? '' : $clean;
+        }
+
+        $lines = array_values(array_filter(
+            array_map('trim', preg_split("/\R/", $value) ?: []),
+            fn (string $line): bool => $line !== '',
+        ));
+
+        foreach ([['ol', '/^\d+[.)]\s+/'], ['ul', '/^[-*\x{2022}]\s+/u']] as [$tag, $marker]) {
+            $cocok = array_filter($lines, fn (string $line): bool => (bool) preg_match($marker, $line));
+
+            if ($lines !== [] && count($cocok) === count($lines)) {
+                $items = array_map(
+                    fn (string $line): string => '<li>'.htmlspecialchars(preg_replace($marker, '', $line) ?? $line, ENT_QUOTES | ENT_HTML5, 'UTF-8').'</li>',
+                    $lines,
+                );
+
+                return "<{$tag}>".implode('', $items)."</{$tag}>";
+            }
+        }
+
+        return self::fromPlainText($value);
+    }
+
+    /**
      * HTML tersimpan menjadi teks biasa untuk textarea: penutup blok dan
      * <br> menjadi baris baru, lalu tag dikupas dan entitas dibuka.
      */

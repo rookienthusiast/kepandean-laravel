@@ -408,9 +408,7 @@ function SekilasSejarah({
                 <article className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm lg:col-span-2">
                     <div
                         className={
-                            excerpt.foto_url
-                                ? 'grid md:grid-cols-5'
-                                : undefined
+                            excerpt.foto_url ? 'grid md:grid-cols-5' : undefined
                         }
                     >
                         <div

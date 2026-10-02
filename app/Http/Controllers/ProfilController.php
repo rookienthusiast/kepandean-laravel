@@ -33,7 +33,7 @@ class ProfilController extends Controller
             'profil' => [
                 'sejarah' => HtmlSanitizer::clean($profil?->sejarah),
                 'visi' => HtmlSanitizer::clean($profil?->visi),
-                'misi' => HtmlSanitizer::clean($profil?->misi),
+                'misi' => HtmlSanitizer::fromRichOrPlain($profil?->misi),
                 'foto_url' => $profil?->foto_path ? asset('storage/'.$profil->foto_path) : null,
                 'isEmpty' => $profil === null || $profil->isEmpty(),
             ],
