@@ -60,7 +60,7 @@ export default function ProfilLayout({
                     aria-hidden="true"
                     className="absolute inset-0 bg-desa-900/50"
                 />
-                <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-28 pb-14 sm:px-8 sm:pt-36 sm:pb-16">
+                <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-10 pb-12 sm:px-8 sm:pt-14 sm:pb-16">
                     <nav
                         aria-label="Breadcrumb profil"
                         className="text-xs text-white/70"

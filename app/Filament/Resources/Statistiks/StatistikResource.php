@@ -23,6 +23,12 @@ class StatistikResource extends ScopedResource
 {
     protected static ?string $model = Statistik::class;
 
+    protected static ?string $navigationLabel = 'Statistik';
+
+    protected static ?string $modelLabel = 'Statistik';
+
+    protected static ?string $pluralModelLabel = 'Statistik';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 
     protected static UnitEnum|string|null $navigationGroup = 'Konten';
