@@ -16,13 +16,12 @@ class ProfilDesaJsonSeeder extends Seeder
      * database/data/profil-desa-kepandean.json (disalin verbatim dari
      * database/Profil_Desa_Kepandean.md, tanpa fabrikasi).
      *
-     * Dijalankan SETELAH ContentFigmaSeeder sehingga data terkonfirmasi
-     * dari dokumen menimpa placeholder Figma (misi 4 poin, statistik
-     * 4820 jiwa, roster pejabat contoh).
+     * Dijalankan SETELAH DesaSeeder sehingga data terkonfirmasi
+     * dari dokumen mengisi profil, statistik, dan roster pejabat desa
+     * (misi 3 poin, statistik 6997 jiwa, roster 31 pejabat).
      *
      * Idempotent: Profil/Statistik via updateOrCreate, roster pejabat
-     * dihapus lalu dimasukkan ulang sesuai JSON (pola yang sama dengan
-     * ContentFigmaSeeder).
+     * dihapus lalu dimasukkan ulang sesuai JSON.
      */
     public function run(): void
     {

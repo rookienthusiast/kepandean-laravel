@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Desa;
 use App\Models\HeroSlide;
 use App\Models\LamanHero;
+use App\Models\Profil;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,6 +19,9 @@ use Illuminate\Support\Facades\Storage;
  * (desa, urutan) untuk slide dan (desa, slug) untuk laman, sehingga
  * upload admin di luar daftar ini tidak tersentuh. Berkas sumber yang
  * hilang hanya dilewati dengan peringatan, bukan gagal.
+ *
+ * Media profil (logo + foto sejarah) hanya diisi bila masih kosong:
+ * logo dan foto hasil upload admin tidak pernah ditimpa seeder ini.
  */
 class HeroGambarSeeder extends Seeder
 {
@@ -111,6 +115,32 @@ class HeroGambarSeeder extends Seeder
                 ['gambar_path' => $path]
             );
         }
+
+        // Media profil: logo + foto sejarah dari database/data/images.
+        // Hanya mengisi yang masih kosong supaya upload admin tidak
+        // pernah ditimpa; kolom teks (sejarah/visi/misi) tidak disentuh.
+        $profil = Profil::withoutGlobalScope('desa')->firstOrNew(['desa_id' => $desa->id]);
+        $profil->foto_path = $this->mediaAktif($profil->foto_path, 'foto-sejarah.jpeg', 'profil/foto-sejarah.jpeg');
+        $profil->logo_path = $this->mediaAktif($profil->logo_path, 'Logo.png', 'profil/logo-desa.png');
+
+        if ($profil->isDirty()) {
+            $profil->save();
+        }
+    }
+
+    /**
+     * Kembalikan path aktif untuk satu media profil: pertahankan nilai
+     * lama bila berkasnya masih ada di disk (milik admin), selain itu
+     * salin berkas sumber dan kembalikan path barunya (atau nilai lama
+     * bila sumber hilang).
+     */
+    private function mediaAktif(?string $saatIni, string $berkas, string $tujuan): ?string
+    {
+        if (is_string($saatIni) && $saatIni !== '' && Storage::disk('public')->exists($saatIni)) {
+            return $saatIni;
+        }
+
+        return $this->salin($berkas, $tujuan) ?? $saatIni;
     }
 
     /**
