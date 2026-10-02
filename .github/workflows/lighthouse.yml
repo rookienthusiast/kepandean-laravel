@@ -47,7 +47,7 @@ jobs:
 
       - name: Optimize for production parity
         run: |
-          composer dump-autoload --optimize --no-dev
+          composer dump-autoload --optimize
           APP_DEBUG=false php artisan config:cache
           php artisan view:cache
 
