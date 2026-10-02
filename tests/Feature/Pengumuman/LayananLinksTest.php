@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 /**
  * Issue #17 checklist 2: semua kartu Layanan Publik + nav + top-bar
- * WAJIB mendarat di tempat nyata — tidak ada jalan buntu.
+ * WAJIB mendarat di tempat nyata, tidak ada jalan buntu.
  *
  * Aturan: href internal → GET dan harus < 400 (mengikuti redirect);
  * href outbound → host-nya harus terdaftar di allowlist (tidak ada

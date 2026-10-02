@@ -105,7 +105,7 @@ function Pagination({
             {prev && (
                 <Link
                     href={prev}
-                    className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                    className="inline-flex min-h-[44px] items-center rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                 >
                     Sebelumnya
                 </Link>
@@ -116,7 +116,7 @@ function Pagination({
             {next && (
                 <Link
                     href={next}
-                    className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                    className="inline-flex min-h-[44px] items-center rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                 >
                     Berikutnya
                 </Link>
@@ -176,7 +176,7 @@ export default function InformasiIndex({
                         })}
                         role="tab"
                         aria-selected={isBerita}
-                        className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                        className={`inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-medium ${
                             isBerita
                                 ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
                                 : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
@@ -188,7 +188,7 @@ export default function InformasiIndex({
                         href={tabHref('pengumuman', {})}
                         role="tab"
                         aria-selected={isPengumuman}
-                        className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                        className={`inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-medium ${
                             isPengumuman
                                 ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
                                 : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
@@ -200,7 +200,7 @@ export default function InformasiIndex({
                         href={tabHref('kegiatan', {})}
                         role="tab"
                         aria-selected={!isBerita && !isPengumuman}
-                        className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                        className={`inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-medium ${
                             !isBerita && !isPengumuman
                                 ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
                                 : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
@@ -222,7 +222,7 @@ export default function InformasiIndex({
                                     aria-current={
                                         activeKategori ? undefined : 'page'
                                     }
-                                    className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                                    className={`inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-medium ${
                                         activeKategori
                                             ? 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                                             : 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
@@ -241,7 +241,7 @@ export default function InformasiIndex({
                                                 ? 'page'
                                                 : undefined
                                         }
-                                        className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                                        className={`inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-medium ${
                                             activeKategori === kategori.slug
                                                 ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
                                                 : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'

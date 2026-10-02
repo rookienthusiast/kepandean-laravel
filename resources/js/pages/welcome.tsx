@@ -272,7 +272,7 @@ function Hero({
                             type="button"
                             onClick={sebelumnya}
                             aria-label="Tampilkan slide sebelumnya"
-                            className="rounded-full border border-white/40 p-2 hover:bg-white/10"
+                            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/40 hover:bg-white/10"
                         >
                             <ChevronLeft
                                 className="h-5 w-5"
@@ -292,19 +292,24 @@ function Hero({
                                     aria-selected={i === indeks}
                                     aria-label={`Tampilkan slide ${i + 1}: ${s.judul}`}
                                     onClick={() => setIndeks(i)}
-                                    className={
-                                        i === indeks
-                                            ? 'h-2.5 w-6 rounded-full bg-white'
-                                            : 'h-2.5 w-2.5 rounded-full bg-white/40 hover:bg-white/70'
-                                    }
-                                />
+                                    className="group flex min-h-[44px] min-w-[44px] items-center justify-center"
+                                >
+                                    <span
+                                        aria-hidden="true"
+                                        className={
+                                            i === indeks
+                                                ? 'block h-2.5 w-6 rounded-full bg-white'
+                                                : 'block h-2.5 w-2.5 rounded-full bg-white/40 group-hover:bg-white/70'
+                                        }
+                                    />
+                                </button>
                             ))}
                         </div>
                         <button
                             type="button"
                             onClick={berikutnya}
                             aria-label="Tampilkan slide berikutnya"
-                            className="rounded-full border border-white/40 p-2 hover:bg-white/10"
+                            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/40 hover:bg-white/10"
                         >
                             <ChevronRight
                                 className="h-5 w-5"
@@ -540,7 +545,7 @@ function LokasiDesa({ lokasi }: { lokasi: LokasiData }) {
                                 href={lokasi.peta_url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-2 rounded-md bg-desa-800 px-4 py-2 text-sm font-medium text-white hover:bg-desa-900"
+                                className="inline-flex min-h-[44px] items-center gap-2 rounded-md bg-desa-800 px-4 py-2 text-sm font-medium text-white hover:bg-desa-900"
                             >
                                 Buka Peta Digital
                             </a>

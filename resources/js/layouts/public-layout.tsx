@@ -413,7 +413,10 @@ export default function PublicLayout({
                 <header
                     className={`sticky top-0 z-[100] transition-colors duration-300 motion-reduce:transition-none ${
                         scrolled
-                            ? 'bg-desa-900 shadow-md backdrop-blur-md'
+                            ? // Hijau 95% + blur: konten yang lewat di bawah
+                              // navbar sedikit teredam, satu-satunya
+                              // elemen ber-blur di halaman (R-10).
+                              'bg-desa-900/95 shadow-md backdrop-blur-md'
                             : 'bg-transparent'
                     }`}
                 >

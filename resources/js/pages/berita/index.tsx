@@ -93,7 +93,7 @@ export default function BeritaIndex({
                     <Link
                         href="/berita"
                         aria-current={activeKategori ? undefined : 'page'}
-                        className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                        className={`inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-medium ${
                             activeKategori
                                 ? 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                                 : 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
@@ -110,7 +110,7 @@ export default function BeritaIndex({
                                     ? 'page'
                                     : undefined
                             }
-                            className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                            className={`inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-medium ${
                                 activeKategori === kategori.slug
                                     ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
                                     : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
@@ -178,7 +178,7 @@ export default function BeritaIndex({
                         {berita.prev_page_url && (
                             <Link
                                 href={pageHref(pages.current_page - 1)}
-                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                                className="inline-flex min-h-[44px] items-center rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                             >
                                 Sebelumnya
                             </Link>
@@ -189,7 +189,7 @@ export default function BeritaIndex({
                         {berita.next_page_url && (
                             <Link
                                 href={pageHref(pages.current_page + 1)}
-                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                                className="inline-flex min-h-[44px] items-center rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                             >
                                 Berikutnya
                             </Link>

@@ -118,7 +118,7 @@ export default function PengumumanIndex({
                         {pengumuman.prev_page_url && (
                             <Link
                                 href={pengumuman.prev_page_url}
-                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                                className="inline-flex min-h-[44px] items-center rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                             >
                                 Sebelumnya
                             </Link>
@@ -129,7 +129,7 @@ export default function PengumumanIndex({
                         {pengumuman.next_page_url && (
                             <Link
                                 href={pengumuman.next_page_url}
-                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                                className="inline-flex min-h-[44px] items-center rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
                             >
                                 Berikutnya
                             </Link>
