@@ -48,5 +48,6 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call(ContentFigmaSeeder::class);
+        $this->call(ProfilDesaJsonSeeder::class);
     }
 }
