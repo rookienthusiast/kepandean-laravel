@@ -310,9 +310,6 @@ function Footer({ site }: { site: SiteData }) {
                         2026 Pemerintah Desa Kepandean, Kecamatan Dukuhturi,
                         Kabupaten Tegal. Hak Cipta Dilindungi Undang-Undang.
                     </p>
-                    <p className="font-medium text-desa-800">
-                        Sinergi OpenSID & Sistem Informasi Desa Tegal
-                    </p>
                 </div>
             </div>
         </footer>

@@ -638,7 +638,7 @@ function LokasiDesa({ lokasi }: { lokasi: LokasiData }) {
 // resmi perangkat desa (format 628..., tanpa +, spasi, atau tanda hubung)
 // sebelum rilis ke production.
 const WA_HOTLINE_URL =
-    'https://wa.me/6281234567890?text=Halo%20Admin%20Desa%20Kepandean%2C%20saya%20ingin%20mengajukan%20aduan.';
+    'https://wa.me/6281770461804?text=Halo%20Admin%20Desa%20Kepandean%2C%20saya%20ingin%20mengajukan%20aduan.';
 
 function HotlineAduan() {
     return (

@@ -22,6 +22,14 @@ class LamanHero extends Model
         'informasi' => 'Informasi',
         'profil' => 'Profil (Sejarah & Visi Misi)',
         'struktur' => 'Struktur Organisasi',
+        'pemerintahan' => 'Pemerintahan',
+        'lembaga-desa' => 'Lembaga Desa',
+        'produk-hukum' => 'Produk Hukum',
+        'laporan' => 'Laporan',
+        'layanan-warga' => 'Layanan Warga',
+        'layanan' => 'Layanan',
+        'potensi-galeri' => 'Potensi & Galeri',
+        'kontak-lokasi' => 'Kontak & Lokasi',
     ];
 
     protected $fillable = ['desa_id', 'slug', 'gambar_path'];
