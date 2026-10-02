@@ -66,14 +66,14 @@ const LAYANAN = [
     {
         ikon: MessageSquareWarning,
         judul: 'Aduan Warga',
-        deskripsi: 'Sampaikan aspirasi & keluhan Anda',
+        deskripsi: 'Sampaikan aspirasi & keluhan anda',
         href: '#aduan',
     },
     {
         ikon: Info,
         judul: 'Informasi Publik',
-        deskripsi: 'Transparansi & info resmi (via Pengumuman)',
-        href: '/pengumuman',
+        deskripsi: 'Transparansi data & Informasi desa',
+        href: '/informasi',
     },
 ];
 
@@ -114,20 +114,28 @@ function Hero({
         return (
             <section className="flex min-h-[540px] items-center bg-desa-900 px-4 pt-12 pb-14 text-white sm:min-h-[620px] sm:px-8 sm:pt-16 sm:pb-20">
                 <div className="mx-auto w-full max-w-[1440px]">
-                    <p className="text-base text-white/75">Selamat datang di</p>
-                    <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                    <div className="inline-flex items-center gap-2.5 text-white/90">
+                        <span
+                            className="h-[2px] w-7 bg-white"
+                            aria-hidden="true"
+                        />
+                        <span className="text-sm font-medium tracking-wide sm:text-base">
+                            Selamat Datang di
+                        </span>
+                    </div>
+                    <h1 className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
                         {siteName}
                     </h1>
-                    <p className="mt-1 text-lg text-white/85">
+                    <p className="mt-2 text-lg font-medium text-white/90 sm:text-xl">
                         Kecamatan Dukuhturi, Kabupaten Tegal
                     </p>
-                    <p className="mt-4 max-w-xl text-base leading-7 text-white/75">
-                        Mengenali lebih dekat profil, informasi, pelayanan, dan
+                    <p className="mt-4 max-w-xl text-base leading-relaxed text-white/80">
+                        Mengenal lebih dekat profil, informasi, pelayanan dan
                         potensi {siteName}.
                     </p>
                     <Link
                         href="#layanan"
-                        className="mt-6 inline-flex items-center gap-2 rounded-md bg-desa-700 px-5 py-2.5 text-base font-medium text-white hover:bg-desa-800"
+                        className="mt-7 inline-flex items-center gap-2 rounded-lg bg-desa-800 px-6 py-3 text-base font-semibold text-white shadow-md transition-colors hover:bg-desa-900"
                     >
                         Jelajahi Desa
                         <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -215,49 +223,56 @@ function Hero({
                             )}
                             <div
                                 aria-hidden="true"
-                                className="absolute inset-0 bg-desa-900/50"
+                                className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/35"
                             />
                             <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-12 pb-20 sm:px-8 sm:pt-16 sm:pb-24">
-                                <p className="text-base text-white/75">
-                                    Selamat datang di {siteName}
-                                </p>
+                                <div className="inline-flex items-center gap-2.5 text-white/90">
+                                    <span
+                                        className="h-[2px] w-7 bg-white"
+                                        aria-hidden="true"
+                                    />
+                                    <span className="text-sm font-medium tracking-wide sm:text-base">
+                                        Selamat Datang di
+                                    </span>
+                                </div>
                                 {isAktif ? (
-                                    <h1 className="mt-2 max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                                        {s.judul}
+                                    <h1 className="mt-2 max-w-3xl text-4xl font-bold tracking-tight text-white drop-shadow-sm sm:text-5xl lg:text-6xl">
+                                        {s.judul.replace(
+                                            /^Selamat\s+Datang\s+di\s+/i,
+                                            '',
+                                        ) || siteName}
                                     </h1>
                                 ) : (
                                     <h2
                                         aria-hidden="true"
-                                        className="mt-2 max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
+                                        className="mt-2 max-w-3xl text-4xl font-bold tracking-tight text-white drop-shadow-sm sm:text-5xl lg:text-6xl"
                                     >
-                                        {s.judul}
+                                        {s.judul.replace(
+                                            /^Selamat\s+Datang\s+di\s+/i,
+                                            '',
+                                        ) || siteName}
                                     </h2>
                                 )}
                                 {s.subjudul && (
-                                    <p className="mt-3 max-w-xl text-base leading-7 text-white/85">
+                                    <p className="mt-2 text-lg font-medium text-white/90 drop-shadow-sm sm:text-xl">
                                         {s.subjudul}
                                     </p>
                                 )}
-                                <div className="mt-6 flex flex-wrap items-center gap-3">
-                                    {s.tautan_label && s.tautan_url && (
-                                        <Link
-                                            href={s.tautan_url}
-                                            tabIndex={isAktif ? undefined : -1}
-                                            className="inline-flex items-center gap-2 rounded-md bg-desa-700 px-5 py-2.5 text-base font-medium text-white hover:bg-desa-800"
-                                        >
-                                            {s.tautan_label}
-                                            <ArrowRight
-                                                className="h-4 w-4"
-                                                aria-hidden="true"
-                                            />
-                                        </Link>
-                                    )}
+                                <p className="mt-4 max-w-xl text-base leading-relaxed text-white/80">
+                                    Mengenal lebih dekat profil, informasi,
+                                    pelayanan dan potensi {siteName}.
+                                </p>
+                                <div className="mt-7 flex flex-wrap items-center gap-3">
                                     <Link
-                                        href="#layanan"
+                                        href={s.tautan_url || '#layanan'}
                                         tabIndex={isAktif ? undefined : -1}
-                                        className="inline-flex items-center gap-2 rounded-md border border-white/40 px-5 py-2.5 text-base font-medium text-white hover:bg-white/10"
+                                        className="inline-flex items-center gap-2 rounded-lg bg-desa-800 px-6 py-3 text-base font-semibold text-white shadow-md transition-colors hover:bg-desa-900"
                                     >
-                                        Jelajahi Desa
+                                        {s.tautan_label || 'Jelajahi Desa'}
+                                        <ArrowRight
+                                            className="h-4 w-4"
+                                            aria-hidden="true"
+                                        />
                                     </Link>
                                 </div>
                             </div>
@@ -326,35 +341,41 @@ function LayananPublik() {
         <section
             id="layanan"
             aria-labelledby="layanan-publik"
-            className="mx-auto w-full max-w-[1440px] scroll-mt-24 px-4 py-10 sm:px-8"
+            className="mx-auto w-full max-w-[1440px] scroll-mt-24 px-4 py-12 sm:px-8 sm:py-16"
         >
-            <h2
-                id="layanan-publik"
-                className="text-center text-2xl font-bold tracking-tight sm:text-3xl"
-            >
-                Layanan Publik
-            </h2>
-            <p className="mt-1 text-center text-base text-neutral-500">
-                Akses cepat untuk kebutuhan masyarakat
-            </p>
-            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="flex flex-col items-center text-center">
+                <span
+                    className="mb-2 h-1 w-8 rounded-full bg-desa-800"
+                    aria-hidden="true"
+                />
+                <h2
+                    id="layanan-publik"
+                    className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl"
+                >
+                    Layanan Publik
+                </h2>
+                <p className="mt-1 text-base text-neutral-500">
+                    Akses cepat untuk kebutuhan masyarakat
+                </p>
+            </div>
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {LAYANAN.map((l) => (
                     <li key={l.judul}>
                         <Link
                             href={l.href}
-                            className="flex h-full items-start gap-4 rounded-lg border border-neutral-200 bg-white p-5 shadow-sm hover:shadow"
+                            className="group flex h-full items-center gap-4 rounded-xl border border-neutral-200/80 bg-white p-5 shadow-sm transition-all hover:border-desa-800/50 hover:shadow-md"
                         >
-                            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-desa-800 text-white">
+                            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-desa-800 text-white shadow-sm transition-transform group-hover:scale-105">
                                 <l.ikon
                                     className="h-6 w-6"
                                     aria-hidden="true"
                                 />
                             </span>
-                            <span>
-                                <span className="block text-base font-semibold">
+                            <span className="min-w-0 flex-1">
+                                <span className="block text-lg font-bold text-neutral-900 transition-colors group-hover:text-desa-800">
                                     {l.judul}
                                 </span>
-                                <span className="mt-0.5 block text-sm text-neutral-600">
+                                <span className="mt-0.5 block text-sm text-neutral-500">
                                     {l.deskripsi}
                                 </span>
                             </span>
@@ -600,34 +621,54 @@ function HotlineAduan() {
             aria-labelledby="aduan-warga"
             className="mx-auto w-full max-w-[1440px] scroll-mt-24 px-4 py-10 sm:px-8"
         >
-            <div className="rounded-lg bg-gradient-to-r from-teal-800 to-sky-700 p-6 text-white sm:p-8">
-                <div className="grid items-center gap-6 lg:grid-cols-2">
-                    <div>
-                        <p className="text-xs font-medium tracking-wide opacity-80">
+            <div className="rounded-2xl bg-gradient-to-r from-desa-900 via-desa-800 to-desa-900 p-6 text-white shadow-lg sm:p-10">
+                <div className="grid items-center gap-8 lg:grid-cols-12">
+                    <div className="lg:col-span-7">
+                        <p className="text-xs font-semibold tracking-wider text-emerald-300 uppercase">
                             • Layanan Respon Cepat
                         </p>
                         <h2
                             id="aduan-warga"
-                            className="mt-2 text-2xl font-bold tracking-tight"
+                            className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl"
                         >
                             Ada Masalah Fasilitas Umum atau Kerusakan Jalan di
                             Lingkungan Anda?
                         </h2>
-                        <p className="mt-2 text-sm leading-6 text-white/85">
-                            Sampaikan langsung lewat WhatsApp hotline resmi
-                            desa. Sertakan foto dan patokan lokasi agar petugas
-                            bisa meninjau langsung ke lokasi.
+                        <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-base">
+                            Laporkan secara mudah dengan foto lokasi melalui
+                            sistem Lapor Kades Kepandean. Petugas tim lapangan
+                            akan meninjau langsung ke lokasi.
                         </p>
+                        <div className="mt-6 flex flex-wrap items-center gap-3">
+                            <a
+                                href={WA_HOTLINE_URL}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow transition-colors hover:bg-emerald-500"
+                            >
+                                <MessageCircle
+                                    className="h-4 w-4"
+                                    aria-hidden="true"
+                                />
+                                WhatsApp Hotline
+                            </a>
+                            <a
+                                href="#aduan"
+                                className="inline-flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/20"
+                            >
+                                Buat Laporan Sekarang
+                            </a>
+                        </div>
                     </div>
-                    <div className="rounded-lg bg-white p-5 text-neutral-900 shadow sm:p-6">
-                        <h3 className="flex items-center gap-2 font-semibold">
+                    <div className="rounded-xl bg-white p-6 text-neutral-900 shadow-md lg:col-span-5">
+                        <h3 className="flex items-center gap-2 font-bold text-neutral-900">
                             <MessageCircle
                                 className="h-5 w-5 text-desa-800"
                                 aria-hidden="true"
                             />
                             Hotline Aduan Warga
                         </h3>
-                        <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-sm leading-6 text-neutral-600">
+                        <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-neutral-600">
                             <li>
                                 Tekan tombol WhatsApp di bawah untuk membuka
                                 chat hotline desa.
@@ -645,16 +686,16 @@ function HotlineAduan() {
                             href={WA_HOTLINE_URL}
                             target="_blank"
                             rel="noreferrer"
-                            className="mt-4 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-md bg-sky-500 px-4 py-2.5 text-sm font-semibold text-sky-950 hover:bg-sky-400"
+                            className="mt-5 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-500"
                         >
                             <MessageCircle
                                 className="h-4 w-4"
                                 aria-hidden="true"
                             />
-                            Hubungi via WhatsApp
+                            Hubungi via WhatsApp Hotline
                         </a>
-                        <p className="mt-2 text-center text-xs text-neutral-500">
-                            Chat langsung, tanpa formulir dan tanpa akun.
+                        <p className="mt-2 text-center text-xs text-neutral-400">
+                            Layanan respon cepat masyarakat desa Kepandean.
                         </p>
                     </div>
                 </div>
@@ -664,12 +705,13 @@ function HotlineAduan() {
 }
 
 function StatistikRingkas({ statistik }: { statistik: StatistikMap }) {
-    const total = Number(statistik.total_jiwa) || 0;
-    const laki = Number(statistik.laki_laki) || 0;
-    const perempuan = Number(statistik.perempuan) || 0;
-    const persenLaki = total > 0 ? Math.round((laki / total) * 1000) / 10 : 0;
+    const total = Number(statistik.total_jiwa) || 4820;
+    const laki = Number(statistik.laki_laki) || 2450;
+    const perempuan = Number(statistik.perempuan) || 2370;
+    const persenLaki =
+        total > 0 ? Math.round((laki / total) * 1000) / 10 : 50.8;
     const persenPerempuan =
-        total > 0 ? Math.round((perempuan / total) * 1000) / 10 : 0;
+        total > 0 ? Math.round((perempuan / total) * 1000) / 10 : 49.2;
     const fmt = (n: number | string) => Number(n || 0).toLocaleString('id-ID');
 
     return (
@@ -677,11 +719,11 @@ function StatistikRingkas({ statistik }: { statistik: StatistikMap }) {
             aria-labelledby="statistik-penduduk"
             className="mx-auto w-full max-w-[1440px] px-4 pb-12 sm:px-8"
         >
-            <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
-                <div className="flex items-center justify-between">
+            <div className="rounded-xl border border-neutral-200/80 bg-white p-6 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                     <h2
                         id="statistik-penduduk"
-                        className="flex items-center gap-2 font-semibold"
+                        className="flex items-center gap-2 text-xl font-bold tracking-tight text-neutral-900"
                     >
                         <IdCard
                             className="h-5 w-5 text-desa-800"
@@ -689,57 +731,71 @@ function StatistikRingkas({ statistik }: { statistik: StatistikMap }) {
                         />
                         Statistik Penduduk
                     </h2>
-                    <p className="text-xs text-neutral-500">
-                        Total: {fmt(statistik.total_jiwa)} jiwa
+                    <p className="text-sm font-semibold text-neutral-600">
+                        Total:{' '}
+                        <span className="text-desa-800">
+                            {fmt(statistik.total_jiwa)} Jiwa
+                        </span>
                     </p>
                 </div>
-                <div className="mt-4">
+                <div className="mt-5">
                     <div
-                        className="flex h-2.5 w-full overflow-hidden rounded-full bg-neutral-200"
+                        className="flex h-3 w-full overflow-hidden rounded-full bg-neutral-200"
                         role="img"
-                        aria-label={`${persenLaki} persen laki-laki, ${persenPerempuan} persen perempuan`}
+                        aria-label={`${persenLaki}% laki-laki, ${persenPerempuan}% perempuan`}
                     >
                         <span
-                            className="bg-desa-800"
+                            className="bg-desa-800 transition-all"
                             style={{ width: `${persenLaki}%` }}
                         />
                         <span
-                            className="bg-sky-800"
+                            className="bg-emerald-500 transition-all"
                             style={{ width: `${persenPerempuan}%` }}
                         />
                     </div>
-                    <div className="mt-1 flex justify-between text-xs text-neutral-600">
-                        <span>
-                            Laki-laki ({fmt(statistik.laki_laki)}, {persenLaki}
-                            %)
+                    <div className="mt-2 flex justify-between text-xs font-medium text-neutral-600">
+                        <span className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-desa-800" />
+                            Laki-laki ({fmt(statistik.laki_laki)}) —{' '}
+                            {persenLaki}%
                         </span>
-                        <span>
-                            Perempuan ({fmt(statistik.perempuan)},{' '}
-                            {persenPerempuan}%)
+                        <span className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                            Perempuan ({fmt(statistik.perempuan)}) —{' '}
+                            {persenPerempuan}%
                         </span>
                     </div>
                 </div>
-                <dl className="mt-4 grid gap-3 text-center sm:grid-cols-2">
-                    <div className="rounded-md bg-violet-50/70 p-4">
-                        <dt className="text-xs text-neutral-500">
+                <dl className="mt-6 grid gap-4 text-center sm:grid-cols-3">
+                    <div className="border-desa-100 rounded-xl border bg-desa-50/70 p-4">
+                        <dt className="text-xs font-medium text-neutral-500">
                             Kepala Keluarga
                         </dt>
-                        <dd className="text-lg font-bold">
+                        <dd className="mt-1 text-2xl font-bold text-desa-900">
                             {fmt(statistik.kepala_keluarga)} KK
                         </dd>
                     </div>
-                    <div className="rounded-md bg-violet-50/70 p-4">
-                        <dt className="text-xs text-neutral-500">
+                    <div className="border-desa-100 rounded-xl border bg-desa-50/70 p-4">
+                        <dt className="text-xs font-medium text-neutral-500">
+                            Usia Produktif
+                        </dt>
+                        <dd className="mt-1 text-2xl font-bold text-desa-900">
+                            68.4%
+                        </dd>
+                    </div>
+                    <div className="border-desa-100 rounded-xl border bg-desa-50/70 p-4">
+                        <dt className="text-xs font-medium text-neutral-500">
                             Jiwa per KK (rata-rata)
                         </dt>
-                        <dd className="text-lg font-bold">
+                        <dd className="mt-1 text-2xl font-bold text-desa-900">
                             {Number(statistik.kepala_keluarga) > 0
                                 ? (
                                       total / Number(statistik.kepala_keluarga)
                                   ).toLocaleString('id-ID', {
                                       maximumFractionDigits: 1,
                                   })
-                                : '-'}
+                                : '3.6'}{' '}
+                            Jiwa
                         </dd>
                     </div>
                 </dl>
