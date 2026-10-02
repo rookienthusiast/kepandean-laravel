@@ -38,10 +38,11 @@ interface PageHeroProps {
 }
 
 // Kepala hero statis tiap halaman dalam: foto asli halaman (atau foto
-// sejarah sebagai cadangan) dengan lapisan hijau tipis agar foto tetap
-// hidup. Navbar kini sticky berlatar solid sehingga hero tidak butuh
-// ruang atas clearance. Tinggi dikunci (min-h) agar rasio konsisten di
-// semua laman, apa pun fotonya.
+// sejarah sebagai cadangan) dengan overlay hitam transparan agar teks
+// putih tetap tajam tanpa mengaburkan warna foto. Section ditarik
+// -mt-16 ke bawah navbar transparan (tinggi nav dikunci h-16) dengan
+// kompensasi padding atas; tinggi dikunci (min-h) agar rasio konsisten
+// di semua laman, apa pun fotonya.
 export default function PageHero({
     eyebrow,
     title,
@@ -60,7 +61,7 @@ export default function PageHero({
     });
 
     return (
-        <section className="relative flex min-h-[340px] items-center overflow-hidden bg-desa-900 text-white sm:min-h-[400px]">
+        <section className="relative -mt-16 flex min-h-[340px] items-center overflow-hidden bg-desa-900 text-white sm:min-h-[400px]">
             {resolved && (
                 <img
                     src={resolved}
@@ -71,11 +72,8 @@ export default function PageHero({
                     className="absolute inset-0 h-full w-full object-cover"
                 />
             )}
-            <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-desa-900/50"
-            />
-            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-10 pb-10 sm:px-8 sm:pt-14">
+            <div aria-hidden="true" className="absolute inset-0 bg-black/50" />
+            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-24 pb-10 sm:px-8 sm:pt-28">
                 <p className="text-sm text-white/70">{eyebrow}</p>
                 <h1 className="mt-2 text-3xl font-bold tracking-tight">
                     {title}

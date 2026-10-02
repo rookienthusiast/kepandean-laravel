@@ -112,7 +112,7 @@ function Hero({
 
     if (jumlah === 0) {
         return (
-            <section className="flex min-h-[540px] items-center bg-desa-900 px-4 pt-12 pb-14 text-white sm:min-h-[620px] sm:px-8 sm:pt-16 sm:pb-20">
+            <section className="-mt-16 flex min-h-[540px] items-center bg-desa-900 px-4 pt-24 pb-14 text-white sm:min-h-[620px] sm:px-8 sm:pt-28 sm:pb-20">
                 <div className="mx-auto w-full max-w-[1440px]">
                     <p className="text-base text-white/75">Selamat datang di</p>
                     <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
@@ -127,7 +127,7 @@ function Hero({
                     </p>
                     <Link
                         href="#layanan"
-                        className="mt-6 inline-flex items-center gap-2 rounded-md bg-desa-700 px-5 py-2.5 text-base font-medium text-white hover:bg-desa-800"
+                        className="mt-6 inline-flex items-center gap-2 rounded-md bg-desa-700 px-5 py-2.5 text-base font-medium text-white transition-transform duration-150 hover:bg-desa-800 active:scale-[0.96] motion-reduce:transition-none"
                     >
                         Jelajahi Desa
                         <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -187,7 +187,7 @@ function Hero({
                 titikSentuh.current = null;
             }}
             onKeyDown={tombolPanah}
-            className="relative [touch-action:pan-y] overflow-hidden bg-desa-900 text-white"
+            className="relative -mt-16 [touch-action:pan-y] overflow-hidden bg-desa-900 text-white"
         >
             <div
                 className="flex transition-transform duration-700 ease-out motion-reduce:transition-none"
@@ -215,9 +215,9 @@ function Hero({
                             )}
                             <div
                                 aria-hidden="true"
-                                className="absolute inset-0 bg-desa-900/50"
+                                className="absolute inset-0 bg-black/50"
                             />
-                            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-12 pb-20 sm:px-8 sm:pt-16 sm:pb-24">
+                            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-24 pb-20 sm:px-8 sm:pt-28 sm:pb-24">
                                 <p className="text-base text-white/75">
                                     Selamat datang di {siteName}
                                 </p>
@@ -243,7 +243,7 @@ function Hero({
                                         <Link
                                             href={s.tautan_url}
                                             tabIndex={isAktif ? undefined : -1}
-                                            className="inline-flex items-center gap-2 rounded-md bg-desa-700 px-5 py-2.5 text-base font-medium text-white hover:bg-desa-800"
+                                            className="inline-flex items-center gap-2 rounded-md bg-desa-700 px-5 py-2.5 text-base font-medium text-white transition-transform duration-150 hover:bg-desa-800 active:scale-[0.96] motion-reduce:transition-none"
                                         >
                                             {s.tautan_label}
                                             <ArrowRight
@@ -255,7 +255,7 @@ function Hero({
                                     <Link
                                         href="#layanan"
                                         tabIndex={isAktif ? undefined : -1}
-                                        className="inline-flex items-center gap-2 rounded-md border border-white/40 px-5 py-2.5 text-base font-medium text-white hover:bg-white/10"
+                                        className="inline-flex items-center gap-2 rounded-md border border-white/40 px-5 py-2.5 text-base font-medium text-white transition-transform duration-150 hover:bg-white/10 active:scale-[0.96] motion-reduce:transition-none"
                                     >
                                         Jelajahi Desa
                                     </Link>
@@ -645,7 +645,7 @@ function HotlineAduan() {
                             href={WA_HOTLINE_URL}
                             target="_blank"
                             rel="noreferrer"
-                            className="mt-4 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-md bg-sky-500 px-4 py-2.5 text-sm font-semibold text-sky-950 hover:bg-sky-400"
+                            className="mt-4 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-md bg-sky-500 px-4 py-2.5 text-sm font-semibold text-sky-950 transition-transform duration-150 hover:bg-sky-400 active:scale-[0.96] motion-reduce:transition-none"
                         >
                             <MessageCircle
                                 className="h-4 w-4"

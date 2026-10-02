@@ -178,8 +178,8 @@ export default function InformasiIndex({
                         aria-selected={isBerita}
                         className={`rounded-full border px-4 py-2 text-sm font-medium ${
                             isBerita
-                                ? 'border-transparent bg-emerald-800 text-white'
-                                : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
+                                ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
+                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                         }`}
                     >
                         Berita Desa ({counts.berita})
@@ -190,8 +190,8 @@ export default function InformasiIndex({
                         aria-selected={isPengumuman}
                         className={`rounded-full border px-4 py-2 text-sm font-medium ${
                             isPengumuman
-                                ? 'border-transparent bg-emerald-800 text-white'
-                                : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
+                                ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
+                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                         }`}
                     >
                         Pengumuman ({counts.pengumuman})
@@ -202,8 +202,8 @@ export default function InformasiIndex({
                         aria-selected={!isBerita && !isPengumuman}
                         className={`rounded-full border px-4 py-2 text-sm font-medium ${
                             !isBerita && !isPengumuman
-                                ? 'border-transparent bg-emerald-800 text-white'
-                                : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
+                                ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
+                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                         }`}
                     >
                         Kegiatan ({counts.kegiatan})
@@ -224,8 +224,8 @@ export default function InformasiIndex({
                                     }
                                     className={`rounded-full border px-4 py-2 text-sm font-medium ${
                                         activeKategori
-                                            ? 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
-                                            : 'border-transparent bg-emerald-800 text-white'
+                                            ? 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
+                                            : 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
                                     }`}
                                 >
                                     Semua
@@ -243,8 +243,8 @@ export default function InformasiIndex({
                                         }
                                         className={`rounded-full border px-4 py-2 text-sm font-medium ${
                                             activeKategori === kategori.slug
-                                                ? 'border-transparent bg-emerald-800 text-white'
-                                                : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
+                                                ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
+                                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
                                         }`}
                                     >
                                         {kategori.nama}
@@ -284,7 +284,7 @@ export default function InformasiIndex({
                                                 {item.judul}
                                             </Link>
                                             {item.excerpt && (
-                                                <p className="mt-2 text-[15px] leading-7 text-[#706f6c] dark:text-[#A1A09A]">
+                                                <p className="mt-2 text-[15px] leading-7 text-slate-800 dark:text-slate-200">
                                                     {item.excerpt}
                                                 </p>
                                             )}
@@ -344,7 +344,7 @@ export default function InformasiIndex({
                                                 {item.judul}
                                             </Link>
                                             {item.excerpt && (
-                                                <p className="mt-2 text-[15px] leading-7 text-[#706f6c] dark:text-[#A1A09A]">
+                                                <p className="mt-2 text-[15px] leading-7 text-slate-800 dark:text-slate-200">
                                                     {item.excerpt}
                                                 </p>
                                             )}
@@ -401,7 +401,7 @@ export default function InformasiIndex({
                                                 {item.judul}
                                             </Link>
                                             {item.excerpt && (
-                                                <p className="mt-2 text-[15px] leading-7 text-[#706f6c] dark:text-[#A1A09A]">
+                                                <p className="mt-2 text-[15px] leading-7 text-slate-800 dark:text-slate-200">
                                                     {item.excerpt}
                                                 </p>
                                             )}

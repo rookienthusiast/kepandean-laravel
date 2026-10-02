@@ -99,7 +99,7 @@ export default function PengumumanIndex({
                                         {item.judul}
                                     </Link>
                                     {item.excerpt && (
-                                        <p className="mt-2 text-[15px] leading-7 text-[#706f6c] dark:text-[#A1A09A]">
+                                        <p className="mt-2 text-[15px] leading-7 text-slate-800 dark:text-slate-200">
                                             {item.excerpt}
                                         </p>
                                     )}

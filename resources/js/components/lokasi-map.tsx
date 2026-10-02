@@ -70,12 +70,15 @@ export default function LokasiMap({
         };
     }, [latitude, longitude, petaUrl, namaKantor]);
 
+    // relative + z-0: mengunci seluruh stacking context internal
+    // Leaflet (pane/kontrol zoom yang z-index-nya tinggi) di dalam
+    // kontainer ini, sehingga tidak pernah menimpa navbar (z-[100]).
     return (
         <div
             ref={containerRef}
             role="application"
             aria-label={`Peta lokasi ${namaKantor}`}
-            className="h-64 w-full rounded-md bg-neutral-100"
+            className="relative z-0 h-64 w-full rounded-md bg-neutral-100"
         />
     );
 }

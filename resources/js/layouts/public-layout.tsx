@@ -311,12 +311,31 @@ function Footer({ site }: { site: SiteData }) {
     );
 }
 
+// Navbar dinamis: transparan saat halaman di posisi paling atas agar
+// menyatu dengan foto hero, hijau solid + bayangan halus setelah
+// di-scroll melewati 20px. Listener pasif agar tidak menghambat scroll.
+function useScrolled(ambang = 20) {
+    const [scrolled, setScrolled] = useState(
+        () => typeof window !== 'undefined' && window.scrollY > ambang,
+    );
+
+    useEffect(() => {
+        const perbarui = () => setScrolled(window.scrollY > ambang);
+        perbarui();
+        window.addEventListener('scroll', perbarui, { passive: true });
+        return () => window.removeEventListener('scroll', perbarui);
+    }, [ambang]);
+
+    return scrolled;
+}
+
 export default function PublicLayout({
     meta,
     site,
     schema,
     children,
 }: PublicLayoutProps) {
+    const scrolled = useScrolled();
     const { props } = usePage<{ analytics?: AnalyticsData }>();
     const analytics = props.analytics;
     const gaId =
@@ -380,13 +399,25 @@ export default function PublicLayout({
                     </script>
                 ) : null}
             </Head>
-            <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900">
+            {/* Latar halaman putih sesuai panduan Informasi: kartu
+                putih berbingkai tetap terbaca lewat border + shadow. */}
+            <div className="flex min-h-screen flex-col bg-white text-neutral-900">
                 <TopBar />
-                {/* Header sticky berlatar solid hijau desa: selalu terbaca,
-                    tidak tertembus konten saat scroll, dan menu seluler
-                    menempel tepat di bawahnya. */}
-                <header className="sticky top-0 z-50 bg-desa-900">
-                    <div className="relative mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-8">
+                {/* Header sticky dinamis (z-[100] agar selalu di atas
+                    stacking context peta Leaflet): transparan di posisi
+                    paling atas sehingga menyatu dengan foto hero, hijau
+                    solid desa-900 + bayangan halus setelah di-scroll.
+                    Baris nav dikunci h-16 agar hero bisa ditarik ke
+                    bawahnya dengan -mt-16 yang pas di semua breakpoint;
+                    teks menu putih di kedua status. */}
+                <header
+                    className={`sticky top-0 z-[100] transition-colors duration-300 motion-reduce:transition-none ${
+                        scrolled
+                            ? 'bg-desa-900 shadow-md backdrop-blur-md'
+                            : 'bg-transparent'
+                    }`}
+                >
+                    <div className="relative mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-8">
                         <Link href="/" className="flex items-center gap-3">
                             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-desa-800">
                                 K
