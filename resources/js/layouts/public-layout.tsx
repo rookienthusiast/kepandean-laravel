@@ -66,7 +66,7 @@ function DesktopNav({ items }: { items: NavItem[] }) {
                     <div key={item.label} className="group relative">
                         <Link
                             href={item.href}
-                            className="flex items-center gap-1 rounded-md px-2.5 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-white/10"
+                            className="flex items-center gap-1 rounded-md px-2 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-white/10 min-[1480px]:px-2.5"
                         >
                             {item.label}
                             <ChevronDown
@@ -90,7 +90,7 @@ function DesktopNav({ items }: { items: NavItem[] }) {
                     <Link
                         key={item.label}
                         href={item.href}
-                        className="rounded-md px-2.5 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-white/10"
+                        className="rounded-md px-2 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-white/10 min-[1480px]:px-2.5"
                     >
                         {item.label}
                     </Link>
@@ -214,8 +214,8 @@ function Footer({ site }: { site: SiteData }) {
                                 aria-hidden="true"
                             />
                             <span>
-                                Kec. Dukuhturi, Kab. Tegal, Jawa Tengah, Kode
-                                Pos 52192
+                                Dukuhturi, Kab. Tegal, Jawa Tengah, Kode Pos
+                                52192
                             </span>
                         </li>
                         <li className="flex items-start gap-2">
@@ -424,14 +424,14 @@ export default function PublicLayout({
                             : 'bg-transparent'
                     }`}
                 >
-                    <div className="relative mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:gap-6 sm:px-6 lg:px-8">
+                    <div className="relative mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-3 px-4 sm:gap-6 sm:px-6 lg:px-8">
                         <Link
                             href="/"
-                            className="flex min-w-0 items-center gap-3 sm:gap-4"
+                            className="flex min-w-0 items-center gap-2.5 sm:gap-4"
                         >
                             <SiteLogo url={site.logo_url} inisial />
                             <span className="min-w-0 leading-tight">
-                                <span className="block truncate text-sm font-bold tracking-wide whitespace-nowrap text-white sm:text-base">
+                                <span className="block truncate text-[13px] font-bold tracking-normal whitespace-nowrap text-white sm:text-base sm:tracking-wide">
                                     <span className="sm:hidden">
                                         DESA KEPANDEAN
                                     </span>
@@ -439,9 +439,9 @@ export default function PublicLayout({
                                         PEMERINTAH DESA KEPANDEAN
                                     </span>
                                 </span>
-                                <span className="mt-0.5 block truncate text-xs whitespace-nowrap text-white/75 sm:text-sm">
+                                <span className="mt-0.5 block truncate text-[11px] whitespace-nowrap text-white/75 sm:text-sm">
                                     <span className="sm:hidden">
-                                        Kec. Dukuhturi, Kab. Tegal
+                                        Dukuhturi, Kab. Tegal
                                     </span>
                                     <span className="hidden sm:inline">
                                         Kecamatan Dukuhturi - Kabupaten Tegal
@@ -451,15 +451,21 @@ export default function PublicLayout({
                         </Link>
                         <DesktopNav items={site.nav} />
                         <div className="flex shrink-0 items-center gap-2">
+                            {/* Selalu tampil: ikon saja bila sempit (<md dan
+                                1280-1479px), label lengkap bila muat. */}
                             <Link
                                 href="/layanan-warga"
-                                className="hidden items-center gap-1.5 rounded-md bg-desa-700 px-4 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-desa-800 2xl:inline-flex"
+                                aria-label="Layanan Mandiri Warga"
+                                title="Layanan Mandiri Warga"
+                                className="inline-flex h-11 w-11 items-center justify-center gap-1.5 rounded-md bg-desa-700 text-sm font-medium whitespace-nowrap text-white hover:bg-desa-800 md:h-auto md:w-auto md:px-4 md:py-2 xl:max-[1479px]:h-11 xl:max-[1479px]:w-11 xl:max-[1479px]:p-0"
                             >
                                 <ShieldCheck
                                     className="h-4 w-4"
                                     aria-hidden="true"
                                 />
-                                Layanan Mandiri Warga
+                                <span className="hidden md:inline xl:max-[1479px]:hidden">
+                                    Layanan Mandiri Warga
+                                </span>
                             </Link>
                             <MobileNav items={site.nav} siteName={site.nama} />
                         </div>
