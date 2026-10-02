@@ -95,8 +95,8 @@ export default function BeritaIndex({
                         aria-current={activeKategori ? undefined : 'page'}
                         className={`inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-medium ${
                             activeKategori
-                                ? 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
-                                : 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
+                                ? 'border-slate-300 bg-white text-slate-700 hover:bg-slate-100'
+                                : 'border-emerald-800 bg-emerald-800 text-white hover:bg-emerald-900'
                         }`}
                     >
                         Semua
@@ -112,8 +112,8 @@ export default function BeritaIndex({
                             }
                             className={`inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-medium ${
                                 activeKategori === kategori.slug
-                                    ? 'border-transparent bg-emerald-800 text-white hover:bg-emerald-900'
-                                    : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
+                                    ? 'border-emerald-800 bg-emerald-800 text-white hover:bg-emerald-900'
+                                    : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-100'
                             }`}
                         >
                             {kategori.nama}
@@ -125,7 +125,7 @@ export default function BeritaIndex({
                         {berita.data.map((item) => (
                             <li
                                 key={item.slug}
-                                className="flex min-h-[44px] flex-col overflow-hidden rounded-md border border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]"
+                                className="flex min-h-[44px] flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm"
                             >
                                 {item.cover_url && (
                                     <img
@@ -137,9 +137,9 @@ export default function BeritaIndex({
                                     />
                                 )}
                                 <div className="flex flex-1 flex-col p-4">
-                                    <p className="mb-2 flex items-center gap-2 text-xs text-[#706f6c] dark:text-[#A1A09A]">
+                                    <p className="mb-2 flex items-center gap-2 text-xs text-slate-500">
                                         {item.kategori && (
-                                            <span className="rounded-full bg-[#efedea] px-2 py-0.5 font-medium text-[#37352f] dark:bg-[#2a2a28] dark:text-[#E8E7E3]">
+                                            <span className="rounded-full bg-slate-100 px-2 py-0.5 font-medium text-slate-700">
                                                 {item.kategori.nama}
                                             </span>
                                         )}
@@ -147,12 +147,12 @@ export default function BeritaIndex({
                                     </p>
                                     <Link
                                         href={item.url}
-                                        className="text-lg font-semibold text-slate-900 underline-offset-4 hover:underline dark:text-slate-100"
+                                        className="text-lg font-bold text-slate-900 underline-offset-4 hover:underline"
                                     >
                                         {item.judul}
                                     </Link>
                                     {item.excerpt && (
-                                        <p className="mt-2 text-[15px] leading-7 text-slate-800 dark:text-slate-200">
+                                        <p className="mt-2 text-[15px] leading-7 text-slate-700">
                                             {item.excerpt}
                                         </p>
                                     )}
@@ -163,7 +163,7 @@ export default function BeritaIndex({
                 ) : berita.total === 0 ? (
                     <SegeraHadirPanel label="Berita Desa" />
                 ) : (
-                    <p className="rounded-md border border-[#e3e3e0] bg-white p-6 text-[15px] text-neutral-700 dark:border-[#3E3E3A] dark:bg-[#161615] dark:text-neutral-200">
+                    <p className="rounded-md border border-slate-200 bg-white p-6 text-[15px] text-neutral-700">
                         Belum ada berita
                         {activeKategori
                             ? ' pada kategori ini.'
@@ -178,18 +178,18 @@ export default function BeritaIndex({
                         {berita.prev_page_url && (
                             <Link
                                 href={pageHref(pages.current_page - 1)}
-                                className="inline-flex min-h-[44px] items-center rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                                className="inline-flex min-h-[44px] items-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
                             >
                                 Sebelumnya
                             </Link>
                         )}
-                        <span className="text-sm text-[#706f6c] dark:text-[#A1A09A]">
+                        <span className="text-sm text-slate-500">
                             Halaman {pages.current_page} dari {pages.last_page}
                         </span>
                         {berita.next_page_url && (
                             <Link
                                 href={pageHref(pages.current_page + 1)}
-                                className="inline-flex min-h-[44px] items-center rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                                className="inline-flex min-h-[44px] items-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
                             >
                                 Berikutnya
                             </Link>
