@@ -45,7 +45,7 @@ export default function ProfilLayout({
 
     return (
         <PublicLayout meta={meta} schema={schema} site={site}>
-            <section className="relative flex min-h-[340px] items-center overflow-hidden bg-desa-900 text-white sm:min-h-[400px]">
+            <section className="relative -mt-16 flex min-h-[340px] items-center overflow-hidden bg-desa-900 text-white sm:min-h-[400px]">
                 {gambarUrl && (
                     <img
                         src={gambarUrl}
@@ -58,9 +58,9 @@ export default function ProfilLayout({
                 )}
                 <div
                     aria-hidden="true"
-                    className="absolute inset-0 bg-desa-900/50"
+                    className="absolute inset-0 bg-black/50"
                 />
-                <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-10 pb-12 sm:px-8 sm:pt-14 sm:pb-16">
+                <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-24 pb-12 sm:px-8 sm:pt-28 sm:pb-16">
                     <nav
                         aria-label="Breadcrumb profil"
                         className="text-xs text-white/70"

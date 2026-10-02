@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import PageHero from '@/components/page-hero';
 import PublicLayout from '@/layouts/public-layout';
 import type { MetaData, SchemaData, SiteData } from '@/types/site';
 
@@ -31,6 +32,13 @@ export default function KegiatanDetail({
 
     return (
         <PublicLayout meta={meta} schema={schema} site={site}>
+            <PageHero
+                eyebrow={`Kegiatan ${desaName}`}
+                title={kegiatan.judul}
+                site={site}
+                laman="kegiatan"
+                coverUrl={kegiatan.cover_url}
+            />
             <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:px-6">
                 <nav aria-label="Navigasi kegiatan" className="mb-6">
                     <Link
@@ -40,17 +48,14 @@ export default function KegiatanDetail({
                         ← Semua kegiatan
                     </Link>
                 </nav>
-                <p className="mb-2 flex items-center gap-2 text-sm text-[#706f6c] dark:text-[#A1A09A]">
-                    <span className="rounded-full bg-[#efedea] px-3 py-1 font-medium text-[#37352f] dark:bg-[#2a2a28] dark:text-[#E8E7E3]">
+                <p className="mb-6 flex items-center gap-2 text-sm text-slate-500">
+                    <span className="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-700">
                         Kegiatan
                     </span>
                     <time>{kegiatan.tanggal}</time>
                     <span aria-hidden="true">•</span>
                     <span>{desaName}</span>
                 </p>
-                <h1 className="mb-6 text-3xl font-bold tracking-tight">
-                    {kegiatan.judul}
-                </h1>
                 {kegiatan.cover_url ? (
                     <img
                         src={kegiatan.cover_url}
@@ -62,13 +67,13 @@ export default function KegiatanDetail({
                 ) : (
                     <div
                         aria-hidden="true"
-                        className="mb-8 flex w-full items-center justify-center rounded-md bg-[#efedea] py-10 text-sm text-[#706f6c] dark:bg-[#2a2a28] dark:text-[#A1A09A]"
+                        className="mb-8 flex w-full items-center justify-center rounded-md bg-slate-100 py-10 text-sm text-slate-500"
                     >
                         Kegiatan {desaName}, tanpa gambar sampul
                     </div>
                 )}
                 {kegiatan.kedaluarsa && (
-                    <p className="mb-6 rounded-md border border-[#e3e3e0] bg-white p-3 text-sm text-[#706f6c] dark:border-[#3E3E3A] dark:bg-[#161615] dark:text-[#A1A09A]">
+                    <p className="mb-6 rounded-md border border-slate-200 bg-white p-3 text-sm text-slate-500">
                         Berlaku hingga {kegiatan.kedaluarsa}.
                     </p>
                 )}

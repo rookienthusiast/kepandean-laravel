@@ -112,7 +112,7 @@ function Hero({
 
     if (jumlah === 0) {
         return (
-            <section className="flex min-h-[540px] items-center bg-desa-900 px-4 pt-12 pb-14 text-white sm:min-h-[620px] sm:px-8 sm:pt-16 sm:pb-20">
+            <section className="-mt-16 flex min-h-[540px] items-center bg-desa-900 px-4 pt-24 pb-14 text-white sm:min-h-[620px] sm:px-8 sm:pt-28 sm:pb-20">
                 <div className="mx-auto w-full max-w-[1440px]">
                     <div className="inline-flex items-center gap-2.5 text-white/90">
                         <span
@@ -135,7 +135,7 @@ function Hero({
                     </p>
                     <Link
                         href="#layanan"
-                        className="mt-7 inline-flex items-center gap-2 rounded-lg bg-desa-800 px-6 py-3 text-base font-semibold text-white shadow-md transition-colors hover:bg-desa-900"
+                        className="mt-7 inline-flex items-center gap-2 rounded-lg bg-desa-800 px-6 py-3 text-base font-semibold text-white shadow-md transition-[background-color,transform] duration-150 hover:bg-desa-900 active:scale-[0.96] motion-reduce:transition-none"
                     >
                         Jelajahi Desa
                         <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -195,7 +195,7 @@ function Hero({
                 titikSentuh.current = null;
             }}
             onKeyDown={tombolPanah}
-            className="relative [touch-action:pan-y] overflow-hidden bg-desa-900 text-white"
+            className="relative -mt-16 [touch-action:pan-y] overflow-hidden bg-desa-900 text-white"
         >
             <div
                 className="flex transition-transform duration-700 ease-out motion-reduce:transition-none"
@@ -225,7 +225,7 @@ function Hero({
                                 aria-hidden="true"
                                 className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/35"
                             />
-                            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-12 pb-20 sm:px-8 sm:pt-16 sm:pb-24">
+                            <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-24 pb-20 sm:px-8 sm:pt-28 sm:pb-24">
                                 <div className="inline-flex items-center gap-2.5 text-white/90">
                                     <span
                                         className="h-[2px] w-7 bg-white"
@@ -266,7 +266,7 @@ function Hero({
                                     <Link
                                         href={s.tautan_url || '#layanan'}
                                         tabIndex={isAktif ? undefined : -1}
-                                        className="inline-flex items-center gap-2 rounded-lg bg-desa-800 px-6 py-3 text-base font-semibold text-white shadow-md transition-colors hover:bg-desa-900"
+                                        className="inline-flex items-center gap-2 rounded-lg bg-desa-800 px-6 py-3 text-base font-semibold text-white shadow-md transition-[background-color,transform] duration-150 hover:bg-desa-900 active:scale-[0.96] motion-reduce:transition-none"
                                     >
                                         {s.tautan_label || 'Jelajahi Desa'}
                                         <ArrowRight
@@ -287,7 +287,7 @@ function Hero({
                             type="button"
                             onClick={sebelumnya}
                             aria-label="Tampilkan slide sebelumnya"
-                            className="rounded-full border border-white/40 p-2 hover:bg-white/10"
+                            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/40 hover:bg-white/10"
                         >
                             <ChevronLeft
                                 className="h-5 w-5"
@@ -307,19 +307,24 @@ function Hero({
                                     aria-selected={i === indeks}
                                     aria-label={`Tampilkan slide ${i + 1}: ${s.judul}`}
                                     onClick={() => setIndeks(i)}
-                                    className={
-                                        i === indeks
-                                            ? 'h-2.5 w-6 rounded-full bg-white'
-                                            : 'h-2.5 w-2.5 rounded-full bg-white/40 hover:bg-white/70'
-                                    }
-                                />
+                                    className="group flex min-h-[44px] min-w-[44px] items-center justify-center"
+                                >
+                                    <span
+                                        aria-hidden="true"
+                                        className={
+                                            i === indeks
+                                                ? 'block h-2.5 w-6 rounded-full bg-white'
+                                                : 'block h-2.5 w-2.5 rounded-full bg-white/40 group-hover:bg-white/70'
+                                        }
+                                    />
+                                </button>
                             ))}
                         </div>
                         <button
                             type="button"
                             onClick={berikutnya}
                             aria-label="Tampilkan slide berikutnya"
-                            className="rounded-full border border-white/40 p-2 hover:bg-white/10"
+                            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/40 hover:bg-white/10"
                         >
                             <ChevronRight
                                 className="h-5 w-5"
@@ -561,7 +566,7 @@ function LokasiDesa({ lokasi }: { lokasi: LokasiData }) {
                                 href={lokasi.peta_url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-2 rounded-md bg-desa-800 px-4 py-2 text-sm font-medium text-white hover:bg-desa-900"
+                                className="inline-flex min-h-[44px] items-center gap-2 rounded-md bg-desa-800 px-4 py-2 text-sm font-medium text-white hover:bg-desa-900"
                             >
                                 Buka Peta Digital
                             </a>
@@ -686,7 +691,7 @@ function HotlineAduan() {
                             href={WA_HOTLINE_URL}
                             target="_blank"
                             rel="noreferrer"
-                            className="mt-5 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-500"
+                            className="mt-5 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-150 hover:bg-emerald-600 active:scale-[0.96] motion-reduce:transition-none"
                         >
                             <MessageCircle
                                 className="h-4 w-4"

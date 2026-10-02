@@ -70,7 +70,7 @@ export default function PengumumanIndex({
                         {pengumuman.data.map((item) => (
                             <li
                                 key={item.slug}
-                                className="flex min-h-[44px] flex-col overflow-hidden rounded-md border border-[#e3e3e0] bg-white dark:border-[#3E3E3A] dark:bg-[#161615]"
+                                className="flex min-h-[44px] flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm"
                             >
                                 {item.cover_url && (
                                     <img
@@ -82,8 +82,8 @@ export default function PengumumanIndex({
                                     />
                                 )}
                                 <div className="flex flex-1 flex-col p-4">
-                                    <p className="mb-2 flex items-center gap-2 text-xs text-[#706f6c] dark:text-[#A1A09A]">
-                                        <span className="inline-flex items-center gap-1 rounded-full bg-[#efedea] px-2 py-0.5 font-medium text-[#37352f] dark:bg-[#2a2a28] dark:text-[#E8E7E3]">
+                                    <p className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+                                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 font-medium text-slate-700">
                                             <Megaphone
                                                 className="h-3 w-3"
                                                 aria-hidden="true"
@@ -94,12 +94,12 @@ export default function PengumumanIndex({
                                     </p>
                                     <Link
                                         href={item.url}
-                                        className="text-lg font-semibold text-slate-900 underline-offset-4 hover:underline dark:text-slate-100"
+                                        className="text-lg font-bold text-slate-900 underline-offset-4 hover:underline"
                                     >
                                         {item.judul}
                                     </Link>
                                     {item.excerpt && (
-                                        <p className="mt-2 text-[15px] leading-7 text-[#706f6c] dark:text-[#A1A09A]">
+                                        <p className="mt-2 text-[15px] leading-7 text-slate-700">
                                             {item.excerpt}
                                         </p>
                                     )}
@@ -118,18 +118,18 @@ export default function PengumumanIndex({
                         {pengumuman.prev_page_url && (
                             <Link
                                 href={pengumuman.prev_page_url}
-                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                                className="inline-flex min-h-[44px] items-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
                             >
                                 Sebelumnya
                             </Link>
                         )}
-                        <span className="text-sm text-[#706f6c] dark:text-[#A1A09A]">
+                        <span className="text-sm text-slate-500">
                             Halaman {pages.current_page} dari {pages.last_page}
                         </span>
                         {pengumuman.next_page_url && (
                             <Link
                                 href={pengumuman.next_page_url}
-                                className="rounded-md border border-[#e3e3e0] px-4 py-2 text-sm font-medium text-slate-700 dark:border-[#3E3E3A] dark:text-slate-200"
+                                className="inline-flex min-h-[44px] items-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
                             >
                                 Berikutnya
                             </Link>
