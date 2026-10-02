@@ -43,7 +43,11 @@ jobs:
           SSR_PID=$!
           echo "SSR_PID=$SSR_PID" >> $GITHUB_ENV
           sleep 5
-          curl -sf http://127.0.0.1:13714/render -X POST -H 'Content-Type: application/json' -d '{"component":"welcome","props":{},"url":"/","version":"1"}' > /dev/null || (cat /tmp/ssr.log; exit 1)
+          # Probe memakai payload minimal yang realistis (bukan props kosong):
+          # di production Inertia selalu mengirim props lengkap dari backend,
+          # jadi render dengan {} tidak pernah terjadi dan hanya menutupi
+          # kesiapan SSR yang sebenarnya.
+          curl -sf http://127.0.0.1:13714/render -X POST -H 'Content-Type: application/json' -d '{"component":"welcome","props":{"site":{"nama":"Desa Kepandean","nav":[],"footer":{"layanan":[],"cepat":[]},"kontak":{"telepon":"-","surel":"probe@example.com","jam":[],"sosmed":[]}},"meta":{"title":"Probe SSR","description":"Probe SSR"},"profilExcerpt":{"sejarah":null,"urls":{"sejarah":"/","visiMisi":"/"}},"beritaTerkini":[],"heroSlides":[],"statistik":{"total_jiwa":"0","laki_laki":"0","perempuan":"0","kepala_keluarga":"0"},"lokasi":{"kode_pos":"","koordinat":"","latitude":0,"longitude":0,"alamat":"","peta_url":"https://example.com","peta_embed":"","surel":""}},"url":"/","version":"1"}' > /dev/null || (cat /tmp/ssr.log; exit 1)
 
       - name: Run CI Checks
         run: composer ci:check
