@@ -242,9 +242,10 @@ class PublicSite
         $nama = $desa instanceof Desa ? $desa->name : 'Desa Kepandean';
 
         // Foto sejarah sebagai latar hero cadangan tiap halaman dalam (satu query ringan, sama untuk semua halaman).
-        $fotoPath = $desa instanceof Desa
-            ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->value('foto_path')
+        $profilMedia = $desa instanceof Desa
+            ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->first(['foto_path', 'logo_path'])
             : null;
+        $fotoPath = $profilMedia?->foto_path;
 
         // Hero tiap laman yang diatur admin (slug => URL). Kosong berarti
         // frontend memakai foto konten, lalu foto sejarah sebagai cadangan.
@@ -266,6 +267,7 @@ class PublicSite
                 'nav' => static::nav(),
                 'footer' => static::footer(),
                 'kontak' => static::kontak(),
+                'logo_url' => Media::url($profilMedia?->logo_path),
                 'hero_fallback_url' => is_string($fotoPath) && $fotoPath !== ''
                     ? asset('storage/'.$fotoPath)
                     : null,

@@ -66,6 +66,7 @@ Route::get('/', function () {
         // Excerpt feed for the Beranda assembly in issue 18.
         'profilExcerpt' => [
             'sejarah' => $sejarah === '' ? null : Str::limit($sejarah, 200),
+            'foto_url' => Media::url($profil?->foto_path),
             'urls' => [
                 'sejarah' => route('profil.sejarah-visi-misi', [], false).'#sejarah',
                 'visiMisi' => route('profil.sejarah-visi-misi', [], false).'#visi-misi',

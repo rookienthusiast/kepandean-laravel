@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\HeroSlides\Tables;
 
 use App\Support\Filament\DesaScoping;
+use App\Support\Media;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -18,7 +18,7 @@ class HeroSlidesTable
     {
         return $table
             ->columns([
-                ImageColumn::make('gambar_path')->label('Gambar')->circular(),
+                Media::column('gambar_path', 'Gambar')->circular(),
                 TextColumn::make('desa.name')
                     ->label('Desa')
                     ->searchable()

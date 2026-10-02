@@ -9,7 +9,7 @@ class Profil extends Model
 {
     use BelongsToDesa;
 
-    protected $fillable = ['desa_id', 'sejarah', 'visi', 'misi', 'foto_path'];
+    protected $fillable = ['desa_id', 'sejarah', 'visi', 'misi', 'foto_path', 'logo_path'];
 
     public static function forDesa(Desa $desa): self
     {

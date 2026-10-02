@@ -2,6 +2,7 @@
 
 namespace App\Support\Filament;
 
+use App\Support\Media;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -18,7 +19,7 @@ final class TerbitanTable
 {
     public static function coverColumn(): ImageColumn
     {
-        return ImageColumn::make('cover_path')->label('Cover')->circular();
+        return Media::column('cover_path', 'Cover')->circular();
     }
 
     public static function desaColumn(): TextColumn

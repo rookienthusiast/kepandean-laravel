@@ -26,44 +26,47 @@ interface PublicLayoutProps {
     children: ReactNode;
 }
 
-function TopBar() {
-    return (
-        // TopBar dengan background hijau paling gelap (desa-900 / #0b3d2e)
-        // sesuai desain. Teks kiri: identitas resmi. Teks kanan: tautan
-        // sekunder 'Layanan Mandiri' & 'Pojok Aduan'. Ukuran teks text-sm
-        // agar terbaca jelas (diperbesar dari text-xs).
-        <div className="bg-desa-900 text-sm text-white">
-            <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-2 sm:px-8">
-                <p className="truncate">
-                    Website Resmi Pemerintah Desa Kepandean | Kec. Dukuhturi,
-                    Kab. Tegal, Jawa Tengah
-                </p>
-                <div className="hidden shrink-0 items-center gap-3 sm:flex">
-                    <Link href="/layanan-warga" className="hover:underline">
-                        Layanan Mandiri
-                    </Link>
-                    <span aria-hidden="true">•</span>
-                    <Link href="/#aduan" className="hover:underline">
-                        Pojok Aduan
-                    </Link>
-                </div>
-            </div>
-        </div>
-    );
+function SiteLogo({
+    url,
+    className = 'h-10 sm:h-11',
+    inisial = false,
+}: {
+    url: string | null;
+    className?: string;
+    inisial?: boolean;
+}) {
+    if (url) {
+        return (
+            <img
+                src={url}
+                alt=""
+                className={`w-auto shrink-0 object-contain ${className}`}
+            />
+        );
+    }
+
+    return inisial ? (
+        <span
+            aria-hidden="true"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white font-bold text-desa-800 sm:h-11 sm:w-11"
+        >
+            K
+        </span>
+    ) : null;
 }
 
 function DesktopNav({ items }: { items: NavItem[] }) {
     return (
         <nav
             aria-label="Navigasi utama"
-            className="hidden items-center gap-1 lg:flex"
+            className="hidden items-center gap-0.5 xl:flex"
         >
             {items.map((item) =>
                 item.children ? (
                     <div key={item.label} className="group relative">
                         <Link
                             href={item.href}
-                            className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-white/10"
+                            className="flex items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-2 text-sm font-medium text-white hover:bg-white/10"
                         >
                             {item.label}
                             <ChevronDown
@@ -87,7 +90,7 @@ function DesktopNav({ items }: { items: NavItem[] }) {
                     <Link
                         key={item.label}
                         href={item.href}
-                        className="rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-white/10"
+                        className="whitespace-nowrap rounded-md px-2.5 py-2 text-sm font-medium text-white hover:bg-white/10"
                     >
                         {item.label}
                     </Link>
@@ -122,7 +125,7 @@ function MobileNav({
     }, [open]);
 
     return (
-        <div className="lg:hidden">
+        <div className="xl:hidden">
             <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}
@@ -188,12 +191,17 @@ function Footer({ site }: { site: SiteData }) {
         <footer className="border-t-4 border-desa-700 bg-white">
             <div className="mx-auto grid w-full max-w-[1440px] gap-8 px-4 py-10 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
                 <div>
-                    <p className="text-base font-bold tracking-wide text-desa-800">
-                        DESA KEPANDEAN
-                    </p>
-                    <p className="text-sm text-neutral-500">
-                        Dukuhturi, Kabupaten Tegal
-                    </p>
+                    <div className="flex items-center gap-3">
+                        <SiteLogo url={site.logo_url} className="h-12" />
+                        <div>
+                            <p className="text-base font-bold tracking-wide text-desa-800">
+                                DESA KEPANDEAN
+                            </p>
+                            <p className="text-sm text-neutral-500">
+                                Dukuhturi, Kabupaten Tegal
+                            </p>
+                        </div>
+                    </div>
                     <p className="mt-3 text-base leading-6 text-neutral-600">
                         Portal Digital Resmi Pemerintahan Desa Kepandean yang
                         transparan, akuntabel, dan mengutamakan pelayanan
@@ -402,7 +410,6 @@ export default function PublicLayout({
             {/* Latar halaman putih sesuai panduan Informasi: kartu
                 putih berbingkai tetap terbaca lewat border + shadow. */}
             <div className="flex min-h-screen flex-col bg-white text-neutral-900">
-                <TopBar />
                 {/* Header sticky dinamis (z-[100] agar selalu di atas
                     stacking context peta Leaflet): transparan di posisi
                     paling atas sehingga menyatu dengan foto hero, hijau
@@ -420,25 +427,36 @@ export default function PublicLayout({
                             : 'bg-transparent'
                     }`}
                 >
-                    <div className="relative mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-8">
-                        <Link href="/" className="flex items-center gap-3">
-                            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-desa-800">
-                                K
-                            </span>
-                            <span className="leading-tight">
-                                <span className="block text-base font-bold tracking-wide text-white">
-                                    PEMERINTAH DESA KEPANDEAN
+                    <div className="relative mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:gap-6 sm:px-6 lg:px-8">
+                        <Link
+                            href="/"
+                            className="flex min-w-0 items-center gap-3 sm:gap-4"
+                        >
+                            <SiteLogo url={site.logo_url} inisial />
+                            <span className="min-w-0 leading-tight">
+                                <span className="block truncate whitespace-nowrap text-sm font-bold tracking-wide text-white sm:text-base">
+                                    <span className="sm:hidden">
+                                        DESA KEPANDEAN
+                                    </span>
+                                    <span className="hidden sm:inline">
+                                        PEMERINTAH DESA KEPANDEAN
+                                    </span>
                                 </span>
-                                <span className="block text-sm text-white/75">
-                                    Kecamatan Dukuhturi - Kabupaten Tegal
+                                <span className="mt-0.5 block truncate whitespace-nowrap text-xs text-white/75 sm:text-sm">
+                                    <span className="sm:hidden">
+                                        Kec. Dukuhturi, Kab. Tegal
+                                    </span>
+                                    <span className="hidden sm:inline">
+                                        Kecamatan Dukuhturi - Kabupaten Tegal
+                                    </span>
                                 </span>
                             </span>
                         </Link>
                         <DesktopNav items={site.nav} />
-                        <div className="flex items-center gap-2">
+                        <div className="flex shrink-0 items-center gap-2">
                             <Link
                                 href="/layanan-warga"
-                                className="hidden items-center gap-1.5 rounded-md bg-desa-700 px-4 py-2 text-sm font-medium text-white hover:bg-desa-800 lg:inline-flex"
+                                className="hidden items-center gap-1.5 whitespace-nowrap rounded-md bg-desa-700 px-4 py-2 text-sm font-medium text-white hover:bg-desa-800 2xl:inline-flex"
                             >
                                 <ShieldCheck
                                     className="h-4 w-4"

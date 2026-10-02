@@ -6,7 +6,6 @@ use App\Models\Pengumuman;
 use App\Support\Filament\DesaScoping;
 use App\Support\Filament\TerbitanForm;
 use App\Support\Media;
-use Filament\Forms\Components\RichEditor;
 use Filament\Schemas\Schema;
 
 class PengumumanForm
@@ -18,7 +17,7 @@ class PengumumanForm
                 DesaScoping::desaSelect(),
                 TerbitanForm::titleField(),
                 TerbitanForm::slugField('pengumumans'),
-                RichEditor::make('isi')
+                Media::richEditor()
                     ->label('Isi')
                     ->required()
                     ->columnSpanFull(),

@@ -41,7 +41,9 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/').'/storage',
+            // Relatif: selalu same-origin dengan halaman yang dibuka (admin via 127.0.0.1 maupun localhost),
+            // sehingga fetch() FilePond tidak terblokir CORS karena beda host dengan APP_URL.
+            'url' => '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

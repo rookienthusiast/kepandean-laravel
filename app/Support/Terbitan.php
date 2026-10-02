@@ -58,7 +58,7 @@ final class Terbitan
 
     public static function cleanedIsi(Berita|Pengumuman|Kegiatan $item): string
     {
-        return HtmlSanitizer::clean((string) $item->isi);
+        return HtmlSanitizer::clean(Media::renderRich($item->isi));
     }
 
     public static function excerpt(?string $isi): ?string

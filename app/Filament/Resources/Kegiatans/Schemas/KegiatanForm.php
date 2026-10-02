@@ -6,7 +6,6 @@ use App\Models\Kegiatan;
 use App\Support\Filament\DesaScoping;
 use App\Support\Filament\TerbitanForm;
 use App\Support\Media;
-use Filament\Forms\Components\RichEditor;
 use Filament\Schemas\Schema;
 
 class KegiatanForm
@@ -18,7 +17,7 @@ class KegiatanForm
                 DesaScoping::desaSelect(),
                 TerbitanForm::titleField(),
                 TerbitanForm::slugField('kegiatans'),
-                RichEditor::make('isi')
+                Media::richEditor()
                     ->label('Isi')
                     ->required()
                     ->columnSpanFull(),

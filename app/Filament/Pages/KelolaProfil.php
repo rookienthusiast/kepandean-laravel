@@ -113,6 +113,7 @@ class KelolaProfil extends Page
             'visi' => HtmlSanitizer::toPlainText($raw['visi'] ?? null),
             'misi' => HtmlSanitizer::toPlainText($raw['misi'] ?? null),
             'foto_path' => $raw['foto_path'] ?? null,
+            'logo_path' => $raw['logo_path'] ?? null,
         ];
 
         if (auth()->user() instanceof User && auth()->user()->isTechade()) {
@@ -237,9 +238,12 @@ class KelolaProfil extends Page
                     ->rows(8)
                     ->columnSpanFull()
                     ->helperText('Teks biasa. Satu baris menjadi satu baris tampilan.'),
+                Media::upload('logo_path', 'profil', 'Logo Desa')
+                    ->columnSpanFull()
+                    ->helperText('Tampil di header dan footer situs (jpg/png/webp, maks. 5 MB). Disarankan PNG transparan. Kosongkan untuk memakai huruf inisial.'),
                 Media::upload('foto_path', 'profil', 'Foto Sejarah')
                     ->columnSpanFull()
-                    ->helperText('Foto pendamping seksi Sejarah (jpg/png/webp, maks. 5 MB). Kosongkan untuk memakai placeholder.'),
+                    ->helperText('Foto pendamping seksi Sejarah dan kartu "Sekilas Desa" di beranda (jpg/png/webp, maks. 5 MB). Kosongkan untuk memakai placeholder.'),
             ]);
     }
 

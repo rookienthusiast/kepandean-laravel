@@ -6,7 +6,6 @@ use App\Models\Berita;
 use App\Support\Filament\DesaScoping;
 use App\Support\Filament\TerbitanForm;
 use App\Support\Media;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
@@ -25,7 +24,7 @@ class BeritaForm
                     ->searchable(),
                 TerbitanForm::titleField(),
                 TerbitanForm::slugField('beritas'),
-                RichEditor::make('isi')
+                Media::richEditor()
                     ->label('Isi')
                     ->required()
                     ->columnSpanFull(),

@@ -4,10 +4,10 @@ namespace App\Filament\Resources\Pejabats\Tables;
 
 use App\Models\Pejabat;
 use App\Support\Filament\DesaScoping;
+use App\Support\Media;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -18,7 +18,7 @@ class PejabatsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('foto_path')->label('Foto')->circular(),
+                Media::column('foto_path', 'Foto')->circular(),
                 TextColumn::make('desa.name')
                     ->label('Desa')
                     ->searchable()

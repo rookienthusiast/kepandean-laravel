@@ -42,6 +42,7 @@ export interface SiteData {
     nav: NavItem[];
     footer: SiteFooter;
     kontak: SiteKontak;
+    logo_url: string | null;
     hero_fallback_url: string | null;
     hero_laman: Record<string, string>;
 }
@@ -96,6 +97,7 @@ export type SchemaData = Record<string, unknown>;
 
 export interface ProfilExcerpt {
     sejarah: string | null;
+    foto_url: string | null;
     urls: {
         sejarah: string;
         visiMisi: string;

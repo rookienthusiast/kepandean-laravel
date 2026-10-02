@@ -14,6 +14,7 @@ use App\Models\Profil;
 use App\Models\Statistik;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class ContentFigmaSeeder extends Seeder
 {
@@ -36,6 +37,7 @@ class ContentFigmaSeeder extends Seeder
                 'visi' => 'Terbangunnya tata kelola pemerintahan desa yang baik dan bersih guna mewujudkan desa Kepandean Religius, Berbudaya, Adil, Mandiri, Makmur, Berdikari, Sejahtera dan Bermanfaat',
                 'misi' => "1. Menyelenggarakan pemerintahan desa yang transparan, akuntabel, dan melayani masyarakat secara prima.\n2. Mengembangkan perekonomian masyarakat berbasis potensi lokal pertanian, UMKM kudapan latopia, dan kerajinan sabut kelapa.\n3. Mewujudkan tata kelola lingkungan yang bersih, sehat, dan infrastruktur desa yang memadai.\n4. Memperkuat nilai-nilai keagamaan, gotong royong, dan pelestarian budaya lokal warisan leluhur.",
                 'foto_path' => 'profil/sejarah-desa.jpg',
+                'logo_path' => $this->salinLogoDesa(),
             ]
         );
 
@@ -216,5 +218,22 @@ class ContentFigmaSeeder extends Seeder
                 'gambar_path' => 'profil/sejarah-desa.jpg',
             ]);
         }
+    }
+
+    /**
+     * Logo awal desa = lambang resmi Kabupaten Tegal (dipakai situs resmi
+     * kepandean.desa.id). Disalin sekali ke disk publik; logo hasil upload
+     * admin di path yang sama tidak ditimpa bila berkasnya sudah ada.
+     */
+    private function salinLogoDesa(): string
+    {
+        $path = 'profil/logo-desa.png';
+        $sumber = public_path('images/logo-kab-tegal.png');
+
+        if (! Storage::disk('public')->exists($path) && is_file($sumber)) {
+            Storage::disk('public')->put($path, (string) file_get_contents($sumber));
+        }
+
+        return $path;
     }
 }

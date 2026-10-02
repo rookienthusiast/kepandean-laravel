@@ -404,44 +404,67 @@ function SekilasSejarah({
             aria-labelledby="sekilas-sejarah"
             className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8"
         >
-            <div className="grid gap-6 lg:grid-cols-3">
-                <article className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm lg:col-span-2">
-                    <h2
-                        id="sekilas-sejarah"
-                        className="text-xl font-bold tracking-tight sm:text-2xl"
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <article className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm lg:col-span-2">
+                    <div
+                        className={
+                            excerpt.foto_url
+                                ? 'grid md:grid-cols-5'
+                                : undefined
+                        }
                     >
-                        Sekilas Desa Kepandean
-                    </h2>
-                    {excerpt.sejarah ? (
-                        <>
-                            <p className="mt-3 text-base leading-7 text-neutral-700">
-                                {excerpt.sejarah}
-                            </p>
-                            <Link
-                                href={excerpt.urls.sejarah}
-                                className="mt-4 inline-flex items-center gap-2 rounded-md bg-desa-800 px-4 py-2 text-base font-medium text-white hover:bg-desa-900"
+                        <div
+                            className={`p-6 sm:p-8 ${excerpt.foto_url ? 'md:col-span-3' : ''}`}
+                        >
+                            <h2
+                                id="sekilas-sejarah"
+                                className="text-xl font-bold tracking-tight sm:text-2xl"
                             >
-                                Selengkapnya
-                                <ArrowRight
-                                    className="h-4 w-4"
-                                    aria-hidden="true"
+                                Sekilas Desa Kepandean
+                            </h2>
+                            {excerpt.sejarah ? (
+                                <>
+                                    <p className="mt-3 text-base leading-7 text-neutral-700">
+                                        {excerpt.sejarah}
+                                    </p>
+                                    <Link
+                                        href={excerpt.urls.sejarah}
+                                        className="mt-5 inline-flex items-center gap-2 rounded-md bg-desa-800 px-4 py-2 text-base font-medium text-white hover:bg-desa-900"
+                                    >
+                                        Selengkapnya
+                                        <ArrowRight
+                                            className="h-4 w-4"
+                                            aria-hidden="true"
+                                        />
+                                    </Link>
+                                </>
+                            ) : (
+                                <p className="mt-3 text-base leading-7 text-neutral-500">
+                                    Cuplikan sejarah desa belum tersedia.
+                                    Perangkat desa akan melengkapinya setelah
+                                    data dari OpenSID dikonfirmasi.{' '}
+                                    <Link
+                                        href={excerpt.urls.sejarah}
+                                        className="font-medium text-desa-800 underline"
+                                    >
+                                        Buka halaman Sejarah
+                                    </Link>
+                                    .
+                                </p>
+                            )}
+                        </div>
+                        {excerpt.foto_url ? (
+                            <div className="order-first aspect-[16/9] md:order-none md:col-span-2 md:aspect-auto md:min-h-64">
+                                <img
+                                    src={excerpt.foto_url}
+                                    alt="Suasana Desa Kepandean"
+                                    loading="lazy"
+                                    decoding="async"
+                                    className="h-full w-full object-cover"
                                 />
-                            </Link>
-                        </>
-                    ) : (
-                        <p className="mt-3 text-base leading-7 text-neutral-500">
-                            Cuplikan sejarah desa belum tersedia. Perangkat desa
-                            akan melengkapinya setelah data dari OpenSID
-                            dikonfirmasi.{' '}
-                            <Link
-                                href={excerpt.urls.sejarah}
-                                className="font-medium text-desa-800 underline"
-                            >
-                                Buka halaman Sejarah
-                            </Link>
-                            .
-                        </p>
-                    )}
+                            </div>
+                        ) : null}
+                    </div>
                 </article>
                 <aside
                     aria-labelledby="berita-terkini"
