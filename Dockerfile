@@ -3,8 +3,7 @@ FROM node:20-bookworm-slim AS frontend
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
-COPY resources ./resources
-COPY vite.config.ts tsconfig.json components.json ./
+COPY . .
 RUN npm run build
 
 # ── Tahap 2: dependensi PHP (tanpa dev) ───────────────────────────
@@ -21,9 +20,9 @@ FROM php:8.3-apache-bookworm
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        libpq-dev libzip-dev libpng-dev libjpeg62-turbo-dev \
+        libpq-dev libzip-dev libpng-dev libjpeg62-turbo-dev libicu-dev \
     && docker-php-ext-configure gd --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" pdo_pgsql gd zip bcmath \
+    && docker-php-ext-install -j"$(nproc)" pdo_pgsql gd zip bcmath intl exif \
     && a2enmod rewrite \
     && sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf /etc/apache2/apache2.conf \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -38,6 +37,7 @@ COPY --from=frontend /app/public/build /var/www/html/public/build
 RUN APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= php artisan filament:assets --ansi
 
 RUN chown -R www-data:www-data storage bootstrap/cache \
+    && sed -i 's/\r$//' /var/www/html/docker/entrypoint.sh \
     && chmod +x /var/www/html/docker/entrypoint.sh
 
 ENTRYPOINT ["/var/www/html/docker/entrypoint.sh"]

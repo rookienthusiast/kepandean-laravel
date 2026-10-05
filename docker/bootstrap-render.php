@@ -20,8 +20,14 @@ $kernel = $app->make(Kernel::class);
 $kernel->call('migrate', ['--force' => true]);
 echo Artisan::output();
 
-// 2. Desa default agar homepage tidak kosong di DB fresh.
-$desa = Desa::where('slug', 'kepandean')->first();
+// 2. Seeder otomatis jika database masih baru (mengisi desa, profil, slide hero, konten)
+if (\App\Models\Profil::count() === 0) {
+    echo "Database baru terdeteksi: menjalankan DatabaseSeeder...\n";
+    $kernel->call('db:seed', ['--force' => true]);
+    echo Artisan::output();
+}
+
+$desa = Desa::where('slug', 'kepandean')->first() ?? Desa::first();
 if (! $desa) {
     $desa = Desa::create([
         'name' => 'Kepandean',
