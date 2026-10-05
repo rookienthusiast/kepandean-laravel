@@ -9,7 +9,7 @@ RUN composer dump-autoload --optimize --no-scripts
 # ── Tahap 2: build frontend (Vite + React + Tailwind) ─────────────
 # Plugin Wayfinder memanggil `php artisan wayfinder:generate` saat build,
 # jadi tahap ini butuh PHP + vendor (build Node murni selalu gagal di sini).
-FROM php:8.3-bookworm-slim AS frontend
+FROM php:8.3-cli-bookworm AS frontend
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates gnupg \
     && mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
