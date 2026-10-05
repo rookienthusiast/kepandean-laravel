@@ -81,6 +81,26 @@ class KontenInformasiSeeder extends Seeder
         ],
     ];
 
+    /** @var array<int, array{slug: string, judul: string, kategori: string, cover: string, tanggal: string, isi: string}> */
+    private const ARTIKEL_ASLI = [
+        [
+            'slug' => 'pemerintah-desa-kepandean',
+            'judul' => 'Pemerintah Desa Kepandean',
+            'kategori' => 'pemerintahan',
+            'cover' => 'artikel-pemerintah-desa.jpg',
+            'tanggal' => '2025-03-25',
+            'isi' => '<p>Pemerintah Desa Kepandean terletak di daerah iklim tropis berada di perbatasan Kabupaten Tegal dan Kota Tegal. Beralamat lengkap di Jalan Raya Kepandean Desa Kepandean Kecamatan Dukuhturi Kabupaten Tegal.</p>',
+        ],
+        [
+            'slug' => 'musyawarah-desa-penetapan-apbdes-2025',
+            'judul' => 'Musyawarah Desa Penetapan APBDES Tahun Anggaran 2025',
+            'kategori' => 'pemerintahan',
+            'cover' => 'artikel-musdes-apbdes-2025.jpg',
+            'tanggal' => '2025-03-25',
+            'isi' => '<p>Pada hari ini tanggal 25 Maret 2025 Pemerintah Desa Kepandean mengadakan musyawarah desa penetapan APBDes Tahun 2025 di Balai Desa Kepandean. Dihadiri oleh para Ketua RT dan RW se Desa Kepandean serta dipimpin oleh Kepala Desa Kepandean dan Ketua BPD Desa Kepandean berjalan dengan hikmat.</p>',
+        ],
+    ];
+
     /** @var array<int, array{slug: string, judul: string, cover: string, hari_lalu: int, kedaluarsa_hari: int|null, isi: string}> */
     private const PENGUMUMANS = [
         [
@@ -189,6 +209,27 @@ class KontenInformasiSeeder extends Seeder
                     'cover_path' => $path,
                     'status' => Berita::STATUS_PUBLISHED,
                     'published_at' => now()->subDays($berita['hari_lalu']),
+                ]
+            );
+        }
+
+        // Artikel asli dari web lama (tanggal terbit dipertahankan).
+        foreach (self::ARTIKEL_ASLI as $berita) {
+            $path = $this->salin($berita['cover'], 'cover/'.$berita['slug'].'.'.pathinfo($berita['cover'], PATHINFO_EXTENSION));
+
+            if ($path === null) {
+                continue;
+            }
+
+            Berita::withoutGlobalScope('desa')->updateOrCreate(
+                ['desa_id' => $desa->id, 'slug' => $berita['slug']],
+                [
+                    'kategori_id' => $kategoriIds[$berita['kategori']] ?? null,
+                    'judul' => $berita['judul'],
+                    'isi' => $berita['isi'],
+                    'cover_path' => $path,
+                    'status' => Berita::STATUS_PUBLISHED,
+                    'published_at' => $berita['tanggal'],
                 ]
             );
         }
