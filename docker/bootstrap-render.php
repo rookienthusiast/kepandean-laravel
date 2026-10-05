@@ -17,6 +17,12 @@ require $root.'/vendor/autoload.php';
 $app = require $root.'/bootstrap/app.php';
 $kernel = $app->make(Kernel::class);
 
+// Diagnostik (tanpa secret): koneksi DB efektif yang dipakai app.
+$driver = config('database.default');
+$host = config("database.connections.{$driver}.host");
+$database = config("database.connections.{$driver}.database");
+echo "DB efektif: {$driver} @ {$host}/{$database}\n";
+
 // 1. Migrasi (termasuk tabel sessions/cache/jobs bawaan Laravel).
 $kernel->call('migrate', ['--force' => true]);
 echo Artisan::output();
