@@ -11,6 +11,7 @@ use Database\Seeders\DesaSeeder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -205,5 +206,35 @@ class ProfilSingletonTest extends TestCase
 
         $this->assertStringNotContainsString('<script', (string) $profil->sejarah);
         $this->assertStringContainsString('Sejarah', (string) $profil->sejarah);
+    }
+
+    public function test_favicon_mengikuti_logo_yang_diupload_admin(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put(
+            'profil/logo-desa.png',
+            (string) file_get_contents(database_path('data/images/Logo.png'))
+        );
+
+        $desa = Desa::where('slug', 'kepandean')->firstOrFail();
+        Profil::forDesa($desa)->update(['logo_path' => 'profil/logo-desa.png']);
+
+        // Varian persegi anti-stretch, bukan berkas logo mentah.
+        $this->get('/')->assertOk()->assertSee('storage/profil/favicon.png', false);
+    }
+
+    public function test_favicon_jatuh_ke_statis_tanpa_logo(): void
+    {
+        $this->get('/')->assertOk()->assertSee('/favicon.svg', false);
+    }
+
+    public function test_favicon_jatuh_ke_statis_bila_berkas_logo_hilang(): void
+    {
+        Storage::fake('public');
+
+        $desa = Desa::where('slug', 'kepandean')->firstOrFail();
+        Profil::forDesa($desa)->update(['logo_path' => 'profil/logo-hilang.png']);
+
+        $this->get('/')->assertOk()->assertSee('/favicon.svg', false);
     }
 }

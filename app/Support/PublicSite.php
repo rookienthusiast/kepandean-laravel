@@ -246,6 +246,7 @@ class PublicSite
             ? Profil::withoutGlobalScope('desa')->where('desa_id', $desa->id)->first(['foto_path', 'logo_path'])
             : null;
         $fotoPath = $profilMedia?->foto_path;
+        $logoPath = $profilMedia?->logo_path;
 
         // Hero tiap laman yang diatur admin (slug => URL). Kosong berarti
         // frontend memakai foto konten, lalu foto sejarah sebagai cadangan.
@@ -268,6 +269,9 @@ class PublicSite
                 'footer' => static::footer(),
                 'kontak' => static::kontak(),
                 'logo_url' => Media::url($profilMedia?->logo_path),
+                // Varian persegi anti-stretch; null berarti blade memakai
+                // favicon statis.
+                'favicon_url' => Favicon::url(is_string($logoPath) && $logoPath !== '' ? $logoPath : null),
                 'hero_fallback_url' => is_string($fotoPath) && $fotoPath !== ''
                     ? asset('storage/'.$fotoPath)
                     : null,

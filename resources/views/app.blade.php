@@ -30,9 +30,17 @@
             }
         </style>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        {{-- Favicon publik mengikuti logo yang diunggah admin di KelolaProfil
+            (props site.favicon_url); kosong berarti pakai berkas statis. --}}
+        @php($faviconUrl = $page['props']['site']['favicon_url'] ?? null)
+        @if (is_string($faviconUrl) && $faviconUrl !== '')
+            <link rel="icon" href="{{ $faviconUrl }}" sizes="any">
+            <link rel="apple-touch-icon" href="{{ $faviconUrl }}">
+        @else
+            <link rel="icon" href="/favicon.ico" sizes="any">
+            <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        @endif
 
         @fonts
 

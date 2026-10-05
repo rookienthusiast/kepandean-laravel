@@ -43,6 +43,7 @@ export interface SiteData {
     footer: SiteFooter;
     kontak: SiteKontak;
     logo_url: string | null;
+    favicon_url: string | null;
     hero_fallback_url: string | null;
     hero_laman: Record<string, string>;
 }
