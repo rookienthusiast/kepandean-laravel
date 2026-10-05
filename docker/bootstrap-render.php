@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Desa;
+use App\Models\Profil;
 use App\Models\User;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\Artisan;
@@ -21,7 +22,7 @@ $kernel->call('migrate', ['--force' => true]);
 echo Artisan::output();
 
 // 2. Seeder otomatis jika database masih baru (mengisi desa, profil, slide hero, konten)
-if (\App\Models\Profil::count() === 0) {
+if (Profil::count() === 0) {
     echo "Database baru terdeteksi: menjalankan DatabaseSeeder...\n";
     $kernel->call('db:seed', ['--force' => true]);
     echo Artisan::output();

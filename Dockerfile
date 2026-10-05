@@ -1,10 +1,11 @@
 # ── Tahap 1: build (composer + npm dalam satu image) ────────────
-# Sengaja berbasis php:8.3-cli + ekstensi yang SAMA dengan runtime:
+# Sengaja berbasis php:8.4-cli + ekstensi yang SAMA dengan runtime:
+# lock file menuntut php >= 8.4.1 (symfony v8), jadi 8.3 gagal resolve.
 # `composer install` harus di-resolve pada platform yang identik dengan
 # production (image `composer:2` minimalis dan gagal dengan exit code 2).
 # Plugin Wayfinder juga memanggil `php artisan` saat `npm run build`,
 # jadi tahap ini wajib punya PHP + vendor (build Node murni selalu gagal).
-FROM php:8.3-cli-bookworm AS build
+FROM php:8.4-cli-bookworm AS build
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -36,8 +37,8 @@ RUN APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= npm run build \
     && APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= php artisan filament:assets --ansi \
     && rm -rf node_modules /root/.npm /root/.composer /root/.cache
 
-# ── Tahap 2: runtime Apache + PHP 8.3 ─────────────────────────────
-FROM php:8.3-apache-bookworm
+# ── Tahap 2: runtime Apache + PHP 8.4 ─────────────────────────────
+FROM php:8.4-apache-bookworm
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
