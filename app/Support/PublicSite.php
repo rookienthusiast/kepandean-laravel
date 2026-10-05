@@ -166,8 +166,8 @@ class PublicSite
     public static function kontak(): array
     {
         return [
-            'telepon' => 'Nomor telepon dalam konfirmasi perangkat desa',
-            'telepon_status' => 'unconfirmed',
+            'telepon' => '+62 817-7046-1804',
+            'telepon_status' => 'confirmed',
             'surel' => 'pemdes@kepandean.desa.id',
             'jam' => [
                 ['hari' => 'Senin - Kamis', 'jam' => '08.00 - 15.00 WIB'],

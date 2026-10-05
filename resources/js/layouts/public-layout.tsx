@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from "@inertiajs/react";
 import {
     ChevronDown,
     Clock,
@@ -9,15 +9,15 @@ import {
     Phone,
     ShieldCheck,
     X,
-} from 'lucide-react';
-import { useEffect, useState, type ReactNode } from 'react';
+} from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
 import type {
     AnalyticsData,
     MetaData,
     NavItem,
     SchemaData,
     SiteData,
-} from '@/types/site';
+} from "@/types/site";
 
 interface PublicLayoutProps {
     meta: MetaData;
@@ -28,7 +28,7 @@ interface PublicLayoutProps {
 
 function SiteLogo({
     url,
-    className = 'h-10 sm:h-11',
+    className = "h-10 sm:h-11",
     inisial = false,
 }: {
     url: string | null;
@@ -116,12 +116,12 @@ function MobileNav({
             return;
         }
         const tutup = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
+            if (e.key === "Escape") {
                 setOpen(false);
             }
         };
-        window.addEventListener('keydown', tutup);
-        return () => window.removeEventListener('keydown', tutup);
+        window.addEventListener("keydown", tutup);
+        return () => window.removeEventListener("keydown", tutup);
     }, [open]);
 
     return (
@@ -131,7 +131,7 @@ function MobileNav({
                 onClick={() => setOpen((v) => !v)}
                 aria-expanded={open}
                 aria-controls="navigasi-seluler"
-                aria-label={open ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
+                aria-label={open ? "Tutup menu navigasi" : "Buka menu navigasi"}
                 className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-white hover:bg-white/10"
             >
                 {open ? (
@@ -321,14 +321,14 @@ function Footer({ site }: { site: SiteData }) {
 // di-scroll melewati 20px. Listener pasif agar tidak menghambat scroll.
 function useScrolled(ambang = 20) {
     const [scrolled, setScrolled] = useState(
-        () => typeof window !== 'undefined' && window.scrollY > ambang,
+        () => typeof window !== "undefined" && window.scrollY > ambang,
     );
 
     useEffect(() => {
         const perbarui = () => setScrolled(window.scrollY > ambang);
         perbarui();
-        window.addEventListener('scroll', perbarui, { passive: true });
-        return () => window.removeEventListener('scroll', perbarui);
+        window.addEventListener("scroll", perbarui, { passive: true });
+        return () => window.removeEventListener("scroll", perbarui);
     }, [ambang]);
 
     return scrolled;
@@ -344,20 +344,20 @@ export default function PublicLayout({
     const { props } = usePage<{ analytics?: AnalyticsData }>();
     const analytics = props.analytics;
     const gaId =
-        typeof analytics?.ga_id === 'string' && analytics.ga_id !== ''
+        typeof analytics?.ga_id === "string" && analytics.ga_id !== ""
             ? analytics.ga_id
             : null;
     const scVerification =
-        typeof analytics?.search_console_verification === 'string' &&
-        analytics.search_console_verification !== ''
+        typeof analytics?.search_console_verification === "string" &&
+        analytics.search_console_verification !== ""
             ? analytics.search_console_verification
             : null;
     const ogType =
         schema !== null &&
         schema !== undefined &&
-        (schema as Record<string, unknown>)['@type'] === 'NewsArticle'
-            ? 'article'
-            : 'website';
+        (schema as Record<string, unknown>)["@type"] === "NewsArticle"
+            ? "article"
+            : "website";
 
     return (
         <>
@@ -420,8 +420,8 @@ export default function PublicLayout({
                             ? // Hijau 95% + blur: konten yang lewat di bawah
                               // navbar sedikit teredam, satu-satunya
                               // elemen ber-blur di halaman (R-10).
-                              'bg-desa-900/95 shadow-md backdrop-blur-md'
-                            : 'bg-transparent'
+                              "bg-desa-900/95 shadow-md backdrop-blur-md"
+                            : "bg-transparent"
                     }`}
                 >
                     <div className="relative mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-3 px-4 sm:gap-6 sm:px-6 lg:px-8">
