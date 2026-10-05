@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call(ProfilDesaJsonSeeder::class);
+        $this->call(KontenInformasiSeeder::class);
         $this->call(HeroGambarSeeder::class);
     }
 }
