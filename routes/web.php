@@ -207,4 +207,19 @@ Route::middleware(['web', 'auth', 'verified'])->prefix('admin')->group(function 
     Route::post('media/upload', [MediaController::class, 'upload'])->name('admin.media.upload');
 });
 
+Route::get('storage/{path}', function (string $path) {
+    $filePath = storage_path('app/public/'.$path);
+    if (! file_exists($filePath)) {
+        $basename = basename($path);
+        $dataImg = database_path('data/images/'.$basename);
+        if (file_exists($dataImg)) {
+            $filePath = $dataImg;
+        }
+    }
+    if (file_exists($filePath)) {
+        return response()->file($filePath);
+    }
+    abort(404);
+})->where('path', '.*')->name('storage.fallback');
+
 require __DIR__.'/settings.php';
