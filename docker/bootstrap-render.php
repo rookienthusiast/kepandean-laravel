@@ -17,15 +17,18 @@ require $root.'/vendor/autoload.php';
 $app = require $root.'/bootstrap/app.php';
 $kernel = $app->make(Kernel::class);
 
+// 1. Migrasi (termasuk tabel sessions/cache/jobs bawaan Laravel).
+// Catatan: call() pertama ini juga me-bootstrap app, jadi helper config()
+// baru boleh dipakai SETELAH baris ini (sebelumnya binding 'config'
+// belum ada -> "Class config does not exist").
+$kernel->call('migrate', ['--force' => true]);
+echo Artisan::output();
+
 // Diagnostik (tanpa secret): koneksi DB efektif yang dipakai app.
 $driver = config('database.default');
 $host = config("database.connections.{$driver}.host");
 $database = config("database.connections.{$driver}.database");
 echo "DB efektif: {$driver} @ {$host}/{$database}\n";
-
-// 1. Migrasi (termasuk tabel sessions/cache/jobs bawaan Laravel).
-$kernel->call('migrate', ['--force' => true]);
-echo Artisan::output();
 
 // 2. Seeder otomatis jika database masih baru (mengisi desa, profil, slide hero, konten)
 if (Profil::count() === 0) {
