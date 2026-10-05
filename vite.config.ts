@@ -8,6 +8,8 @@ import { bunny } from 'laravel-vite-plugin/fonts';
 import { defineConfig, lazyPlugins } from 'vite-plus';
 import path from 'node:path';
 
+const isVercel = Boolean(process.env.VERCEL || process.env.CI);
+
 export default defineConfig({
     resolve: {
         alias: {
@@ -32,6 +34,7 @@ export default defineConfig({
         tailwindcss(),
         wayfinder({
             formVariants: true,
+            command: isVercel ? 'true' : undefined,
         }),
     ]),
     server: {
